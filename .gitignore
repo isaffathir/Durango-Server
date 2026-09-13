@@ -114,3 +114,5 @@ server/mods/*.dll
 !tools/terraingen/**
 !tools/androidclient/
 !tools/androidclient/**
+__pycache__/
+*.pyc
