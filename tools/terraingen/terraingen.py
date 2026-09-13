@@ -45,6 +45,9 @@ CLIMATES = {
     'desert':    dict(main=B['Desert'],          alt=B['Grassland'], beach=B['SandBeach'], ocean=B['WarmOcean'], temp=220, hum=40,  cold=False),
     'snow':      dict(main=B['SnowField'],       alt=B['Tundra'],    beach=B['PebbleBeach'], ocean=B['ColdOcean'], temp=40, hum=120, cold=True),
     'volcanic':  dict(main=B['Volcanic'],        alt=B['Grassland'], beach=B['PebbleBeach'], ocean=B['WarmOcean'], temp=230, hum=90, cold=False),
+    # Ancora: the train-wreck starter island. Grass and sparse forest under permanent volcanic ash (weather comes from
+    # the region template i01ancora*), gentle relief, a wide beach on the north side where K waits.
+    'ancora':    dict(main=B['Grassland'],       alt=B['TemperateForest'], beach=B['SandBeach'], ocean=B['WarmOcean'], temp=140, hum=120, cold=False),
 }
 
 # ----------------------------------------------------------------------------- noise
