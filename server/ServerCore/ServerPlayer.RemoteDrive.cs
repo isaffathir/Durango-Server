@@ -41,11 +41,11 @@ public partial class ServerPlayer
     {
         if (string.IsNullOrEmpty(recipeId))
         {
-            return "ใช้: craft <ชื่อสูตร>";
+            return "Pakai: craft <nama resep>";
         }
         if (!RecipeRequirements.TryGet(recipeId, out RecipeRequirements.Slot[] slots))
         {
-            return $"ไม่มีสูตร '{recipeId}' ในเกม";
+            return $"Resep '{recipeId}' tidak ada di game";
         }
         RecipeMeta.TryGet(recipeId, out RecipeMeta.Info meta);
 
@@ -80,14 +80,14 @@ public partial class ServerPlayer
                 }
                 if (picked.Count < want)
                 {
-                    missing.Add($"ช่อง '{slot.Id}' ขาด {want - picked.Count} ชิ้น");
+                    missing.Add($"Slot '{slot.Id}' kurang {want - picked.Count} buah");
                 }
                 materials[slot.Id] = picked.ToArray();
             }
         }
         if (missing.Count > 0)
         {
-            return $"วัตถุดิบไม่พอสำหรับ {recipeId}: {string.Join(" · ", missing)}";
+            return $"Bahan tidak cukup untuk {recipeId}: {string.Join(" · ", missing)}";
         }
 
         // 2. เครื่องมือ (ถ้าสูตรขอ) — ปล่อยให้ CheckCraftTool ตัดสินอีกที
@@ -131,8 +131,8 @@ public partial class ServerPlayer
             ReformSlotIndex = null
         };
         HandleCraft(msg, DriveHeader);
-        string where = workbench.HasValue ? "ที่โต๊ะ" : "มือเปล่า";
-        return $"สั่ง {Name} คราฟต์ {recipeId} {where} (วัตถุดิบ {used.Count} ชิ้น · เครื่องมือ {(toolId == null ? "ไม่ใช้" : "มี")})";
+        string where = workbench.HasValue ? "di meja" : "tangan kosong";
+        return $"Menyuruh {Name} craft {recipeId} {where} (bahan {used.Count} buah · alat {(toolId == null ? "ไม่ใช้" : "มี")})";
     }
 
     /// <summary>โต๊ะที่ใกล้ที่สุดรอบตัวที่ให้ tag ตามที่สูตรขอ (null = สูตรไม่ต้องใช้โต๊ะ หรือหาไม่เจอ)</summary>
@@ -197,7 +197,7 @@ public partial class ServerPlayer
         tx = Math.Clamp(tx, 0, Math.Max(0, _world.Terrain.Width - 1));
         ty = Math.Clamp(ty, 0, Math.Max(0, _world.Terrain.Height - 1));
         ControlWalk(tx, ty);
-        return $"สั่ง {Name} เดินไป tile {tx},{ty} (จากที่ยืน {dx:+#;-#;0},{dy:+#;-#;0})";
+        return $"Menyuruh {Name} jalan ke tile {tx},{ty} (dari posisi {dx:+#;-#;0},{dy:+#;-#;0})";
     }
 
     // ---------------------------------------------------------------- กิน
@@ -228,11 +228,11 @@ public partial class ServerPlayer
         if (itemId == null)
         {
             return string.IsNullOrEmpty(prototype)
-                ? "ไม่มีของกินในกระเป๋า"
-                : $"ไม่มี '{prototype}' ที่กินได้ในกระเป๋า";
+                ? "Tidak ada makanan di tas"
+                : $"Tidak ada '{prototype}' yang bisa dimakan di tas";
         }
         HandleUseItem(new UseItem { ItemId = itemId }, DriveHeader);
-        return $"สั่ง {Name} กิน {ate}";
+        return $"Menyuruh {Name} makan {ate}";
     }
 
     // ---------------------------------------------------------------- วางของ
@@ -263,8 +263,8 @@ public partial class ServerPlayer
         if (itemId == null)
         {
             return string.IsNullOrEmpty(blueprintId)
-                ? "ไม่มีของที่วางได้ในกระเป๋า"
-                : $"ไม่มีแคปซูลของ '{blueprintId}' ในกระเป๋า";
+                ? "Tidak ada barang yang bisa ditempatkan di tas"
+                : $"Tidak ada kapsul '{blueprintId}' di tas";
         }
         WorldPosition me = CurrentPosition;
         var tile = new Point2((int)(me.x / 200f), (int)(me.y / 200f));
@@ -280,7 +280,7 @@ public partial class ServerPlayer
             Rotation = Rotation.None,
             Floor = null
         }, DriveHeader);
-        return $"สั่ง {Name} วาง {placed} ที่ tile {tile.x},{tile.y}";
+        return $"Menyuruh {Name} menempatkan {placed} di tile {tile.x},{tile.y}";
     }
 
     // ---------------------------------------------------------------- ดูสถานะ
@@ -301,7 +301,7 @@ public partial class ServerPlayer
                 //    ตอนนี้ดู tag ที่ติดมากับชิ้นนั้นตรง ๆ
                 if (HasTag(_inventory[i], ItemProcessing.CookedTag))
                 {
-                    key += " (แปรรูปแล้ว)";
+                    key += " (sudah diolah)";
                 }
                 counts.TryGetValue(key, out int n);
                 counts[key] = n + 1;
@@ -309,7 +309,7 @@ public partial class ServerPlayer
         }
         if (total == 0)
         {
-            return $"{Name}: กระเป๋าว่าง";
+            return $"{Name}: tas kosong";
         }
         var parts = new List<string>(counts.Count);
         foreach (KeyValuePair<string, int> pair in counts)
@@ -317,7 +317,7 @@ public partial class ServerPlayer
             parts.Add($"{pair.Key} x{pair.Value}");
         }
         parts.Sort(StringComparer.Ordinal);
-        return $"{Name}: ของ {total} ชิ้น — {string.Join(" · ", parts)}";
+        return $"{Name}: {total} barang — {string.Join(" · ", parts)}";
     }
 
     /// <summary>ไอเทมชิ้นนี้ติด tag นี้ไหม (ดูจาก tag ที่ติดมากับชิ้นนั้น ไม่ใช่ตาราง prototype)</summary>
@@ -351,9 +351,9 @@ public partial class ServerPlayer
                 parts.Add($"{ProficiencyNameOf(cat)} {level}");
             }
         }
-        string bars = $"เลือด {CurrentLife:F0} · เลเวล {Level} · แต้มสกิล {_skillPoints}";
+        string bars = $"Darah {CurrentLife:F0} · level {Level} · poin skill {_skillPoints}";
         return parts.Count == 0
-            ? $"{Name}: ยังไม่มีหมวดไหนขึ้นเกินเลเวล 1 · {bars}"
+            ? $"{Name}: belum ada kategori di atas level 1 · {bars}"
             : $"{Name}: {string.Join(" · ", parts)} · {bars}";
     }
 }

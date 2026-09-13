@@ -130,7 +130,7 @@ public sealed class IslandInfo
 
     public override string ToString()
     {
-        return $"{Id} ({Name}) lv{MinLevel}-{MaxLevel} ต้องเลเวล {RequiredLevel}+ @ {Address}";
+        return $"{Id} ({Name}) lv{MinLevel}-{MaxLevel} butuh level {RequiredLevel}+ @ {Address}";
     }
 
     /// <summary>
@@ -145,19 +145,19 @@ public sealed class IslandInfo
         {
             new IslandInfo
             {
-                Id = "isle01", Name = "เกาะเริ่มต้น", Terrain = "ri35te",
+                Id = "isle01", Name = "Pulau Awal", Terrain = "ri35te",
                 MinLevel = 1, MaxLevel = 10, RequiredLevel = 1,
                 Host = "127.0.0.1", GatewayPort = 8190, GamePort = 8191
             },
             new IslandInfo
             {
-                Id = "isle02", Name = "เกาะป่าลึก", Terrain = "ri40tr",
+                Id = "isle02", Name = "Pulau Hutan Lebat", Terrain = "ri40tr",
                 MinLevel = 10, MaxLevel = 20, RequiredLevel = 8,
                 Host = "127.0.0.1", GatewayPort = 8290, GamePort = 8291
             },
             new IslandInfo
             {
-                Id = "isle03", Name = "เกาะทะเลทราย", Terrain = "ri35de",
+                Id = "isle03", Name = "Pulau Gurun", Terrain = "ri35de",
                 MinLevel = 20, MaxLevel = 30, RequiredLevel = 18,
                 // ⚠️ ห้ามใช้ 8390/8391 — ตัวเกมมี server ของตัวเองอยู่บนสองพอร์ตนั้น
                 Host = "127.0.0.1", GatewayPort = 8490, GamePort = 8491

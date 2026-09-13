@@ -138,7 +138,7 @@ public partial class ServerPlayer
         {
             // ในเกมจริงอาหารมี "เวลาย่อย" — ไม่มีตัวนี้ก็รัวกินทั้งกระเป๋ารวดเดียวจนสตามินาเต็มตลอด
             Console.WriteLine("[item] ปฏิเสธ {0}: ยังอิ่มอยู่ (อีก {1:F0} วิ)", Name, _canEatAt - now);
-            Send(new Info { Text = "เพิ่งกินไป รออีกสักครู่" }, header.Seq);
+            Send(new Info { Text = "Baru saja makan, tunggu sebentar" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -237,8 +237,8 @@ public partial class ServerPlayer
         }
 
         Console.WriteLine("[item] {0} กิน {1}{2} (+{3:F0} สตามินา{4}{5})",
-            Name, item.Name ?? item.Prototype, raw ? " [ดิบ]" : string.Empty, stamina,
-            fatigueRelief > 0f ? $" · ล้า −{fatigueRelief:F0}" : string.Empty,
-            life > 0f ? $" · เลือด +{life:F0}" : string.Empty);
+            Name, item.Name ?? item.Prototype, raw ? " [mentah]" : string.Empty, stamina,
+            fatigueRelief > 0f ? $" · lelah −{fatigueRelief:F0}" : string.Empty,
+            life > 0f ? $" · darah +{life:F0}" : string.Empty);
     }
 }

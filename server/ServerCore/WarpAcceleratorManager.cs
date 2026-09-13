@@ -126,12 +126,12 @@ public sealed class WarpAcceleratorManager
             _sessions.TryGetValue(entityId ?? string.Empty, out Session s);
             if (s != null && s.State.Status != AcceleratorStatus.RiftInactivated)
             {
-                reason = "รอยแยกนี้กำลังมีกิจกรรมอยู่แล้ว — กด \"เข้าร่วม\" แทน";
+                reason = "Retakan ini sudah ada event berjalan — tekan \"Gabung\" saja";
                 return false;
             }
             if (s != null && now < s.CooldownUntil)
             {
-                reason = "รอยแยกนี้เพิ่งใช้ไป ต้องรอสักครู่ก่อนเปิดใหม่";
+                reason = "Retakan ini baru saja dipakai, tunggu sebentar sebelum dibuka lagi";
                 return false;
             }
             if (s == null)
@@ -170,13 +170,13 @@ public sealed class WarpAcceleratorManager
                 || s.State.Status == AcceleratorStatus.RiftInactivated
                 || s.State.Status == AcceleratorStatus.End)
             {
-                reason = "ยังไม่มีกิจกรรมกำลังดำเนินอยู่ที่นี่ — กด \"เร่งวาร์ป\" เพื่อเริ่มก่อน";
+                reason = "Belum ada event berjalan di sini — tekan \"Percepat Warp\" untuk memulai";
                 return false;
             }
             string[] existing = s.State.Participants ?? Array.Empty<string>();
             if (Array.IndexOf(existing, playerId) != -1)
             {
-                reason = "เข้าร่วมอยู่แล้ว";
+                reason = "Sudah bergabung";
                 return false;
             }
             var list = new List<string>(existing) { playerId };
@@ -198,17 +198,17 @@ public sealed class WarpAcceleratorManager
         {
             if (!_sessions.TryGetValue(entityId ?? string.Empty, out Session s) || s.State.Status != AcceleratorStatus.End)
             {
-                reason = "ยังไม่ผ่านกิจกรรมนี้ หรือกิจกรรมนี้จบไปแล้ว";
+                reason = "Event ini belum diselesaikan atau sudah berakhir";
                 return false;
             }
             if (s.State.Participants == null || Array.IndexOf(s.State.Participants, playerId) == -1)
             {
-                reason = "ไม่ได้เข้าร่วมกิจกรรมนี้";
+                reason = "Tidak ikut event ini";
                 return false;
             }
             if (!s.Claimed.Add(playerId))
             {
-                reason = "รับรางวัลรอบนี้ไปแล้ว";
+                reason = "Hadiah ronde ini sudah diambil";
                 return false;
             }
             granted = s.PendingWarpMatter;
@@ -367,7 +367,7 @@ public sealed class WarpAcceleratorManager
             s.State = state;
             s.WaveAnimalIds.Clear();
             _world.SetArtifactWarpAccelerator(entityId, s.State);
-            NotifyParticipants(s, $"ผ่านกิจกรรมวาร์ปเรกเซเลอเรเตอร์ครบทุกคลื่นแล้ว! กด \"รับรางวัล\" เพื่อรับ Warp Matter {s.PendingWarpMatter} หน่วย");
+            NotifyParticipants(s, $"Semua gelombang Warp Accelerator selesai! Tekan \"Ambil Hadiah\" untuk menerima {s.PendingWarpMatter} Warp Matter");
             Console.WriteLine("[warp-accel] {0} ผ่านครบ {1} คลื่น — รอเคลมรวม {2} Warp Matter", entityId, maxWave, s.PendingWarpMatter);
         }
         else
@@ -387,7 +387,7 @@ public sealed class WarpAcceleratorManager
     {
         Console.WriteLine("[warp-accel] {0} คลื่น {1} ล้มเหลว (หมดเวลา {2:F0} วิ ยังมีสัตว์เหลืออยู่) — ไม่ได้รางวัลสะสม {3} หน่วยที่ค้างไว้",
             entityId, s.State.CurrentWave, Cfg.PhaseSeconds, s.PendingWarpMatter);
-        NotifyParticipants(s, "กิจกรรมวาร์ปเรกเซเลอเรเตอร์ล้มเหลว — ฆ่าสัตว์ไม่ทันเวลาที่กำหนด");
+        NotifyParticipants(s, "Event Warp Accelerator gagal — hewan tidak terbunuh dalam waktu yang ditentukan");
         ResetToIdle(entityId, s, now);
     }
 

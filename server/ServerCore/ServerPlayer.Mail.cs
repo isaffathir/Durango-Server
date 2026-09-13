@@ -34,7 +34,7 @@ public partial class ServerPlayer
 
     private bool RejectMailDisabled(PacketHeader header)
     {
-        Send(new Info { Text = "ระบบจดหมายยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem surat belum aktif" }, header.Seq);
         Send(Aborts.Reason(), header.Seq);
         return false;
     }
@@ -70,7 +70,7 @@ public partial class ServerPlayer
         string text = msg.Text ?? "";
         if (text.Length > 500)
         {
-            Send(new Info { Text = "ข้อความยาวเกิน 500 ตัวอักษร" }, header.Seq);
+            Send(new Info { Text = "Pesan lebih dari 500 karakter" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -87,7 +87,7 @@ public partial class ServerPlayer
                     int idx = _inventory.FindIndex(it => it.Id == itemId);
                     if (idx < 0)
                     {
-                        Send(new Info { Text = $"ไม่มีไอเทม {itemId}" }, header.Seq);
+                        Send(new Info { Text = $"Tidak ada item {itemId}" }, header.Seq);
                         Send(Aborts.Reason(), header.Seq);
                         return;
                     }

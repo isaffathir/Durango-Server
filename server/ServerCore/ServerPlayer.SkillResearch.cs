@@ -134,7 +134,7 @@ public partial class ServerPlayer
         _completedCategoryResearch.Add(ResearchKey(completed, target));
         ClearSkillResearch();
         MarkDirty();
-        Send(new Info { Text = $"วิจัยความชำนาญ {ProficiencyNameOf(completed)} เลเวล {target} สำเร็จ" });
+        Send(new Info { Text = $"Riset keahlian {ProficiencyNameOf(completed)} level {target} selesai" });
         SendSkills();
         RefreshAbilities();
     }

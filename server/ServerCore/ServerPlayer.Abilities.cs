@@ -309,7 +309,7 @@ public partial class ServerPlayer
     public string DescribeAbilities()
     {
         var sb = new System.Text.StringBuilder();
-        sb.Append(Name).Append(" เลเวล ").Append(Level).Append(" · ");
+        sb.Append(Name).Append(" level ").Append(Level).Append(" · ");
         for (int i = 0; i < AbilityData.Sources.Length; i++)
         {
             AbilityData.Source s = AbilityData.Sources[i];
@@ -319,15 +319,15 @@ public partial class ServerPlayer
             }
             sb.Append(s.ThaiName).Append(' ').Append(AbilityValue(s.Ability));
         }
-        sb.Append("\n  เลือดสูงสุด ").Append(ComputedLifeMax.ToString("F0"))
-          .Append(" · สตามินาสูงสุด ").Append(ComputedStaminaMax.ToString("F0"))
-          .Append(" · พลังโจมตี ").Append(AttackPower().ToString("F1"));
+        sb.Append("\n  darah maks ").Append(ComputedLifeMax.ToString("F0"))
+          .Append(" · stamina maks ").Append(ComputedStaminaMax.ToString("F0"))
+          .Append(" · serangan ").Append(AttackPower().ToString("F1"));
         float defense = DefenseRating();
-        sb.Append(" · ค่าป้องกัน ").Append(defense.ToString("F1"))
-          .Append(" (ลดดาเมจ ").Append((1f - ArmorDamageScale()).ToString("P0")).Append(')');
+        sb.Append(" · pertahanan ").Append(defense.ToString("F1"))
+          .Append(" (kurangi damage ").Append((1f - ArmorDamageScale()).ToString("P0")).Append(')');
         if (TryGetWeaponItem(out Item weapon, out EquipData.WeaponInfo info))
         {
-            sb.Append("\n  อาวุธ: ").Append(weapon.Name ?? weapon.Prototype)
+            sb.Append("\n  senjata: ").Append(weapon.Name ?? weapon.Prototype)
               .Append(" lv").Append(weapon.Level)
               .Append(" (attack ").Append(info.AttackAt(weapon.Level).ToString("F0"))
               .Append(" × ").Append(CombatRates.WeaponAttackScale.ToString("0.###"))
@@ -336,7 +336,7 @@ public partial class ServerPlayer
         }
         else
         {
-            sb.Append("\n  อาวุธ: มือเปล่า");
+            sb.Append("\n  senjata: tangan kosong");
         }
         return sb.ToString();
     }

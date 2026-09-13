@@ -186,7 +186,7 @@ public class GameServer
         {
             if (RequireSessionToken)
             {
-                reason = string.IsNullOrEmpty(auth.SessionToken) ? "ไม่มี session token" : "token ไม่รู้จักหรือหมดอายุ";
+                reason = string.IsNullOrEmpty(auth.SessionToken) ? "Tidak ada session token" : "token tidak dikenal atau kedaluwarsa";
                 return false;
             }
             // โหมด --insecure-auth: กลับไปเชื่อ entity id ที่ส่งมา
@@ -219,13 +219,13 @@ public class GameServer
             if (sessionIsTemporary && claimedCharacterExists)
             {
                 Console.WriteLine($"[auth] ย้าย session ชั่วคราว {session.EntityId} " +
-                                  $"→ ตัวละครที่เพิ่งสร้าง {auth.EntityId}");
+                                  $"→ karakter yang baru dibuat {auth.EntityId}");
                 session.EntityId = auth.EntityId;
                 session.Data = null;   // ให้โหลดใหม่จากเซฟของตัวละครจริง
             }
             else
             {
-                reason = $"token เป็นของ {session.EntityId} แต่อ้างเป็น {auth.EntityId}";
+                reason = $"token milik {session.EntityId} tapi mengaku sebagai {auth.EntityId}";
                 return false;
             }
         }
@@ -421,7 +421,7 @@ public class GameServer
             if (!TryAuthorize(auth, out string authedId, out PlayerData data, out string reason))
             {
                 Console.WriteLine($"[auth] ปฏิเสธ {socket.RemoteEndPoint}: {reason} (อ้างเป็น {auth.EntityId})");
-                connection.Send(AbortWith("การยืนยันตัวตนไม่ผ่าน: " + reason), header.Seq);
+                connection.Send(AbortWith("Autentikasi gagal: " + reason), header.Seq);
                 connection.Close();
                 return;
             }
@@ -429,7 +429,7 @@ public class GameServer
             if (state.Authed)
             {
                 Console.WriteLine($"[auth] {ip} ส่ง Auth ซ้ำบน connection เดิม — ปฏิเสธ");
-                connection.Send(AbortWith("ส่ง Auth ซ้ำ"), header.Seq);
+                connection.Send(AbortWith("Auth dikirim dua kali"), header.Seq);
                 return;
             }
             // [4 ก.ย. 2026] คนที่ถูกระงับการเข้าเล่น — ตรวจหลัง TryAuthorize เพราะต้องได้ id จริง
@@ -475,7 +475,7 @@ public class GameServer
                 return;
             }
             if (!state.Authed || state.Rejected)
-            { connection.Send(AbortWith("ยังไม่ผ่านการยืนยันตัวตน"), header.Seq); return; }
+            { connection.Send(AbortWith("Belum lolos autentikasi"), header.Seq); return; }
             IReadOnlyList<PluginManager.LoadedModInfo> mods = PluginManager.Instance?.Mods ?? Array.Empty<PluginManager.LoadedModInfo>();
             ModNegotiationResult result = ModNegotiation.Validate(hello.ManifestJson, hello.CatalogHash, mods, ModPolicy);
             if (!result.Accepted)
@@ -505,7 +505,7 @@ public class GameServer
             if (state.PlayerCreated)
             {
                 Console.WriteLine($"[gameserver] {playerName} ส่ง Ready ซ้ำ — ปฏิเสธ");
-                connection.Send(AbortWith("ส่ง Ready ซ้ำ"), header.Seq);
+                connection.Send(AbortWith("Ready dikirim dua kali"), header.Seq);
                 return;
             }
             state.PlayerCreated = true;
@@ -517,7 +517,7 @@ public class GameServer
             if (existing != null)
             {
                 Console.WriteLine($"[gameserver] {playerName} เข้าซ้ำจาก {ip} — เตะเส้นเดิมออก");
-                existing.Kick("มีการเข้าเกมด้วยตัวละครนี้จากที่อื่น");
+                existing.Kick("Karakter ini sedang dimainkan dari tempat lain");
             }
             connection.Send(default(OK), header.Seq);
             // GP-12: ใช้ข้อมูลที่ผูกมากับ token ไม่ใช่ค้นจาก entity id ที่ client อ้าง

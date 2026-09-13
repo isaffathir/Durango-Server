@@ -116,7 +116,7 @@ public sealed class ItemSave
             // ⇒ ของที่เราส่งไป ModifiableCount = 0 ถูกกรองทิ้งหมด ช่องเลยขึ้นว่า "ไม่มีของ"
             // ทั้งที่มีอยู่เต็มกระเป๋า และ **packet ไม่เคยถูกส่งมาถึง server เลย** (client กันไว้ก่อน)
             //
-            // ช่องที่ใช้ `required_tags` (เช่นช่อง "น้ำ" ของ boiled_meat) เป็น General
+            // ช่องที่ใช้ `required_tags` (เช่นช่อง "Air" ของ boiled_meat) เป็น General
             // จึงผ่านปกติ — นี่คือเหตุผลที่บางช่องมีของบางช่องว่าง
             ModifiableCount = 1,
             ModifiedCount = 0,

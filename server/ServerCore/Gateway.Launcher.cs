@@ -11,7 +11,7 @@ namespace DurangoServer.Core;
 // ============================================================================
 // Gateway.Launcher — endpoint สำหรับ DinoWorld Launcher (tools/Launcher)
 //
-// ต่างจาก /admin/* ตรงที่นี่คือโซน "ผู้เล่น" ตอบเฉพาะข้อมูลที่ปลอดภัยพอให้ผู้เล่นเห็น:
+// ต่างจาก /admin/* ตรงที่นี่คือโซน "Pemain" ตอบเฉพาะข้อมูลที่ปลอดภัยพอให้ผู้เล่นเห็น:
 //   GET /launcher/news    → ประกาศ/อีเวนต์/patch note อ่านจาก data/launcher_news.json
 //                           (เจ้าของเซิร์ฟแก้ไฟล์นี้ได้ตลอด ไม่ต้อง restart — อ่านใหม่ทุกคำขอ)
 //   GET /launcher/status  → ชื่อเซิฟ + จำนวนผู้เล่น/เพดาน + เวอร์ชันเกมล่าสุด
@@ -195,7 +195,7 @@ public partial class Gateway
             string rel = request.QueryString["path"] ?? "";
             if (!TryResolveGameFile(rel, out string full))
             {
-                return new WebServer.TextResponse("text/plain", "ไม่พบไฟล์ " + rel, HttpStatusCode.NotFound);
+                return new WebServer.TextResponse("text/plain", "File tidak ditemukan " + rel, HttpStatusCode.NotFound);
             }
             return new WebServer.BinaryReponse
             {
@@ -210,7 +210,7 @@ public partial class Gateway
             name = Path.GetFileName(name);
             if (!PatchFileExists(name))
             {
-                return new WebServer.TextResponse("text/plain", "ไม่พบไฟล์แพท " + name, HttpStatusCode.NotFound);
+                return new WebServer.TextResponse("text/plain", "File patch tidak ditemukan " + name, HttpStatusCode.NotFound);
             }
             byte[] bytes = File.ReadAllBytes(PatchFilePath(name));
             return new WebServer.BinaryReponse { Content = bytes, ContentType = "application/octet-stream" };

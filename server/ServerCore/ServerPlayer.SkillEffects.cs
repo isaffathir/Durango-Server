@@ -161,9 +161,9 @@ public partial class ServerPlayer
     public string DescribeSkillBonuses()
     {
         return string.Format(
-            "เก็บของ {0} (เร็วขึ้น {1:P0} · โบนัส {2:P0}) · แล่เนื้อ {3} (เร็วขึ้น {4:P0}) · " +
-            "ต่อสู้ {5} (ดาเมจ +{6:P0}) · ป้องกัน {7} (รับ -{8:P0}) · คราฟต์ (เร็วขึ้น {9:P0}) · " +
-            "เอาชีวิตรอด {10} (สตามินา -{11:P0})",
+            "Mengumpulkan {0} (lebih cepat {1:P0} · bonus {2:P0}) · menguliti {3} (lebih cepat {4:P0}) · " +
+            "bertarung {5} (damage +{6:P0}) · bertahan {7} (terima -{8:P0}) · craft (lebih cepat {9:P0}) · " +
+            "bertahan hidup {10} (stamina -{11:P0})",
             SkillLevelIn(Category.Gathering), 1f - GatherDurationScale(), SkillRatio(Category.Gathering) * SkillRates.GatherBonus,
             SkillLevelIn(Category.Butchery), 1f - ButcheryDurationScale(),
             SkillLevelIn(Category.MeleeCombat), MeleeDamageScale() - 1f,

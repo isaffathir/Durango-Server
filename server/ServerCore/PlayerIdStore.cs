@@ -191,14 +191,14 @@ public static class PlayerIdStore
         error = null;
         if (!PinLooksValid(pin))
         {
-            error = "PIN ต้องยาว 4-12 ตัว";
+            error = "PIN harus 4-12 karakter";
             return null;
         }
 
         string id = NewUniqueId();
         if (id == null)
         {
-            error = "สุ่มเลขไอดีไม่สำเร็จ ลองใหม่อีกครั้ง";
+            error = "Gagal mengacak nomor ID, coba lagi";
             return null;
         }
 
@@ -233,7 +233,7 @@ public static class PlayerIdStore
         string ip = AccountStore.NormalizeIp(remoteIp);
         if (TooManyFailures(ip))
         {
-            error = "กรอกผิดหลายครั้งเกินไป รอสัก 15 นาทีแล้วลองใหม่";
+            error = "Terlalu banyak salah, tunggu 15 menit lalu coba lagi";
             return null;
         }
 
@@ -241,12 +241,12 @@ public static class PlayerIdStore
         if (rec == null || string.IsNullOrEmpty(pin))
         {
             NoteFailure(ip);
-            error = "ไอดีหรือ PIN ไม่ถูกต้อง";
+            error = "ID atau PIN salah";
             return null;
         }
         if (rec.Banned)
         {
-            error = "ไอดีนี้ถูกระงับ" + (string.IsNullOrEmpty(rec.BanReason) ? "" : " — " + rec.BanReason);
+            error = "ID ini diblokir" + (string.IsNullOrEmpty(rec.BanReason) ? "" : " — " + rec.BanReason);
             return null;
         }
 
@@ -255,7 +255,7 @@ public static class PlayerIdStore
                 Encoding.UTF8.GetBytes(given), Encoding.UTF8.GetBytes(rec.PinHash ?? "")))
         {
             NoteFailure(ip);
-            error = "ไอดีหรือ PIN ไม่ถูกต้อง";
+            error = "ID atau PIN salah";
             return null;
         }
 
@@ -274,7 +274,7 @@ public static class PlayerIdStore
         }
         if (!PinLooksValid(newPin))
         {
-            error = "PIN ใหม่ต้องยาว 4-12 ตัว";
+            error = "PIN baru harus 4-12 karakter";
             return false;
         }
         byte[] salt = RandomNumberGenerator.GetBytes(16);

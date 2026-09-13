@@ -104,10 +104,10 @@
     "BackupOnStartup": true
   },
   "Announcement": {
-    "Text": "ทดสอบประกาศค้าง — ข้อความนี้โชว์ทุกคนที่เข้าเกม",
+    "Text": "Selamat datang di Ancora! Server pribadi Durango Indonesia. Selamat bertualang, Pionir.",
     "RepeatSeconds": 0.0
   },
-  "AssetBundleUrlBase": "http://your-domain.com",
+  "AssetBundleUrlBase": "http://192.168.1.2:8190",
   "CraftMenu": {
     "HiddenCategories": [
       "deco_and_installation",
@@ -166,7 +166,7 @@
   "Spawn": [
     {
       "Type": 2042,
-      "Name": "กิ้งก่า",
+      "Name": "Kadal",
       "MinLevel": 1,
       "MaxLevel": 3,
       "Quota": 6,
@@ -177,7 +177,7 @@
     },
     {
       "Type": 2015,
-      "Name": "คอมป์โซกนาทัส",
+      "Name": "Compsognathus",
       "MinLevel": 1,
       "MaxLevel": 4,
       "Quota": 6,
@@ -188,7 +188,7 @@
     },
     {
       "Type": 2033,
-      "Name": "โดโดฟิซิส",
+      "Name": "Dodophis",
       "MinLevel": 2,
       "MaxLevel": 5,
       "Quota": 4,
@@ -199,7 +199,7 @@
     },
     {
       "Type": 2006,
-      "Name": "เฟนาโคดัส",
+      "Name": "Phenacodus",
       "MinLevel": 3,
       "MaxLevel": 6,
       "Quota": 4,
@@ -210,7 +210,7 @@
     },
     {
       "Type": 2017,
-      "Name": "โปรโตเซราท็อปส์",
+      "Name": "Protoceratops",
       "MinLevel": 3,
       "MaxLevel": 7,
       "Quota": 4,
@@ -221,7 +221,7 @@
     },
     {
       "Type": 2009,
-      "Name": "พาราซอโรโลฟัส",
+      "Name": "Parasaurolophus",
       "MinLevel": 5,
       "MaxLevel": 9,
       "Quota": 3,
@@ -232,7 +232,7 @@
     },
     {
       "Type": 2000,
-      "Name": "สเตโกซอรัส",
+      "Name": "Stegosaurus",
       "MinLevel": 6,
       "MaxLevel": 10,
       "Quota": 2,
@@ -243,7 +243,7 @@
     },
     {
       "Type": 2003,
-      "Name": "ทริเซราท็อปส์",
+      "Name": "Triceratops",
       "MinLevel": 6,
       "MaxLevel": 10,
       "Quota": 2,
@@ -254,7 +254,7 @@
     },
     {
       "Type": 2002,
-      "Name": "โอวิแรปเตอร์",
+      "Name": "Oviraptor",
       "MinLevel": 4,
       "MaxLevel": 8,
       "Quota": 2,
@@ -265,7 +265,7 @@
     },
     {
       "Type": 2001,
-      "Name": "แร็ปเตอร์",
+      "Name": "Raptor",
       "MinLevel": 7,
       "MaxLevel": 10,
       "Quota": 1,
@@ -278,7 +278,7 @@
   "Zones": [
     {
       "Id": "meadow",
-      "Name": "ทุ่งหญ้าหน้าบ้าน",
+      "Name": "Padang Rumput Depan",
       "OffsetTileX": 0.0,
       "OffsetTileY": 0.0,
       "RadiusTiles": 14.0,
@@ -290,7 +290,7 @@
     },
     {
       "Id": "forest",
-      "Name": "ชายป่า",
+      "Name": "Tepi Hutan",
       "OffsetTileX": 22.0,
       "OffsetTileY": 6.0,
       "RadiusTiles": 13.0,
@@ -301,7 +301,7 @@
     },
     {
       "Id": "highland",
-      "Name": "ที่ราบสูง",
+      "Name": "Dataran Tinggi",
       "OffsetTileX": -8.0,
       "OffsetTileY": 24.0,
       "RadiusTiles": 13.0,
@@ -313,7 +313,7 @@
     },
     {
       "Id": "raptor_den",
-      "Name": "หุบแร็ปเตอร์",
+      "Name": "Lembah Raptor",
       "OffsetTileX": 26.0,
       "OffsetTileY": -22.0,
       "RadiusTiles": 10.0,

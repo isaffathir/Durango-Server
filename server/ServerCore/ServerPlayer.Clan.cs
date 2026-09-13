@@ -39,7 +39,7 @@ public partial class ServerPlayer
 
     private bool RejectClanDisabled(PacketHeader header)
     {
-        Send(new Info { Text = "ระบบแคลนยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem klan belum aktif" }, header.Seq);
         Send(Aborts.Reason(), header.Seq);
         return false;
     }
@@ -71,13 +71,13 @@ public partial class ServerPlayer
         if (!PartyEnabled) { RejectClanDisabled(header); return; }
         if (_clanId != null)
         {
-            Send(new Info { Text = "คุณอยู่ในแคลนอยู่แล้ว" }, header.Seq);
+            Send(new Info { Text = "Kamu sudah berada di klan" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         if (string.IsNullOrEmpty(msg.ClanName) || msg.ClanName.Length > 20)
         {
-            Send(new Info { Text = "ชื่อแคลนต้อง 1-20 ตัวอักษร" }, header.Seq);
+            Send(new Info { Text = "Nama klan harus 1-20 karakter" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -85,7 +85,7 @@ public partial class ServerPlayer
         // ตรวจ DurangoCoin (ถ้า wallet enabled)
         if (WalletEnabled && !TryDebitWallet(Currency.PcCoin, 100))
         {
-            Send(new Info { Text = "ต้องมี DurangoCoin 100 เพื่อสร้างแคลน" }, header.Seq);
+            Send(new Info { Text = "Butuh 100 DurangoCoin untuk membuat klan" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -115,20 +115,20 @@ public partial class ServerPlayer
         if (!PartyEnabled) { RejectClanDisabled(header); return; }
         if (_clanId != null)
         {
-            Send(new Info { Text = "คุณอยู่ในแคลนอยู่แล้ว" }, header.Seq);
+            Send(new Info { Text = "Kamu sudah berada di klan" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         ClanSave clan = _world.GetClan(msg.ClanId);
         if (clan == null)
         {
-            Send(new Info { Text = "ไม่พบแคลนนี้" }, header.Seq);
+            Send(new Info { Text = "Klan ini tidak ditemukan" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         if (clan.ApplicantEntityIds.Contains(EntityId))
         {
-            Send(new Info { Text = "ส่งใบสมัครไปแล้ว" }, header.Seq);
+            Send(new Info { Text = "Permohonan sudah dikirim" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -158,20 +158,20 @@ public partial class ServerPlayer
         if (!PartyEnabled) { RejectClanDisabled(header); return; }
         if (_clanId == null || _clanRoleId < 2)
         {
-            Send(new Info { Text = "คุณไม่ใช่หัวหน้าแคลน" }, header.Seq);
+            Send(new Info { Text = "Kamu bukan ketua klan" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         ServerPlayer target = _world.FindPlayer(msg.EntityId);
         if (target == null)
         {
-            Send(new Info { Text = "ผู้เล่นออฟไลน์" }, header.Seq);
+            Send(new Info { Text = "Pemain offline" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         if (target._clanId != null)
         {
-            Send(new Info { Text = "ผู้เล่นนี้อยู่ในแคลนอยู่แล้ว" }, header.Seq);
+            Send(new Info { Text = "Pemain ini sudah berada di klan" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -194,14 +194,14 @@ public partial class ServerPlayer
         if (!PartyEnabled) { RejectClanDisabled(header); return; }
         if (_clanId == null || _clanRoleId < 2)
         {
-            Send(new Info { Text = "คุณไม่ใช่หัวหน้าแคลน" }, header.Seq);
+            Send(new Info { Text = "Kamu bukan ketua klan" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         string targetId = msg.EntityId;
         if (targetId == EntityId)
         {
-            Send(new Info { Text = "เตะตัวเองไม่ได้" }, header.Seq);
+            Send(new Info { Text = "Tidak bisa mengeluarkan diri sendiri" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -222,13 +222,13 @@ public partial class ServerPlayer
         if (!PartyEnabled) { RejectClanDisabled(header); return; }
         if (_clanId == null || _clanRoleId < 2)
         {
-            Send(new Info { Text = "คุณไม่ใช่หัวหน้าแคลน" }, header.Seq);
+            Send(new Info { Text = "Kamu bukan ketua klan" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         if (string.IsNullOrEmpty(msg.ClanName) || msg.ClanName.Length > 20)
         {
-            Send(new Info { Text = "ชื่อแคลนต้อง 1-20 ตัวอักษร" }, header.Seq);
+            Send(new Info { Text = "Nama klan harus 1-20 karakter" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -302,21 +302,21 @@ public partial class ServerPlayer
     private void HandleDonateToClanFund(DonateToClanFund msg, PacketHeader header)
     {
         if (!PartyEnabled) { RejectClanDisabled(header); return; }
-        Send(new Info { Text = "ระบบบริจาคคลังแคลนยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem donasi gudang klan belum aktif" }, header.Seq);
         Send(Aborts.Reason(), header.Seq);
     }
 
     private void HandleBreakAlly(BreakAlly msg, PacketHeader header)
     {
         if (!PartyEnabled) { RejectClanDisabled(header); return; }
-        Send(new Info { Text = "ระบบพันธมิตรแคลนยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem aliansi klan belum aktif" }, header.Seq);
         Send(Aborts.Reason(), header.Seq);
     }
 
     private void HandleSuggestAlly(SuggestAlly msg, PacketHeader header)
     {
         if (!PartyEnabled) { RejectClanDisabled(header); return; }
-        Send(new Info { Text = "ระบบพันธมิตรแคลนยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem aliansi klan belum aktif" }, header.Seq);
         Send(Aborts.Reason(), header.Seq);
     }
 
@@ -335,7 +335,7 @@ public partial class ServerPlayer
     private void HandleStartClanResearch(StartClanResearch msg, PacketHeader header)
     {
         if (!PartyEnabled) { RejectClanDisabled(header); return; }
-        Send(new Info { Text = "ระบบวิจัยแคลนยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem riset klan belum aktif" }, header.Seq);
         Send(Aborts.Reason(), header.Seq);
     }
 

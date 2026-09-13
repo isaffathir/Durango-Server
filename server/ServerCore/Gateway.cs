@@ -419,7 +419,7 @@ public partial class Gateway
 			if (hasSelectedCharacter && SaveStore.Peek<PlayerSave>(SaveStore.PlayerPath(entityId)) == null)
 			{
 				Console.WriteLine($"[gateway] {remoteIp} อ้าง id {entityId} ที่ไม่มีเซฟ " +
-					$"(ตัวละคร local ของ client) ⇒ ถือว่ายังไม่ได้เลือกตัวละคร ให้ไปสร้างใหม่");
+					$"(karakter lokal milik client) ⇒ dianggap belum memilih karakter, silakan buat baru");
 				entityId = generatedEntityId;
 				data = new GameServer.PlayerData { EntityId = entityId, Name = "" };
 				_gameServer.RegisterPlayerData(data);

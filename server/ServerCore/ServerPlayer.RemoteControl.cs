@@ -236,15 +236,15 @@ public partial class ServerPlayer
         switch (what)
         {
             case "axe":
-                GiveEquipTestItem("axe_onehand_stone_01", "ขวานหิน", "weapon_axe_onehand_stone_2", 0);
+                GiveEquipTestItem("axe_onehand_stone_01", "Kapak batu", "weapon_axe_onehand_stone_2", 0);
                 return $"ให้ขวานหินกับ {Name}";
             case "clothes":
-                GiveEquipTestItem("clothes_builder_01", "ชุดช่าง", "clothes_builder_01", 0);
+                GiveEquipTestItem("clothes_builder_01", "Kit tukang", "clothes_builder_01", 0);
                 return $"ให้ชุดช่างกับ {Name}";
             case "bonfire":
                 lock (_inventory)
                 {
-                    _inventory.Add(MakeCapsuleItem("capsulated_bonfire", "กองไฟ", "furniture_workbench_bonfire"));
+                    _inventory.Add(MakeCapsuleItem("capsulated_bonfire", "Api unggun", "furniture_workbench_bonfire"));
                 }
                 MarkDirty();
                 SendInventory();
@@ -252,7 +252,7 @@ public partial class ServerPlayer
             case "tent":
                 lock (_inventory)
                 {
-                    _inventory.Add(MakeCapsuleItem("capsulated_tent", "เต็นท์", "building_house_tent"));
+                    _inventory.Add(MakeCapsuleItem("capsulated_tent", "Tenda", "building_house_tent"));
                 }
                 MarkDirty();
                 SendInventory();
@@ -278,7 +278,7 @@ public partial class ServerPlayer
             case "box":
                 lock (_inventory)
                 {
-                    _inventory.Add(MakeCapsuleItem("capsulated_fur_box_03_leaf", "กล่องใบไม้", "furniture_box"));
+                    _inventory.Add(MakeCapsuleItem("capsulated_fur_box_03_leaf", "Kotak daun", "furniture_box"));
                 }
                 MarkDirty();
                 SendInventory();
@@ -287,11 +287,11 @@ public partial class ServerPlayer
             case "stone":
                 for (int i = 0; i < 5; i++)
                 {
-                    GiveEquipTestItem("stone", "หิน", "icon_nat_stone", 0);
+                    GiveEquipTestItem("stone", "Batu", "icon_nat_stone", 0);
                 }
                 return $"ให้หิน 5 ก้อนกับ {Name} (คราฟต์ใบมีดหินได้เลย)";
             case "knife":
-                GiveEquipTestItem("blade_stone", "ใบมีดหิน", "icon_nat_blade_stone", 0);
+                GiveEquipTestItem("blade_stone", "Mata pisau batu", "icon_nat_blade_stone", 0);
                 return $"ให้ใบมีดหินกับ {Name}";
             // ชุดทำอาหารครบเซ็ต — ไว้เทสเช็คลิสต์ทำอาหารโดยไม่ต้องออกไปล่า/ขุดดินเอง
             case "cook":
@@ -303,7 +303,7 @@ public partial class ServerPlayer
                 GiveByPrototype("grill_stone", 1, out _);
                 lock (_inventory)
                 {
-                    _inventory.Add(MakeCapsuleItem("capsulated_bonfire", "กองไฟ", "furniture_workbench_bonfire"));
+                    _inventory.Add(MakeCapsuleItem("capsulated_bonfire", "Api unggun", "furniture_workbench_bonfire"));
                     _inventory.Add(MakeCapsuleItem("capsulated_bonfire_01", "กองไฟใหญ่", "furniture_workbench_bonfire_01"));
                 }
                 MarkDirty();

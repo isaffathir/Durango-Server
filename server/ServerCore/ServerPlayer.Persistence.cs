@@ -39,7 +39,7 @@ public partial class ServerPlayer
         {
             if (hadSave)
             {
-                throw new InvalidDataException($"ไฟล์เซฟผู้เล่น {EntityId} อ่านไม่ได้และถูกกักกัน — ไม่สร้างตัวละครใหม่ทับ");
+                throw new InvalidDataException($"File save pemain {EntityId} tidak terbaca dan dikarantina — karakter baru tidak dibuat menimpanya");
             }
             GrantStarterItems();
             ApplySurvivalSave(null);          // เฟส C — ค่าเริ่มต้นเต็มหลอด
@@ -165,7 +165,7 @@ public partial class ServerPlayer
         else if (save.HasPosition)
         {
             Console.WriteLine("[island] {0} มาจากเกาะ '{1}' → เกิดที่จุดเข้าเกมของ '{2}'",
-                Name, string.IsNullOrEmpty(save.LastIsland) ? "(ไม่ระบุ)" : save.LastIsland, here);
+                Name, string.IsNullOrEmpty(save.LastIsland) ? "(tidak ditentukan)" : save.LastIsland, here);
         }
 
         // ที่เก็บ key/value ของ client — ส่งคืนตอนล็อกอินผ่าน Welcome.Storage (ดู SaveModels.ClientStorage)
@@ -257,13 +257,13 @@ public partial class ServerPlayer
         lock (_inventory)
         {
             // ไอเทมเริ่มต้น: กองไฟ (capsule) สำหรับวางสิ่งก่อสร้างโดยไม่ต้องคราฟ
-            _inventory.Add(MakeCapsuleItem("capsulated_bonfire", "กองไฟ", "furniture_workbench_bonfire"));
+            _inventory.Add(MakeCapsuleItem("capsulated_bonfire", "Api unggun", "furniture_workbench_bonfire"));
             // Beta 1.0: แจกขวานหินด้วย — มือเปล่าตีได้ ~6 หน่วย ล่าสัตว์แทบไม่ไหว
             // (ดูตารางสมดุลใน docs/testing/BETA-1.0-PLAN.md)
             _inventory.Add(MakeGatheredItem(new Generator
             {
                 Id = "axe_onehand_stone_01",
-                Name = "ขวานหิน",
+                Name = "Kapak batu",
                 Icon = "weapon_axe_onehand_stone_2"
             }));
         }

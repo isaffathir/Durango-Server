@@ -59,14 +59,14 @@ public static class AbilityData
     /// </summary>
     public static readonly Source[] Sources =
     {
-        new Source(Basic.Strength, "พลัง", Category.MeleeCombat, Category.Constructing),
-        new Source(Basic.Endurance, "ความอดทน", Category.Defense, Category.Survival),
-        new Source(Basic.Agility, "ความคล่องแคล่ว", Category.MeleeCombat, Category.RangedCombat),
-        new Source(Basic.Dexterity, "ความคล่องมือ", Category.Weaponcrafting, Category.Armorcrafting, Category.Process),
-        new Source(Basic.Perception, "การรับรู้", Category.Gathering, Category.RangedCombat),
-        new Source(Basic.Intelligence, "สติปัญญา", Category.Cooking, Category.Process),
-        new Source(Basic.Will, "ความมุ่งมั่น", Category.Survival, Category.Butchery),
-        new Source(Basic.Charisma, "เสน่ห์", Category.Cooking, Category.Armorcrafting)
+        new Source(Basic.Strength, "Kekuatan", Category.MeleeCombat, Category.Constructing),
+        new Source(Basic.Endurance, "Ketahanan", Category.Defense, Category.Survival),
+        new Source(Basic.Agility, "Kelincahan", Category.MeleeCombat, Category.RangedCombat),
+        new Source(Basic.Dexterity, "Ketangkasan", Category.Weaponcrafting, Category.Armorcrafting, Category.Process),
+        new Source(Basic.Perception, "Persepsi", Category.Gathering, Category.RangedCombat),
+        new Source(Basic.Intelligence, "Kecerdasan", Category.Cooking, Category.Process),
+        new Source(Basic.Will, "Tekad", Category.Survival, Category.Butchery),
+        new Source(Basic.Charisma, "Pesona", Category.Cooking, Category.Armorcrafting)
     };
 
     /// <summary>หา source ของ ability ตัวหนึ่ง (คืน null ถ้าไม่มีในตาราง)</summary>

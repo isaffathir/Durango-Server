@@ -162,7 +162,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.Equipment)
         {
-            RejectFeatureDisabled("Equipment", "Equip", "ระบบอุปกรณ์ยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("Equipment", "Equip", "Sistem perlengkapan belum aktif di ronde ini", header);
             return;
         }
         if (!IsPlayablePreset(msg.SlotType))
@@ -203,7 +203,7 @@ public partial class ServerPlayer
             if (!FitsSlot(prototype, slot))
             {
                 Console.WriteLine("[equip] ปฏิเสธ {0}: {1} ใส่ช่อง '{2}' ไม่ได้ (ของชิ้นนี้เป็นของช่อง '{3}')",
-                    Name, prototype, slot, EquipData.SlotOf(prototype) ?? "ใส่ไม่ได้");
+                    Name, prototype, slot, EquipData.SlotOf(prototype) ?? "Tidak bisa dipakai");
                 Send(Aborts.Reason(), header.Seq);
                 return;
             }
@@ -241,7 +241,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.Equipment)
         {
-            RejectFeatureDisabled("Equipment", "ChangeEquipSlotType", "ระบบอุปกรณ์ยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("Equipment", "ChangeEquipSlotType", "Sistem perlengkapan belum aktif di ronde ini", header);
             return;
         }
         if (!IsPlayablePreset(msg.SlotType))
@@ -262,7 +262,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.Equipment)
         {
-            RejectFeatureDisabled("Equipment", "AttachAccessory", "ระบบอุปกรณ์ยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("Equipment", "AttachAccessory", "Sistem perlengkapan belum aktif di ronde ini", header);
             return;
         }
         if (string.IsNullOrWhiteSpace(msg.AccessoryId) || msg.AccessoryId.Length > 128)
@@ -281,7 +281,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.Equipment)
         {
-            RejectFeatureDisabled("Equipment", "ResetAccessory", "ระบบอุปกรณ์ยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("Equipment", "ResetAccessory", "Sistem perlengkapan belum aktif di ronde ini", header);
             return;
         }
         _accessoryId = null;

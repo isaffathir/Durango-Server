@@ -157,7 +157,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.IslandTravel)
         {
-            RejectFeatureDisabled("IslandTravel", "Warp", "การเดินทางข้ามเกาะยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("IslandTravel", "Warp", "Perjalanan antar pulau belum aktif di ronde ini", header);
             return;
         }
         if (msg.Tile.x < 0 || msg.Tile.y < 0
@@ -199,7 +199,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.IslandTravel)
         {
-            RejectFeatureDisabled("IslandTravel", "WarpBack", "การเดินทางข้ามเกาะยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("IslandTravel", "WarpBack", "Perjalanan antar pulau belum aktif di ronde ini", header);
             return;
         }
         WorldPosition dest = _returningPoint.HasValue
@@ -221,7 +221,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.IslandTravel)
         {
-            RejectFeatureDisabled("IslandTravel", "WarpToPort", "การเดินทางข้ามเกาะยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("IslandTravel", "WarpToPort", "Perjalanan antar pulau belum aktif di ronde ini", header);
             return;
         }
         WorldPosition dest = FindNearestPOIPosition(Shared.System.PointOfInterest.Port);
@@ -252,7 +252,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.IslandTravel)
         {
-            RejectFeatureDisabled("IslandTravel", "IsWarpholeAvailable", "การเดินทางข้ามเกาะยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("IslandTravel", "IsWarpholeAvailable", "Perjalanan antar pulau belum aktif di ronde ini", header);
             return;
         }
         if (!_world.TryGetArtifact(msg.EntityId, out AppearArtifact artifact)
@@ -285,7 +285,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.IslandTravel)
         {
-            RejectFeatureDisabled("IslandTravel", "GetWarpCosts", "การเดินทางข้ามเกาะยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("IslandTravel", "GetWarpCosts", "Perjalanan antar pulau belum aktif di ronde ini", header);
             return;
         }
         var costs = new List<WarpCost>();
@@ -307,7 +307,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.IslandTravel)
         {
-            RejectFeatureDisabled("IslandTravel", "GetWarpBackCost", "การเดินทางข้ามเกาะยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("IslandTravel", "GetWarpBackCost", "Perjalanan antar pulau belum aktif di ronde ini", header);
             return;
         }
         Point2 rp = _returningPoint ?? _world.Terrain.EntryPoint;

@@ -61,14 +61,14 @@ public static class GatheringTools
     {
         if (string.IsNullOrEmpty(_path))
         {
-            return "ยังไม่ได้โหลด gathering_tools.json";
+            return "gathering_tools.json belum dimuat";
         }
         if (!File.Exists(_path))
         {
-            return "ไม่เจอไฟล์ " + _path;
+            return "File tidak ditemukan " + _path;
         }
         int n = Reload(quiet: false);
-        return n < 0 ? "อ่านไฟล์ไม่สำเร็จ ดู log" : $"โหลดเครื่องมือเก็บของ {n} รายการจาก {_path}";
+        return n < 0 ? "Gagal membaca file, lihat log" : $"Memuat {n} alat pengumpul dari {_path}";
     }
 
     /// <summary>tag เครื่องมือที่ต้องใช้ หรือ null ถ้ามือเปล่า</summary>

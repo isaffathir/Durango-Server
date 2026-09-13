@@ -213,7 +213,7 @@ public static class AccountStore
             && !_whitelist.Contains(entityId)
             && (string.IsNullOrEmpty(name) || !_whitelist.Contains(name.Trim())))
         {
-            reason = "ไม่ได้อยู่ในรายชื่อที่อนุญาต";
+            reason = "Tidak ada dalam daftar yang diizinkan";
             return false;
         }
 
@@ -245,7 +245,7 @@ public static class AccountStore
             && !string.IsNullOrEmpty(acc.ClaimedFromIp)
             && !SameClient(NormalizeIp(acc.ClaimedFromIp), remoteIp))
         {
-            reason = $"entity id นี้ถูกจองไว้จาก {acc.ClaimedFromIp} แล้ว";
+            reason = $"entity id ini sudah diklaim dari {acc.ClaimedFromIp}";
             return false;
         }
 
@@ -253,7 +253,7 @@ public static class AccountStore
             && !string.IsNullOrEmpty(ownerKey)
             && !string.Equals(acc.OwnerKey, ownerKey, StringComparison.Ordinal))
         {
-            reason = "ตัวละครนี้เป็นของบัญชีอื่น";
+            reason = "Karakter ini milik akun lain";
             return false;
         }
 

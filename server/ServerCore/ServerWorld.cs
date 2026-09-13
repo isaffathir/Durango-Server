@@ -160,14 +160,14 @@ public partial class ServerWorld
         int online = Count;
         if (joined && cfg.WelcomeInfo && who.WantsServerSideOnlineCount)
         {
-            // เกมของแท้ไม่แสดง Info ⇒ ใช้ RadioNotice (popup + บรรทัดในแท็บ "ระบบ")
-            who.SendNotice($"ยินดีต้อนรับสู่ {ServerName} · ออนไลน์ตอนนี้ {online} คน");
+            // เกมของแท้ไม่แสดง Info ⇒ ใช้ RadioNotice (popup + บรรทัดในแท็บ "Sistem")
+            who.SendNotice($"Selamat datang di {ServerName} · online sekarang {online} orang");
         }
         if (!cfg.OnlineCountInChat) return;
-        string name = string.IsNullOrEmpty(who.Name) ? "ผู้เล่น" : who.Name;
+        string name = string.IsNullOrEmpty(who.Name) ? "Pemain" : who.Name;
         string text = joined
-            ? $"{name} เข้าเกม · ออนไลน์ {online} คน"
-            : $"{name} ออกจากเกม · ออนไลน์ {online} คน";
+            ? $"{name} masuk game · online {online} orang"
+            : $"{name} keluar game · online {online} orang";
         ServerPlayer[] snapshot;
         lock (_lock)
         {
@@ -678,7 +678,7 @@ public partial class ServerWorld
                 float dx = ax - from.x, dy = ay - from.y;
                 if (dx * dx + dy * dy <= range * range)
                 {
-                    spotName = blueprint != null && blueprint.Contains("tent") ? "เต็นท์" : "กองไฟ";
+                    spotName = blueprint != null && blueprint.Contains("tent") ? "Tenda" : "Api unggun";
                     return true;
                 }
             }
@@ -991,7 +991,7 @@ public partial class ServerWorld
         {
             if (hadSave)
             {
-                throw new InvalidDataException($"ไฟล์เซฟโลกอ่านไม่ได้หรือ JSON เสียและถูกกักกัน: {worldPath}");
+                throw new InvalidDataException($"File save dunia tidak terbaca atau JSON rusak dan dikarantina: {worldPath}");
             }
             Console.WriteLine("[save] ยังไม่มีไฟล์เซฟโลก — เริ่มจากแมพเปล่า");
             EnsureNaturalPOIs();
@@ -1272,7 +1272,7 @@ public partial class ServerWorld
         }
         if (stale.Count > 0)
         {
-            BackupWorldSave("ก่อนเปลี่ยนไปใช้ POI จาก pois.yml");
+            BackupWorldSave("sebelum beralih ke POI dari pois.yml");
             foreach (string id in stale)
             {
                 RemoveArtifact(id);
@@ -1293,7 +1293,7 @@ public partial class ServerWorld
                                           && !shouldHave.Contains(id)).ToList();
         if (extras.Count > 0)
         {
-            BackupWorldSave("ก่อนเก็บ POI ที่วางซ้ำ");
+            BackupWorldSave("sebelum membersihkan POI duplikat");
             foreach (string id in extras)
             {
                 RemoveArtifact(id);
@@ -2191,7 +2191,7 @@ public partial class ServerWorld
                 return false;
             }
             generator = g;
-            // 🐛 เดิมพอ generator ชนิดที่จองถึงหน่วยสุดท้าย (เช่น "กิ่งไม้") จะ Remove(naturalId)
+            // 🐛 เดิมพอ generator ชนิดที่จองถึงหน่วยสุดท้าย (เช่น "Ranting") จะ Remove(naturalId)
             // ทั้งก้อนทันที ⇒ ต้นไม้ที่มีทั้งกิ่งไม้+ท่อนไม้ (ดู NaturalData.cs) หายไปทั้งต้นทั้งที่
             // ท่อนไม้ยังไม่ได้เก็บเลย ผู้เล่นรายงาน "เก็บแค่กิ่งไม้ แต่ต้นไม้หายไปก่อน" ตรงนี้เป๊ะ
             // แก้ให้เหมือน TryReserveCorpsePart ด้านล่าง: เอาออกแค่ชนิดที่หมด (RemoveAt) แล้วค่อยเช็คว่า

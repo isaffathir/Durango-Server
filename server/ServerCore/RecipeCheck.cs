@@ -26,7 +26,7 @@ public static class RecipeCheck
         int needTool = 0;
         foreach (KeyValuePair<string, RecipeMeta.Info> pair in RecipeMeta.Map)
         {
-            string cat = pair.Value.Category ?? "(ไม่ระบุ)";
+            string cat = pair.Value.Category ?? "(tidak ditentukan)";
             byCategory.TryGetValue(cat, out int n);
             byCategory[cat] = n + 1;
             if (pair.Value.Workbench != null && pair.Value.Workbench.Length > 0)
@@ -106,7 +106,7 @@ public static class RecipeCheck
                     mark = "⚠ ";
                 }
             }
-            string kind = meta.Type == 1 ? "แปรรูป" : (meta.Type == 2 ? "แก้ทรง" : "คราฟต์");
+            string kind = meta.Type == 1 ? "Olah" : (meta.Type == 2 ? "Ubah bentuk" : "Craft");
             Console.WriteLine($"{mark}{recipeId,-26} {kind} · {meta.Category,-16} โต๊ะ {wb,-18} เครื่องมือ {tools,-24} {meta.Duration:F0} วิ · {meta.Energy:F0} สตามินา · ได้ {meta.Count} ชิ้น");
         }
         Console.WriteLine();

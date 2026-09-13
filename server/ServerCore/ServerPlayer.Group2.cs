@@ -251,7 +251,7 @@ public partial class ServerPlayer
         MarkDirty();
         SendStatusEffects();
         SendStatistics();
-        Send(new Info { Text = "กินดิบแล้วปวดท้อง — เลือดจะค่อย ๆ ลดลงประมาณ 5 นาที" });
+        Send(new Info { Text = "Makan mentah bikin sakit perut — darah perlahan turun sekitar 5 menit" });
         Console.WriteLine("[item] {0} ปวดท้องจากของดิบ {1:F0} วิ", Name, seconds);
         NoteStomachache();      // ปวดท้องซ้ำ ๆ แล้วป่วย (ระบบป่วย)
     }

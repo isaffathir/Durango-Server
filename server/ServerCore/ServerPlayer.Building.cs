@@ -59,7 +59,7 @@ public partial class ServerPlayer
             // ⇒ ของที่เราส่งไป ModifiableCount = 0 ถูกกรองทิ้งหมด ช่องเลยขึ้นว่า "ไม่มีของ"
             // ทั้งที่มีอยู่เต็มกระเป๋า และ **packet ไม่เคยถูกส่งมาถึง server เลย** (client กันไว้ก่อน)
             //
-            // ช่องที่ใช้ `required_tags` (เช่นช่อง "น้ำ" ของ boiled_meat) เป็น General
+            // ช่องที่ใช้ `required_tags` (เช่นช่อง "Air" ของ boiled_meat) เป็น General
             // จึงผ่านปกติ — นี่คือเหตุผลที่บางช่องมีของบางช่องว่าง
             ModifiableCount = 1,
             ModifiedCount = 0,
@@ -122,7 +122,7 @@ public partial class ServerPlayer
             return;
         }
         // สิทธิ์ที่ดิน: ห้ามจองที่สร้างบนแปลงคนอื่นถ้าเจ้าของไม่ได้ให้สิทธิ์ Occupy
-        if (!RejectIfLandLocked(msg.Tile, Shared.Estate.AccessRights.Occupy, "จองที่สร้าง", header))
+        if (!RejectIfLandLocked(msg.Tile, Shared.Estate.AccessRights.Occupy, "Pesan lokasi bangunan", header))
         {
             return;
         }
@@ -131,7 +131,7 @@ public partial class ServerPlayer
         if (mine >= MaxArtifactsPerPlayer)
         {
             Console.WriteLine("[build] ปฏิเสธ {0}: สร้างครบเพดานแล้ว ({1} ชิ้น)", Name, mine);
-            Send(new Info { Text = $"สร้างได้สูงสุด {MaxArtifactsPerPlayer} ชิ้นต่อคน — ทุบของเก่าก่อน" }, header.Seq);
+            Send(new Info { Text = $"Maksimal {MaxArtifactsPerPlayer} bangunan per orang — hancurkan yang lama dulu" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -144,7 +144,7 @@ public partial class ServerPlayer
             });
         if (placeBefore != null && placeBefore.IsCancelled)
         {
-            Send(new Info { Text = placeBefore.CancelReason ?? "mod ยกเลิกการวางสิ่งปลูกสร้าง" }, header.Seq);
+            Send(new Info { Text = placeBefore.CancelReason ?? "mod membatalkan penempatan bangunan" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -161,13 +161,13 @@ public partial class ServerPlayer
             return;
         }
         // [แก้เอง] 25 ส.ค. 2026 — สิ่งก่อสร้าง event (คริสต์มาส/ฮาโลวีน ฯลฯ) วางได้เฉพาะ admin
-        // handler นี้เป็นเส้นทาง "จองที่สร้าง" ที่ไม่เคยเช็ค unlock/recipe อะไรเลย (client ส่ง
+        // handler นี้เป็นเส้นทาง "Pesan lokasi bangunan" ที่ไม่เคยเช็ค unlock/recipe อะไรเลย (client ส่ง
         // BlueprintId มาตรง ๆ ก็วางได้ทันทีถ้ามีอยู่ใน BlueprintType) ต้องกันตรงนี้ถึงจะจริง
         if (RecipeData.IsEventBlueprint(msg.BlueprintId) && !IsAdmin)
         {
             Console.WriteLine("[build] ปฏิเสธ {0}: '{1}' เป็นของอีเวนต์ — admin เท่านั้น", Name, msg.BlueprintId);
             RestoreStamina(StaminaCostBuild, 0f);
-            Send(new Info { Text = "สิ่งก่อสร้างนี้เป็นของอีเวนต์ — ใช้ได้แค่แอดมิน" }, header.Seq);
+            Send(new Info { Text = "Bangunan ini milik event — hanya admin yang bisa memakainya" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -178,7 +178,7 @@ public partial class ServerPlayer
         {
             Console.WriteLine("[build] ปฏิเสธ {0}: '{1}' ยังไม่ปลดล็อก (ต้องเรียนสกิลที่เกี่ยวข้องก่อน)", Name, msg.BlueprintId);
             RestoreStamina(StaminaCostBuild, 0f);
-            Send(new Info { Text = "สิ่งก่อสร้างนี้ยังไม่ปลดล็อก — เรียนสกิลที่เกี่ยวข้องก่อน" }, header.Seq);
+            Send(new Info { Text = "Bangunan ini belum terbuka — pelajari skill terkait dulu" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -188,7 +188,7 @@ public partial class ServerPlayer
         {
             Console.WriteLine("[build] ปฏิเสธ {0}: '{1}' เป็นแบบก่อสร้างฟรีและปิดอยู่", Name, msg.BlueprintId);
             RestoreStamina(StaminaCostBuild, 0f);
-            Send(new Info { Text = "การสร้างสิ่งก่อสร้างฟรีถูกปิดอยู่ — ต้องใช้แบบที่มีวัตถุดิบ" }, header.Seq);
+            Send(new Info { Text = "Membangun gratis dinonaktifkan — harus memakai blueprint dengan bahan" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -210,7 +210,7 @@ public partial class ServerPlayer
             Console.WriteLine("[build] ปฏิเสธ {0}: พื้นที่ {1},{2} ขนาด {3}x{4} ทับสิ่งปลูกสร้างเดิม",
                 Name, msg.Tile.x, msg.Tile.y, size.x, size.y);
             RestoreStamina(StaminaCostBuild, 0f);
-            Send(new Info { Text = "ตรงนี้มีสิ่งปลูกสร้างอยู่แล้ว" }, header.Seq);
+            Send(new Info { Text = "Di sini sudah ada bangunan" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -271,7 +271,7 @@ public partial class ServerPlayer
 	{
 		if (!ServerConfig.Current.Features.Building)
         {
-            RejectFeatureDisabled("Building", "PlaceCapsulatedArtifact", "ระบบก่อสร้างยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("Building", "PlaceCapsulatedArtifact", "Sistem bangunan belum aktif di ronde ini", header);
             return;
         }
         if (Dead || IsItemLocked(msg.ItemId))
@@ -294,7 +294,7 @@ public partial class ServerPlayer
             return;
         }
         // สิทธิ์ที่ดิน: วางของสำเร็จรูปบนแปลงคนอื่นก็ต้องมีสิทธิ์ Occupy เหมือนการจองที่สร้าง
-        if (!RejectIfLandLocked(msg.Tile, Shared.Estate.AccessRights.Occupy, "วางสิ่งปลูกสร้าง", header))
+        if (!RejectIfLandLocked(msg.Tile, Shared.Estate.AccessRights.Occupy, "Tempatkan bangunan", header))
         {
             return;
         }
@@ -308,7 +308,7 @@ public partial class ServerPlayer
         if (!AllowFreeBuild)
         {
             Console.WriteLine("[build] ปฏิเสธ {0}: วางแคปซูล '{1}' แบบไม่ใช้วัสดุถูกปิดอยู่", Name, blueprintId);
-            Send(new Info { Text = "การวางสิ่งก่อสร้างแบบไม่ใช้วัตถุดิบถูกปิดอยู่ — ต้องสร้างผ่านแบบและใส่วัตถุดิบ" }, header.Seq);
+            Send(new Info { Text = "Menempatkan bangunan tanpa bahan dinonaktifkan — bangun lewat blueprint dan isi bahannya" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -317,7 +317,7 @@ public partial class ServerPlayer
         if (RecipeData.IsEventBlueprint(blueprintId) && !IsAdmin)
         {
             Console.WriteLine("[build] ปฏิเสธ {0}: แคปซูล '{1}' เป็นของอีเวนต์ — admin เท่านั้น", Name, blueprintId);
-            Send(new Info { Text = "สิ่งก่อสร้างนี้เป็นของอีเวนต์ — ใช้ได้แค่แอดมิน" }, header.Seq);
+            Send(new Info { Text = "Bangunan ini milik event — hanya admin yang bisa memakainya" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -384,12 +384,12 @@ public partial class ServerPlayer
         reason = null;
         if (!_world.TryGetArtifactBlueprint(entityId, out string blueprintId) || string.IsNullOrEmpty(blueprintId))
         {
-            reason = "ไม่รู้ชนิดของสิ่งปลูกสร้างนี้";
+            reason = "Jenis bangunan ini tidak dikenal";
             return false;
         }
         if (!BlueprintRequirements.TryGet(blueprintId, out slots))
         {
-            reason = $"ไม่มีข้อมูลวัตถุดิบของ {blueprintId}";
+            reason = $"Tidak ada data bahan untuk {blueprintId}";
             return false;
         }
         return true;
@@ -402,7 +402,7 @@ public partial class ServerPlayer
         reason = null;
         if (request == null || request.Count == 0)
         {
-            reason = "ไม่ได้เลือกวัตถุดิบ";
+            reason = "Bahan belum dipilih";
             return false;
         }
 
@@ -412,7 +412,7 @@ public partial class ServerPlayer
         {
             if (!slotById.ContainsKey(pair.Key))
             {
-                reason = $"ไม่มีช่อง '{pair.Key}' ในแบบก่อสร้าง";
+                reason = $"Tidak ada slot '{pair.Key}' di blueprint";
                 return false;
             }
         }
@@ -430,7 +430,7 @@ public partial class ServerPlayer
             int existing = reserved != null && reserved.TryGetValue(pair.Key, out List<Item> old) ? old.Count : 0;
             if (existing + given.Length > slot.Max)
             {
-                reason = $"ช่อง '{slot.Id}' ใส่ได้มากสุด {slot.Max} ชิ้น";
+                reason = $"Slot '{slot.Id}' maksimal {slot.Max} buah";
                 return false;
             }
             for (int i = 0; i < given.Length; i++)
@@ -438,12 +438,12 @@ public partial class ServerPlayer
                 string id = given[i];
                 if (string.IsNullOrEmpty(id) || !used.Add(id))
                 {
-                    reason = $"ไอเทม {id ?? "(ว่าง)"} ถูกใช้ซ้ำ";
+                    reason = $"Item {id ?? "(ว่าง)"} dipakai dua kali";
                     return false;
                 }
                 if (_equippedItems.ContainsValue(id) || IsItemLocked(id))
                 {
-                    reason = $"ไอเทม {id} ถูกใช้งานหรือล็อกอยู่";
+                    reason = $"Item {id} sedang dipakai atau terkunci";
                     return false;
                 }
                 Item item;
@@ -452,14 +452,14 @@ public partial class ServerPlayer
                     int index = _inventory.FindIndex(x => x.Id == id);
                     if (index < 0)
                     {
-                        reason = $"ไม่มีไอเทม {id} อยู่ในกระเป๋า";
+                        reason = $"Tidak ada item {id} di tas";
                         return false;
                     }
                     item = _inventory[index];
                 }
                 if (!MatchesAny(item.Prototype, slot.Tags) || !MatchesAny(item.Prototype, slot.Materials))
                 {
-                    reason = $"ไอเทม {item.Prototype} ไม่ตรงกับช่อง '{slot.Id}'";
+                    reason = $"Item {item.Prototype} tidak cocok dengan slot '{slot.Id}'";
                     return false;
                 }
                 itemIds.Add(id);
@@ -482,7 +482,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.Building)
         {
-            RejectFeatureDisabled("Building", "PutMaterials", "ระบบก่อสร้างยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("Building", "PutMaterials", "Sistem bangunan belum aktif di ronde ini", header);
             return;
         }
         if (Dead)
@@ -504,7 +504,7 @@ public partial class ServerPlayer
         }
         if (artifact.States.BuildingState != BuildingState.Occupied)
         {
-            Send(new Info { Text = "สิ่งปลูกสร้างนี้สร้างเสร็จแล้ว — ไม่ต้องใส่วัสดุ" }, header.Seq);
+            Send(new Info { Text = "Bangunan ini sudah selesai — tidak perlu bahan lagi" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -520,7 +520,7 @@ public partial class ServerPlayer
             out itemIds, out reason);
         if (!validDeposit)
         {
-            string message = slotsReason ?? reason ?? "วัตถุดิบไม่ถูกต้อง";
+            string message = slotsReason ?? reason ?? "Bahan tidak valid";
             Console.WriteLine("[build] PutMaterials ปฏิเสธ {0}: {1}", Name, message);
             Send(new Info { Text = message }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
@@ -560,7 +560,7 @@ public partial class ServerPlayer
             {
                 foreach (var pair in deposits) _inventory.AddRange(pair.Value);
             }
-            Send(new Info { Text = "วัสดุในช่องนี้ถูกเติมครบโดยผู้เล่นคนอื่นแล้ว" }, header.Seq);
+            Send(new Info { Text = "Bahan di slot ini sudah dipenuhi pemain lain" }, header.Seq);
             SendInventory();
             Send(Aborts.Reason(), header.Seq);
             return;
@@ -577,7 +577,7 @@ public partial class ServerPlayer
         if (!ServerConfig.Current.Features.Building)
         {
             Console.WriteLine("[feature] ปฏิเสธ {0}: ระบบก่อสร้างปิดอยู่ในรอบนี้ (Features.Building)", Name);
-            Send(new Info { Text = "ระบบก่อสร้างยังไม่เปิดในรอบนี้" }, header.Seq);
+            Send(new Info { Text = "Sistem bangunan belum aktif di ronde ini" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -604,20 +604,20 @@ public partial class ServerPlayer
         {
             Console.WriteLine("[build] ปฏิเสธ {0}: {1} สร้างเสร็จไปแล้ว (สถานะ {2})",
                 Name, msg.EntityId, target.States.BuildingState);
-            Send(new Info { Text = "สิ่งปลูกสร้างนี้สร้างเสร็จแล้ว" }, header.Seq);
+            Send(new Info { Text = "Bangunan ini sudah selesai" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         if (!IsWithinReach(target.Tile))
         {
-            Send(new Info { Text = "ต้องเข้าไปใกล้ ๆ ก่อนถึงจะสร้างได้" }, header.Seq);
+            Send(new Info { Text = "Harus mendekat dulu untuk membangun" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         if (!TryGetBuildSlots(msg.EntityId, out BlueprintRequirements.Slot[] buildSlots, out string slotReason)
             || !AreBuildSlotsComplete(buildSlots, _world.GetArtifactMaterials(msg.EntityId)))
         {
-            string message = slotReason ?? "ใส่วัตถุดิบสำหรับก่อสร้างยังไม่ครบ";
+            string message = slotReason ?? "Bahan bangunan belum lengkap";
             Console.WriteLine("[build] ปฏิเสธ {0}: {1}", Name, message);
             Send(new Info { Text = message }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
@@ -626,7 +626,7 @@ public partial class ServerPlayer
         IModEventContext? beforeComplete = PluginManager.Instance?.FireEvent("building.before_complete", this, true, false,
             new Dictionary<string, string>(StringComparer.Ordinal) { ["entity_id"] = msg.EntityId ?? "" });
         if (beforeComplete?.IsCancelled == true)
-        { Send(new Info { Text = beforeComplete.CancelReason ?? "การก่อสร้างถูกยกเลิกโดยม็อด" }, header.Seq); Send(Aborts.Reason(), header.Seq); return; }
+        { Send(new Info { Text = beforeComplete.CancelReason ?? "Pembangunan dibatalkan oleh mod" }, header.Seq); Send(Aborts.Reason(), header.Seq); return; }
         // กันยิงซ้ำระหว่างที่ตัวเดิมยังนับเวลา 2 วิอยู่ (สถานะยังไม่เปลี่ยนจนกว่าจะครบเวลา)
         if (!_buildingNow.Add(msg.EntityId))
         {
@@ -656,7 +656,7 @@ public partial class ServerPlayer
         }
         if (!TrySpendStamina(buildEnergy, ActionKind.Build))
         {
-            _buildingNow.Remove(msg.EntityId);     // ไม่งั้นค้างว่า "กำลังสร้าง" ตลอดกาล
+            _buildingNow.Remove(msg.EntityId);     // ไม่งั้นค้างว่า "Sedang membangun" ตลอดกาล
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -719,15 +719,15 @@ public partial class ServerPlayer
         if (!_world.TryGetArtifact(msg.EntityId, out AppearArtifact artifact))
         {
             Console.WriteLine("[build] destruct ปฏิเสธ: ไม่รู้จัก entity '{0}'", msg.EntityId);
-            Send(new Info { Text = "ไม่พบสิ่งก่อสร้างนี้" });
-            Send(Aborts.Reason("ไม่พบสิ่งก่อสร้างนี้"), header.Seq);
+            Send(new Info { Text = "Bangunan ini tidak ditemukan" });
+            Send(Aborts.Reason("Bangunan ini tidak ditemukan"), header.Seq);
             return;
         }
         if (!CanModifyArtifact(artifact) && !IsAdmin)
         {
             string why = string.IsNullOrEmpty(artifact.FounderEntityId)
-                ? "สิ่งนี้เป็นของโลก ทุบไม่ได้ — ทุบได้เฉพาะที่ตัวเองสร้าง"
-                : "ต้องเป็นเจ้าของถึงจะทุบได้";
+                ? "Ini milik dunia, tidak bisa dihancurkan — hanya bangunan sendiri yang bisa"
+                : "Harus pemiliknya untuk menghancurkan";
             Console.WriteLine("[build] destruct ปฏิเสธ: {0} ไม่ใช่เจ้าของ {1}", EntityId, msg.EntityId);
             Send(new Info { Text = why });
             Send(Aborts.Reason(why), header.Seq);
@@ -739,15 +739,15 @@ public partial class ServerPlayer
         if (!IsWithinReach(artifact.Tile))
         {
             Console.WriteLine("[build] destruct ปฏิเสธ {0}: {1} ไกลเกินเอื้อม", Name, msg.EntityId);
-            Send(new Info { Text = "ต้องเข้าไปใกล้ ๆ ก่อนถึงจะทุบได้" });
-            Send(Aborts.Reason("ต้องเข้าไปใกล้ ๆ ก่อนถึงจะทุบได้"), header.Seq);
+            Send(new Info { Text = "Harus mendekat dulu untuk menghancurkan" });
+            Send(Aborts.Reason("Harus mendekat dulu untuk menghancurkan"), header.Seq);
             return;
         }
 
         IModEventContext? beforeDestroy = PluginManager.Instance?.FireEvent("building.before_destroy", this, true, false,
             new Dictionary<string, string>(StringComparer.Ordinal) { ["entity_id"] = msg.EntityId ?? "" });
         if (beforeDestroy?.IsCancelled == true)
-        { Send(new Info { Text = beforeDestroy.CancelReason ?? "การทำลายถูกยกเลิกโดยม็อด" }, header.Seq); Send(Aborts.Reason(), header.Seq); return; }
+        { Send(new Info { Text = beforeDestroy.CancelReason ?? "Penghancuran dibatalkan oleh mod" }, header.Seq); Send(Aborts.Reason(), header.Seq); return; }
 
         // ทุบ = 10 + ความทนทาน/2 (constants.json → build/destruct/energy)
         // เดิมทุบฟรี ไม่เสียสตามินาเลย ทั้งที่ต้นฉบับให้ทุบแพงกว่าสร้างเสียอีก
@@ -758,8 +758,8 @@ public partial class ServerPlayer
         if (!TrySpendStamina(destructEnergy, ActionKind.Build))
         {
             Console.WriteLine("[survival] {0} สตามินาไม่พอสำหรับทุบ (ต้องใช้ {1:F0})", Name, destructEnergy);
-            Send(new Info { Text = $"สตามินาไม่พอ — ทุบของชิ้นนี้ต้องใช้ {destructEnergy:F0} หน่วย" }, header.Seq);
-            Send(Aborts.Reason("สตามินาไม่พอสำหรับทุบ"), header.Seq);
+            Send(new Info { Text = $"Stamina tidak cukup — menghancurkan ini butuh {destructEnergy:F0}" }, header.Seq);
+            Send(Aborts.Reason("Stamina tidak cukup untuk menghancurkan"), header.Seq);
             return;
         }
 
@@ -781,7 +781,7 @@ public partial class ServerPlayer
         if (refunded > 0 || stored.Count > 0)
         {
             Console.WriteLine("[build] destruct คืนวัสดุ {0} ชิ้นและของในกล่อง {1} ชิ้นให้ {2}", refunded, stored.Count, Name);
-            Send(new Info { Text = $"ได้รับวัสดุคืน {refunded} ชิ้น และของในกล่อง {stored.Count} ชิ้น" });
+            Send(new Info { Text = $"Bahan dikembalikan {refunded} buah dan isi kotak {stored.Count} buah" });
         }
 
         // โหมด Online ตัวเกมรอคำตอบ Destructing ก่อนจะเล่นท่าทุบ

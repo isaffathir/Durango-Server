@@ -75,7 +75,7 @@ public static class SaveStore
             T save = JsonConvert.DeserializeObject<T>(json, Settings);
             if (save == null)
             {
-                throw new InvalidDataException("ไฟล์เซฟว่างหรือไม่ใช่ JSON object");
+                throw new InvalidDataException("File save kosong atau bukan objek JSON");
             }
             if (save is SaveEnvelope envelope)
             {
@@ -138,11 +138,11 @@ public static class SaveStore
     {
         if (save.Version > SaveEnvelope.CurrentVersion)
         {
-            throw new InvalidDataException($"schema v{save.Version} ใหม่กว่า server นี้ (รองรับถึง v{SaveEnvelope.CurrentVersion})");
+            throw new InvalidDataException($"schema v{save.Version} lebih baru dari server ini (didukung sampai v{SaveEnvelope.CurrentVersion})");
         }
         if (save.Version < 0)
         {
-            throw new InvalidDataException($"schema version {save.Version} ไม่ถูกต้อง");
+            throw new InvalidDataException($"schema version {save.Version} tidak valid");
         }
         if (save.Version < SaveEnvelope.CurrentVersion)
         {
@@ -163,7 +163,7 @@ public static class SaveStore
             string json = File.ReadAllText(tmp);
             if (JsonConvert.DeserializeObject(json, Settings) == null)
             {
-                throw new InvalidDataException("ไฟล์ชั่วคราวว่างหรือไม่ใช่ JSON");
+                throw new InvalidDataException("File sementara kosong atau bukan JSON");
             }
             File.Move(tmp, path, overwrite: false);
             Console.WriteLine($"[save] กู้ไฟล์ชั่วคราว {tmp} เป็น {path}");
@@ -171,7 +171,7 @@ public static class SaveStore
         }
         catch (Exception e)
         {
-            Quarantine(tmp, "กู้ไฟล์ชั่วคราวไม่สำเร็จ: " + e.Message);
+            Quarantine(tmp, "Gagal memulihkan file sementara: " + e.Message);
             return false;
         }
     }

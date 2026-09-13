@@ -57,8 +57,8 @@ public partial class ServerPlayer
             Send(new Info
             {
                 Text = string.IsNullOrEmpty(reason)
-                    ? "ป่วยแล้ว — ทำงานช้าลง เปลืองแรง เหนื่อยไว และเดินช้าลง"
-                    : $"ป่วยแล้ว ({reason}) — ทำงานช้าลง เปลืองแรง เหนื่อยไว และเดินช้าลง"
+                    ? "Sakit — kerja lebih lambat, boros tenaga, cepat lelah, dan jalan lebih pelan"
+                    : $"Sakit ({reason}) — kerja lebih lambat, boros tenaga, cepat lelah, dan jalan lebih pelan"
             });
             Console.WriteLine("[sick] {0} ป่วย ({1}) นาน {2:F0} วิ", Name, reason ?? "-", cfg.DurationSeconds);
         }
@@ -73,7 +73,7 @@ public partial class ServerPlayer
         SendStatusEffects();
         RefreshFatigueFromStatusEffects();
         PushMoveSpeed();
-        Send(new Info { Text = "หายป่วยแล้ว" });
+        Send(new Info { Text = "Sudah sembuh" });
         Console.WriteLine("[sick] {0} หายป่วย", Name);
         return true;
     }
@@ -101,7 +101,7 @@ public partial class ServerPlayer
         _stomachacheStacks++;
         if (_stomachacheStacks >= cfg.StomachacheStacksToSick)
         {
-            MakeSick("กินของดิบซ้ำ ๆ");
+            MakeSick("terus makan makanan mentah");
         }
     }
 
@@ -120,7 +120,7 @@ public partial class ServerPlayer
             _coldWetSeconds += elapsed;
             if (_coldWetSeconds >= cfg.ColdWetSeconds)
             {
-                MakeSick("ตัวเปียกอยู่ในที่หนาวนานเกินไป");
+                MakeSick("basah di tempat dingin terlalu lama");
             }
         }
         else if (_coldWetSeconds > 0)

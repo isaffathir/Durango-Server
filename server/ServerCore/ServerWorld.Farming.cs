@@ -263,8 +263,8 @@ public partial class ServerWorld
 
         Console.WriteLine("[farm] {0} ({1}) โตแล้ว — {2} x{3}{4}{5}",
             plot.ArtifactId, crop.SeedId, crop.ProductId, amount,
-            healthy ? "" : " (น้ำไม่ครบ ได้แค่ขั้นต่ำ)",
-            plot.Fitness == Fitness.Bad ? " (ผิดไบโอม)" : "");
+            healthy ? "" : " (air kurang, hanya hasil minimum)",
+            plot.Fitness == Fitness.Bad ? " (bioma tidak cocok)" : "");
         ApplyFarmToArtifact(plot);
         MarkDirty();
     }

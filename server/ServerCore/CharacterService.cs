@@ -196,7 +196,7 @@ public sealed class CharacterService
         {
             Console.WriteLine($"[id] ปฏิเสธการสร้างตัวละครจาก {createIpEarly} — ยังไม่ได้ผูกไอดี");
             return new WebServer.JsonResponse(
-                new JObject { ["error"] = "ต้องสมัครและผูกไอดีที่หน้า /id ก่อนสร้างตัวละคร" }.ToString(),
+                new JObject { ["error"] = "Harus daftar dan menautkan ID di halaman /id sebelum membuat karakter" }.ToString(),
                 HttpStatusCode.Forbidden);
         }
 

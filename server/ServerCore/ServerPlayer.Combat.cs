@@ -82,7 +82,7 @@ public partial class ServerPlayer
         if (!ServerConfig.Current.Features.Combat)
         {
             Console.WriteLine("[feature] ปฏิเสธ {0}: ระบบต่อสู้ปิดอยู่ในรอบนี้ (Features.Combat)", Name);
-            Send(new Info { Text = "ระบบต่อสู้ยังไม่เปิดในรอบนี้" }, header.Seq);
+            Send(new Info { Text = "Sistem pertarungan belum aktif di ronde ini" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -112,7 +112,7 @@ public partial class ServerPlayer
         if (!IsActionUnlocked(action.Id))
         {
             Console.WriteLine("[combat] ปฏิเสธ {0}: ยังไม่ได้เรียนสกิลที่ปลดล็อกท่า {1}", Name, action.Id);
-            Send(new Info { Text = "ต้องเรียนสกิลก่อนจึงจะใช้ท่านี้ได้" }, header.Seq);
+            Send(new Info { Text = "Pelajari skill-nya dulu untuk memakai jurus ini" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -157,12 +157,12 @@ public partial class ServerPlayer
             ServerPlayer targetPlayer = _world.FindPlayer(msg.TargetEntityId);
             if (!ServerConfig.Current.Features.Pvp)
             {
-                RejectFeatureDisabled("Pvp", "UseBattleAction", "PvP ยังไม่เปิดในรอบนี้", header);
+                RejectFeatureDisabled("Pvp", "UseBattleAction", "PvP belum aktif di ronde ini", header);
                 return;
             }
             if (Level < 20 || targetPlayer == null || targetPlayer.Level < 20)
             {
-                Send(new Info { Text = "PvP เปิดสำหรับผู้เล่นเลเวล 20 ขึ้นไปเท่านั้น" }, header.Seq);
+                Send(new Info { Text = "PvP hanya untuk pemain level 20 ke atas" }, header.Seq);
                 Send(Aborts.Reason(), header.Seq);
                 return;
             }
@@ -178,7 +178,7 @@ public partial class ServerPlayer
         IModEventContext? beforeAttack = PluginManager.Instance?.FireEvent("combat.before_attack", this, true, false,
             new Dictionary<string, string>(StringComparer.Ordinal) { ["target_id"] = msg.TargetEntityId ?? "", ["action_id"] = action.Id.ToString() });
         if (beforeAttack?.IsCancelled == true)
-        { Send(new Info { Text = beforeAttack.CancelReason ?? "การโจมตีถูกยกเลิกโดยม็อด" }, header.Seq); Send(Aborts.Reason(), header.Seq); return; }
+        { Send(new Info { Text = beforeAttack.CancelReason ?? "Serangan dibatalkan oleh mod" }, header.Seq); Send(Aborts.Reason(), header.Seq); return; }
 
         float staminaCost = Math.Max(action.Stamina, StaminaCostAttackMin);
         if (!TrySpendStamina(staminaCost, ActionKind.Combat))
@@ -380,7 +380,7 @@ public partial class ServerPlayer
             return;
         }
         ReviveAtSpawn();
-        Send(default(Revived), header.Seq);     // ปิด UI "รอฟื้น" ของคนที่กดปุ่มเอง
+        Send(default(Revived), header.Seq);     // ปิด UI "Menunggu pulih" ของคนที่กดปุ่มเอง
         QuestProgress(QuestData.Goal.Revive);
     }
 
@@ -444,7 +444,7 @@ public partial class ServerPlayer
             int index = _inventory.FindIndex(x => string.Equals(x.Prototype, "gunpowder_arrow", StringComparison.Ordinal));
             if (index < 0)
             {
-                Send(new Info { Text = "ไม่มีกระสุน ต้องคราฟต์ลูกธนูก่อน" }, replyOf);
+                Send(new Info { Text = "Tidak ada amunisi, craft anak panah dulu" }, replyOf);
                 Send(Aborts.Reason(), replyOf);
                 return false;
             }

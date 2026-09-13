@@ -41,7 +41,7 @@ public partial class ServerPlayer
         if (!ServerConfig.Current.Features.Farming)
         {
             Console.WriteLine("[feature] ปฏิเสธ {0}: ระบบปลูกผักปิดอยู่ในรอบนี้ (Features.Farming)", Name);
-            Send(new Info { Text = "ระบบปลูกผักยังไม่เปิดในรอบนี้" }, header.Seq);
+            Send(new Info { Text = "Sistem bercocok tanam belum aktif di ronde ini" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return false;
         }
@@ -72,14 +72,14 @@ public partial class ServerPlayer
         if (artifact.States.BuildingState != BuildingState.Built)
         {
             Console.WriteLine("[farm] ปฏิเสธ {0}: {1} ยังสร้างไม่เสร็จ", Name, entityId);
-            Send(new Info { Text = "แปลงนี้ยังสร้างไม่เสร็จ" }, header.Seq);
+            Send(new Info { Text = "Petak ini belum selesai dibangun" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return false;
         }
         if (!CanModifyArtifact(artifact))
         {
             Console.WriteLine("[farm] ปฏิเสธ {0}: ไม่ใช่เจ้าของแปลง {1}", Name, entityId);
-            Send(new Info { Text = "แปลงนี้ไม่ใช่ของคุณ" }, header.Seq);
+            Send(new Info { Text = "Petak ini bukan milikmu" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return false;
         }
@@ -103,7 +103,7 @@ public partial class ServerPlayer
         if (_world.TryGetFarm(msg.EntityId, out ServerWorld.FarmPlot existing))
         {
             Console.WriteLine("[farm] ปฏิเสธ {0}: แปลง {1} มี {2} ปลูกอยู่แล้ว", Name, msg.EntityId, existing.SeedId);
-            Send(new Info { Text = "แปลงนี้มีต้นอยู่แล้ว — ถอนก่อนถึงจะปลูกใหม่ได้" }, header.Seq);
+            Send(new Info { Text = "Petak ini sudah ada tanamannya — cabut dulu sebelum menanam lagi" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -117,14 +117,14 @@ public partial class ServerPlayer
         if (!CropData.TryGet(seed.Prototype, out CropData.CropInfo crop))
         {
             Console.WriteLine("[farm] ปฏิเสธ {0}: {1} ไม่ใช่เมล็ดที่ปลูกได้", Name, seed.Prototype);
-            Send(new Info { Text = "ของชิ้นนี้ปลูกไม่ได้" }, header.Seq);
+            Send(new Info { Text = "Barang ini tidak bisa ditanam" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         IModEventContext? beforePlant = PluginManager.Instance?.FireEvent("farm.before_plant", this, true, false,
             new Dictionary<string, string>(StringComparer.Ordinal) { ["entity_id"] = msg.EntityId ?? "", ["seed_item_id"] = seed.Id ?? "", ["seed_prototype"] = seed.Prototype ?? "" });
         if (beforePlant?.IsCancelled == true)
-        { Send(new Info { Text = beforePlant.CancelReason ?? "การปลูกถูกยกเลิกโดยม็อด" }, header.Seq); Send(Aborts.Reason(), header.Seq); return; }
+        { Send(new Info { Text = beforePlant.CancelReason ?? "Penanaman dibatalkan oleh mod" }, header.Seq); Send(Aborts.Reason(), header.Seq); return; }
         if (!TrySpendStamina(FarmCfg.StaminaCostPlant))
         {
             Console.WriteLine("[survival] {0} สตามินาไม่พอสำหรับปลูก", Name);
@@ -158,7 +158,7 @@ public partial class ServerPlayer
             Name, crop.SeedId, msg.EntityId, plot.GrowsUntil - now, fit);
         if (fit == Fitness.Bad)
         {
-            Send(new Info { Text = $"{crop.Name} ไม่ชอบพื้นที่แบบนี้ — โตช้าลงและได้ผลน้อยลง" });
+            Send(new Info { Text = $"{crop.Name} tidak cocok di tempat ini — tumbuh lebih lambat dan hasil lebih sedikit" });
         }
     }
 
@@ -177,21 +177,21 @@ public partial class ServerPlayer
     /// <summary>รดน้ำกับใส่ปุ๋ยต่างกันแค่ "ของที่ยอมรับ" กับ "ตัวเลขที่เพิ่ม" — โครงเดียวกัน</summary>
     private void HandleTendPlant(string entityId, string[] itemIds, PacketHeader header, bool water)
     {
-        string what = water ? "รดน้ำ" : "ใส่ปุ๋ย";
+        string what = water ? "Siram" : "Beri pupuk";
         if (!CheckFarmAccess(entityId, header, out AppearArtifact _))
         {
             return;
         }
         if (!_world.TryGetFarm(entityId, out ServerWorld.FarmPlot plot))
         {
-            Send(new Info { Text = "แปลงนี้ยังไม่ได้ปลูกอะไร" }, header.Seq);
+            Send(new Info { Text = "Petak ini belum ditanami" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         if (plot.Resolved)
         {
             // โตครบแล้ว (หรือตายแล้ว) — เติมน้ำ/ปุ๋ยตอนนี้ไม่มีผลกับอะไรทั้งนั้น
-            Send(new Info { Text = plot.Dead ? "ต้นนี้ตายแล้ว ถอนทิ้งได้เลย" : "ต้นนี้โตเต็มที่แล้ว" }, header.Seq);
+            Send(new Info { Text = plot.Dead ? "Tanaman ini sudah mati, cabut saja" : "Tanaman ini sudah dewasa" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -243,7 +243,7 @@ public partial class ServerPlayer
         if (used.Count == 0)
         {
             Console.WriteLine("[farm] ปฏิเสธ {0}: ไม่มีของที่ใช้{1}ได้ในรายการที่ส่งมา", Name, what);
-            Send(new Info { Text = water ? "ต้องใช้ของที่เป็นน้ำ" : "ต้องใช้ปุ๋ย" }, header.Seq);
+            Send(new Info { Text = water ? "Butuh barang berupa air" : "Butuh pupuk" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -294,7 +294,7 @@ public partial class ServerPlayer
         }
         if (!_world.TryGetFarm(msg.EntityId, out ServerWorld.FarmPlot plot))
         {
-            Send(new Info { Text = "แปลงนี้ยังไม่ได้ปลูกอะไร" }, header.Seq);
+            Send(new Info { Text = "Petak ini belum ditanami" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -326,7 +326,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.Farming)
         {
-            RejectFeatureDisabled("Farming", "DrawWater", "ระบบปลูกผักยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("Farming", "DrawWater", "Sistem bercocok tanam belum aktif di ronde ini", header);
             return;
         }
         if (Dead)
@@ -348,7 +348,7 @@ public partial class ServerPlayer
         float capacity = CropData.CapacityOf(tool.Prototype, Math.Max(1, tool.Level));
         if (capacity <= 0f && !HasTag(tool, "container"))
         {
-            Send(new Info { Text = "ของชิ้นนี้ใส่น้ำไม่ได้" }, header.Seq);
+            Send(new Info { Text = "Barang ini tidak bisa diisi air" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -359,7 +359,7 @@ public partial class ServerPlayer
         if (!IsNearWater())
         {
             Console.WriteLine("[farm] ปฏิเสธ {0}: ไม่ได้อยู่ใกล้แหล่งน้ำ", Name);
-            Send(new Info { Text = "ต้องยืนใกล้แหล่งน้ำก่อน" }, header.Seq);
+            Send(new Info { Text = "Harus berdiri dekat sumber air" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -391,7 +391,7 @@ public partial class ServerPlayer
                 Item bottle = MakeGatheredItem(new Generator
                 {
                     Id = "water",
-                    Name = ItemNameData.NameOf("water", "น้ำ"),
+                    Name = ItemNameData.NameOf("water", "Air"),
                     Icon = ItemNameData.IconOf("water", "icon_nat_liquid")
                 });
                 lock (_inventory)
@@ -403,7 +403,7 @@ public partial class ServerPlayer
             if (made == 0)
             {
                 RestoreStamina(FarmCfg.StaminaCostDraw, 0f);
-                Send(new Info { Text = "กระเป๋าเต็ม" }, header.Seq);
+                Send(new Info { Text = "Tas penuh" }, header.Seq);
                 Send(Aborts.Reason(), header.Seq);
                 return;
             }
@@ -522,7 +522,7 @@ public partial class ServerPlayer
         IModEventContext? beforeHarvest = PluginManager.Instance?.FireEvent("farm.before_harvest", this, true, false,
             new Dictionary<string, string>(StringComparer.Ordinal) { ["entity_id"] = msg.EntityId ?? "", ["generator_id"] = msg.GeneratorId ?? "" });
         if (beforeHarvest?.IsCancelled == true)
-        { Send(new Info { Text = beforeHarvest.CancelReason ?? "การเก็บเกี่ยวถูกยกเลิกโดยม็อด" }, header.Seq); Send(Aborts.Reason(), header.Seq); return; }
+        { Send(new Info { Text = beforeHarvest.CancelReason ?? "Panen dibatalkan oleh mod" }, header.Seq); Send(Aborts.Reason(), header.Seq); return; }
         if (!TrySpendStamina(StaminaCostCollect, ActionKind.Collect))
         {
             Send(Aborts.Reason(), header.Seq);
@@ -656,7 +656,7 @@ public partial class ServerPlayer
         const string blueprintId = "farm_tile_01";
         if (!RecipeData.BlueprintType.TryGetValue(blueprintId, out ushort entityType))
         {
-            return "ไม่มี blueprint " + blueprintId + " ในตาราง";
+            return "Tidak ada blueprint " + blueprintId + " di tabel";
         }
         Point2 size = new Point2(1, 1);
         if (RecipeData.BlueprintSize.TryGetValue(blueprintId, out var bp) && bp.x > 0 && bp.y > 0)
@@ -690,7 +690,7 @@ public partial class ServerPlayer
         }
         if (!found)
         {
-            return "หาที่ว่างวางแปลงไม่ได้ — ลองเดินไปที่โล่งกว่านี้";
+            return "Tidak ada tempat kosong untuk petak — coba ke area yang lebih lapang";
         }
 
         string entityId = Guid.NewGuid().ToString();
@@ -699,7 +699,7 @@ public partial class ServerPlayer
         _world.AddArtifact(placed, blueprintId);
         _world.AnnounceArtifact(placed);
         MarkDirty();
-        return $"วางแปลงผักที่ tile {spot.x},{spot.y} แล้ว [id={entityId}]\n{GiveFarmSupplies()}";
+        return $"Petak kebun ditempatkan di tile {spot.x},{spot.y} [id={entityId}]\n{GiveFarmSupplies()}";
     }
 
     /// <summary>`cheat seeds` — เมล็ด/น้ำ/ปุ๋ยสำหรับเทส</summary>
@@ -711,7 +711,7 @@ public partial class ServerPlayer
         added += GiveFarmItem("fertilizer_01", 4);
         MarkDirty();
         SendInventory();
-        return $"ได้ของสำหรับปลูก {added} ชิ้น (เมล็ดข้าวโพด · น้ำ · ปุ๋ย)";
+        return $"Dapat {added} perlengkapan tanam (benih jagung · air · pupuk)";
     }
 
     private int GiveFarmItem(string prototype, int count)
@@ -761,7 +761,7 @@ public partial class ServerPlayer
             plots[i].GrowsUntil = now;
             n++;
         }
-        return n == 0 ? "ไม่มีแปลงที่กำลังโตอยู่" : $"เร่ง {n} แปลงให้โตทันที (รอ 1 วิให้ระบบคิดผล)";
+        return n == 0 ? "Tidak ada petak yang sedang tumbuh" : $"Mempercepat {n} petak agar langsung dewasa (tunggu 1 dtk untuk dihitung)";
     }
 
     /// <summary>ยังเหลือของให้เก็บกี่ชิ้นในแปลงนี้ (อ่านจาก generator จริง)</summary>
@@ -795,14 +795,14 @@ public partial class ServerPlayer
                 continue;
             }
             CropData.TryGet(p.SeedId, out CropData.CropInfo crop);
-            string status = p.Dead ? "ตายแล้ว"
-                : p.Resolved ? ("เก็บได้ เหลือ " + RemainingText(p.ArtifactId))
-                : $"อีก {Math.Max(0.0, p.GrowsUntil - now):F0} วิ";
-            sb.AppendFormat("· {0} @ {1},{2} — {3} · น้ำ {4:F1}/{5} · ปุ๋ย {6:F1}/{7} · ไบโอม {8}\n",
+            string status = p.Dead ? "Mati"
+                : p.Resolved ? ("Bisa dipanen, sisa " + RemainingText(p.ArtifactId))
+                : $"{Math.Max(0.0, p.GrowsUntil - now):F0} dtk lagi";
+            sb.AppendFormat("· {0} @ {1},{2} — {3} · air {4:F1}/{5} · pupuk {6:F1}/{7} · bioma {8}\n",
                 p.SeedId, p.TileX, p.TileY, status,
                 p.Water, crop.RequiredWater, p.Fertilizer, crop.RequiredFertilizer, p.Fitness);
             n++;
         }
-        return n == 0 ? "ยังไม่มีแปลงผักของตัวเอง (ลอง cheat farm)" : sb.ToString();
+        return n == 0 ? "Belum punya petak kebun sendiri (coba cheat farm)" : sb.ToString();
     }
 }

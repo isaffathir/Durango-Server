@@ -137,7 +137,7 @@ public sealed class EstateManager
         error = "";
         if (type != OwnerType.Player && type != OwnerType.PersonalPlayer)
         {
-            error = "ประกาศได้เฉพาะที่ดินส่วนตัว";
+            error = "Hanya bisa diklaim sebagai tanah pribadi";
             return false;
         }
         // 🐛 [แก้เอง 2 ก.ย. 2026] เดิมบังคับเป็น OwnerType.Player เสมอ — ไม่ตรงกับช่องที่เราส่งข้อมูลไป
@@ -154,7 +154,7 @@ public sealed class EstateManager
         {
             if (FindLockedAnyType(ownerId) != null)
             {
-                error = "มีที่ดินอยู่แล้ว — สละแปลงเก่าก่อนจึงจะประกาศใหม่ได้";
+                error = "Sudah punya tanah — lepaskan petak lama dulu sebelum mengklaim yang baru";
                 return false;
             }
             var cells = new List<Point2>(InitialSide * InitialSide);
@@ -165,7 +165,7 @@ public sealed class EstateManager
                     var p = new Point2(cell.x + dx, cell.y + dy);
                     if (OccupiedLocked(p, null))
                     {
-                        error = "ช่องนี้มีที่ดินคนอื่นอยู่แล้ว";
+                        error = "Petak ini sudah menjadi tanah orang lain";
                         return false;
                     }
                     cells.Add(p);
@@ -204,27 +204,27 @@ public sealed class EstateManager
             EstateRecord? existing = FindLockedById(estateId);
             if (existing == null || existing.OwnerId != ownerId)
             {
-                error = "ไม่พบที่ดินนี้";
+                error = "Tanah ini tidak ditemukan";
                 return false;
             }
             if (ContainsCell(existing, cell))
             {
-                error = "ช่องนี้อยู่ในที่ดินแล้ว";
+                error = "Petak ini sudah termasuk tanah";
                 return false;
             }
             if (!IsAdjacent(existing, cell))
             {
-                error = "ขยายได้เฉพาะช่องที่ติดกับที่ดิน";
+                error = "Hanya bisa memperluas ke petak yang bersebelahan dengan tanah";
                 return false;
             }
             if (OccupiedLocked(cell, existing.Id))
             {
-                error = "ช่องนี้มีที่ดินคนอื่นอยู่แล้ว";
+                error = "Petak ini sudah menjadi tanah orang lain";
                 return false;
             }
             if (existing.Cells.Count >= MaxCells)
             {
-                error = $"ที่ดินขยายได้สูงสุด {MaxCells} ช่อง";
+                error = $"Tanah maksimal {MaxCells} petak";
                 return false;
             }
             existing.Cells.Add(cell);
@@ -249,18 +249,18 @@ public sealed class EstateManager
             EstateRecord? existing = FindLockedById(estateId);
             if (existing == null || existing.OwnerId != ownerId)
             {
-                error = "ไม่พบที่ดินนี้";
+                error = "Tanah ini tidak ditemukan";
                 return false;
             }
             if (existing.Cells.Count <= InitialSide * InitialSide)
             {
-                error = $"เล็กกว่า {InitialSide}×{InitialSide} ไม่ได้";
+                error = $"Tidak bisa lebih kecil dari {InitialSide}×{InitialSide}";
                 return false;
             }
             int idx = IndexOfCell(existing, cell);
             if (idx < 0)
             {
-                error = "ช่องนี้ไม่ได้อยู่ในที่ดิน";
+                error = "Petak ini tidak termasuk tanah";
                 return false;
             }
             existing.Cells.RemoveAt(idx);
@@ -280,7 +280,7 @@ public sealed class EstateManager
             EstateRecord? existing = FindLockedById(estateId);
             if (existing == null || existing.OwnerId != ownerId)
             {
-                error = "ไม่พบที่ดินนี้";
+                error = "Tanah ini tidak ditemukan";
                 return false;
             }
             existing.Others = rights.ForOthers;
@@ -303,7 +303,7 @@ public sealed class EstateManager
             EstateRecord? existing = FindLockedById(estateId);
             if (existing == null || existing.OwnerId != ownerId)
             {
-                error = "ไม่พบที่ดินนี้";
+                error = "Tanah ini tidak ditemukan";
                 return false;
             }
             double now = Durango.Utils.Times.UnixTimeNow();
@@ -330,7 +330,7 @@ public sealed class EstateManager
                 }
             }
         }
-        error = "ไม่พบที่ดินนี้";
+        error = "Tanah ini tidak ditemukan";
         return false;
     }
 

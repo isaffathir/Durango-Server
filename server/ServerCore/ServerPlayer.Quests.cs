@@ -50,7 +50,7 @@ public partial class ServerPlayer
 
     private static bool QuestsEnabled => ServerConfig.Current.Features.Quests;
 
-    /// <summary>เปิดชุด "เควสประจำวัน" อยู่ไหม — ปิดแล้วเควสชุดนั้นหายจากทุกทาง</summary>
+    /// <summary>เปิดชุด "Quest harian" อยู่ไหม — ปิดแล้วเควสชุดนั้นหายจากทุกทาง</summary>
     private static bool ChecklistEnabled => ServerConfig.Current.Features.QuestChecklist;
 
     /// <summary>เควสนี้ถูกซ่อนเพราะปิดชุดตรวจอยู่ไหม</summary>
@@ -193,7 +193,7 @@ public partial class ServerPlayer
     {
         if (!QuestsEnabled)
         {
-            Send(new Info { Text = "ระบบเควสยังไม่เปิดในรอบนี้" }, header.Seq);
+            Send(new Info { Text = "Sistem quest belum aktif di ronde ini" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -214,7 +214,7 @@ public partial class ServerPlayer
             // [4 ก.ย. 2026] บั๊ก #11 — client เปิดปุ่ม "ได้รับ" ให้กดทั้งที่ยังทำไม่ครบ แล้วไม่จัดการ Abort
             // ⇒ ผู้เล่นเห็นแต่ไอคอนหมุนค้าง ไม่รู้ว่าเกิดอะไร · ส่งข้อความบอกเหตุไปด้วย
             Console.WriteLine("[quest] ปฏิเสธ {0}: {1} ยังทำไม่ครบ ({2}/{3})", Name, q.Id, ProgressOf(q.Id), q.Count);
-            Send(new Info { Text = $"เควสนี้ยังทำไม่ครบ ({ProgressOf(q.Id)}/{q.Count}) — ทำให้ครบก่อนจึงจะรับรางวัลได้" }, header.Seq);
+            Send(new Info { Text = $"Quest ini belum selesai ({ProgressOf(q.Id)}/{q.Count}) — selesaikan dulu untuk mengambil hadiah" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -244,7 +244,7 @@ public partial class ServerPlayer
         catch (Exception e)
         {
             Console.WriteLine("[quest] ⚠️ ให้รางวัล {0} ของ {1} ไม่สำเร็จ: {2}", q.Id, Name, e.Message);
-            Send(new Info { Text = "รับรางวัลไม่สำเร็จ — แจ้งผู้ดูแลเซิร์ฟได้เลย" });
+            Send(new Info { Text = "Gagal mengambil hadiah — laporkan ke admin server" });
         }
         finally
         {
@@ -280,7 +280,7 @@ public partial class ServerPlayer
     {
         if (q.Prize.Exp > 0)
         {
-            GainExp(q.Prize.Exp, "เควส");
+            GainExp(q.Prize.Exp, "Quest");
         }
         if (q.Prize.SkillPoints > 0)
         {
@@ -296,7 +296,7 @@ public partial class ServerPlayer
                 {
                     if (_inventory.Count >= PlayerInventoryMaxSize)
                     {
-                        Send(new Info { Text = "กระเป๋าเต็ม — ของรางวัลบางส่วนตกหล่น" });
+                        Send(new Info { Text = "Tas penuh — sebagian hadiah terjatuh" });
                         break;
                     }
                     _inventory.Add(MakeGatheredItem(new Generator
@@ -420,7 +420,7 @@ public partial class ServerPlayer
                 _questDone.Add(q.Id);
                 unlockedSomething = true;
                 Console.WriteLine("[quest] ✅ {0} ทำเควส {1} สำเร็จ ({2}/{3})", Name, q.Id, Math.Min(now, q.Count), q.Count);
-                Send(new Info { Text = $"[เควสสำเร็จ] {q.Thai}\nเปิดหน้าเควสเพื่อรับรางวัล" });
+                Send(new Info { Text = $"[Quest selesai] {q.Thai}\nBuka halaman quest untuk mengambil hadiah" });
             }
             else
             {
@@ -470,13 +470,13 @@ public partial class ServerPlayer
                 continue;
             }
             fresh.Add(MakeTodo(q));
-            Send(new Info { Text = $"[เควสใหม่] {q.Thai}" });
+            Send(new Info { Text = $"[Quest baru] {q.Thai}" });
         }
         if (checklistFresh > 0)
         {
             Send(new Info
             {
-                Text = $"[เควสประจำวัน] เพิ่ม {checklistFresh} ข้อในหน้าเควส — พิมพ์ `cheat checklist` ดูรายการเต็ม"
+                Text = $"[Quest harian] {checklistFresh} tugas baru di halaman quest — ketik `cheat checklist` untuk daftar lengkap"
             });
         }
         if (fresh.Count > 0)
@@ -491,7 +491,7 @@ public partial class ServerPlayer
     }
 
     /// <summary>
-    /// `cheat checklist` — พิมพ์ "เควสประจำวัน" พร้อมสถานะแต่ละข้อ
+    /// `cheat checklist` — พิมพ์ "Quest harian" พร้อมสถานะแต่ละข้อ
     ///
     /// มีไว้เพราะหน้าต่างเควสในเกมโชว์ชื่อเป็น**ภาษาเกาหลี** (มาจากข้อมูลเกม) ซึ่งอ่านแล้วไม่รู้ว่าต้องทำอะไร
     /// อันนี้พิมพ์คำสั่งภาษาไทยของเราออกมาให้ครบ พร้อมตัวเลขความคืบหน้าที่ server นับจริง
@@ -500,7 +500,7 @@ public partial class ServerPlayer
     {
         if (!ChecklistEnabled)
         {
-            return "เควสประจำวันปิดอยู่ (Features.QuestChecklist = false)";
+            return "Quest harian nonaktif (Features.QuestChecklist = false)";
         }
         var sb = new System.Text.StringBuilder();
         int done = 0;
@@ -515,7 +515,7 @@ public partial class ServerPlayer
             }
             sb.AppendFormat("{0} {1}/{2}  {3}\n", ok ? "[/]" : "[ ]", now, q.Count, q.Thai);
         }
-        sb.AppendFormat("— ผ่านแล้ว {0}/{1} ข้อ", done, QuestData.Checklist.Length);
+        sb.AppendFormat("— selesai {0}/{1} tugas", done, QuestData.Checklist.Length);
         return sb.ToString();
     }
 
@@ -568,7 +568,7 @@ public partial class ServerPlayer
     }
 
     /// <summary>
-    /// เควสประเภท "ถึงเลเวล N" ต่างจากอันอื่นตรงที่ **วัดจากค่าปัจจุบัน ไม่ใช่การนับสะสม**
+    /// เควสประเภท "Capai level N" ต่างจากอันอื่นตรงที่ **วัดจากค่าปัจจุบัน ไม่ใช่การนับสะสม**
     /// จึงต้องเช็คตอนขึ้นเลเวลและตอนเข้าเกม (เผื่อเลเวลถึงตั้งแต่ก่อนเปิดระบบเควส)
     /// </summary>
     public void CheckLevelQuests()
@@ -591,7 +591,7 @@ public partial class ServerPlayer
                 _questDone.Add(q.Id);
                 finishedAny = true;
                 MarkDirty();
-                Send(new Info { Text = $"[เควสสำเร็จ] {q.Thai}" });
+                Send(new Info { Text = $"[Quest selesai] {q.Thai}" });
                 Send(new NotifyQuestProceed
                 {
                     QuestId = q.Id,
@@ -603,7 +603,7 @@ public partial class ServerPlayer
         }
         if (finishedAny)
         {
-            // 🐛 เดิมไม่ได้เรียก ⇒ เควสแบบ "ถึงเลเวล N" สำเร็จแล้ว **ขั้นถัดไปในสายไม่โผล่**
+            // 🐛 เดิมไม่ได้เรียก ⇒ เควสแบบ "Capai level N" สำเร็จแล้ว **ขั้นถัดไปในสายไม่โผล่**
             //    จนกว่าจะมีเควสอื่นสำเร็จมาปลุกให้
             AnnounceNewQuests();
         }
@@ -736,7 +736,7 @@ public partial class ServerPlayer
     {
         if (!QuestsEnabled)
         {
-            return "ระบบเควสปิดอยู่";
+            return "Sistem quest nonaktif";
         }
         // 🐛 รอบแรกวนทั้ง QuestData.All — พอเพิ่ม "รายการตรวจเซิร์ฟ" เข้ามาต่อท้าย
         //    ตัวสุดท้ายของ All กลายเป็นข้อในชุดตรวจ ⇒ เควสต่อแพถูกมาร์คว่าเสร็จไปด้วย
@@ -769,20 +769,20 @@ public partial class ServerPlayer
         }
         MarkDirty();
         SendQuestList();
-        return $"ข้ามเควสไป {n} ขั้น — เหลือขั้นต่อไป: {QuestData.Story[stopAt].Thai}";
+        return $"Melewati {n} tahap quest — tahap berikutnya: {QuestData.Story[stopAt].Thai}";
     }
 
     /// <summary>สรุปสถานะเควสไว้ตอบคำสั่ง `cheat quests`</summary>
     public string DescribeQuests()
     {
         var sb = new System.Text.StringBuilder();
-        sb.Append(Name).Append(" — เควสสายหลัก:");
+        sb.Append(Name).Append(" — quest utama:");
         for (int i = 0; i < QuestData.All.Length; i++)
         {
             QuestData.Quest q = QuestData.All[i];
-            string state = _questRewarded.Contains(q.Id) ? "รับรางวัลแล้ว"
-                : _questDone.Contains(q.Id) ? "**รอรับรางวัล**"
-                : !IsQuestOpen(q) ? "ยังไม่เปิด"
+            string state = _questRewarded.Contains(q.Id) ? "Hadiah sudah diambil"
+                : _questDone.Contains(q.Id) ? "**Menunggu diambil**"
+                : !IsQuestOpen(q) ? "Belum terbuka"
                 : $"{Math.Min(ProgressOf(q.Id), q.Count)}/{q.Count}";
             sb.Append("\n  ").Append(i + 1).Append(". ").Append(q.Thai).Append("  [").Append(state).Append(']');
         }

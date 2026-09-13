@@ -47,7 +47,7 @@ public partial class ServerPlayer
 
     private bool RejectFriendsDisabled(PacketHeader header)
     {
-        Send(new Info { Text = "ระบบเพื่อนยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem teman belum aktif" }, header.Seq);
         Send(Aborts.Reason(), header.Seq);
         return false;
     }
@@ -86,19 +86,19 @@ public partial class ServerPlayer
         }
         if (_friends.Contains(targetId))
         {
-            Send(new Info { Text = "เป็นเพื่อนกันอยู่แล้ว" }, header.Seq);
+            Send(new Info { Text = "Sudah berteman" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         if (_sentFriendRequests.Contains(targetId))
         {
-            Send(new Info { Text = "ส่งคำขอไปแล้ว" }, header.Seq);
+            Send(new Info { Text = "Permintaan sudah dikirim" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         if (_sentFriendRequests.Count >= MaxPendingRequests)
         {
-            Send(new Info { Text = "ส่งคำขอได้สูงสุด 30 รายการ" }, header.Seq);
+            Send(new Info { Text = "Maksimal 30 permintaan terkirim" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -106,14 +106,14 @@ public partial class ServerPlayer
         ServerPlayer target = _world.FindPlayer(targetId);
         if (target != null && target._blockedEntityIds.Contains(EntityId))
         {
-            Send(new Info { Text = "ผู้เล่นนี้บล็อกคุณอยู่" }, header.Seq);
+            Send(new Info { Text = "Pemain ini memblokirmu" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         // ตรวจ offline counterpart blocked
         if (target == null && IsBlockedOffline(targetId))
         {
-            Send(new Info { Text = "ผู้เล่นนี้บล็อกคุณอยู่" }, header.Seq);
+            Send(new Info { Text = "Pemain ini memblokirmu" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -152,7 +152,7 @@ public partial class ServerPlayer
         }
         if (_friends.Count >= MaxFriends)
         {
-            Send(new Info { Text = "รายชื่อเพื่อนเต็มแล้ว (สูงสุด 200)" }, header.Seq);
+            Send(new Info { Text = "Daftar teman penuh (maksimal 200)" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }

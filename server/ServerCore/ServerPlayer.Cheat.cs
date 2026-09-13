@@ -57,7 +57,7 @@ public partial class ServerPlayer
         if (!GameServer.CheatsEnabled)
         {
             Console.WriteLine($"[cheat] ปฏิเสธ {Name} ({EntityId}): '{cmd}' — คำสั่งทดสอบถูกปิดอยู่");
-            Send(new Info { Text = "คำสั่งทดสอบถูกปิดอยู่ (เปิดเซิร์ฟด้วย --enable-cheat ถึงจะใช้ได้)" }, header.Seq);
+            Send(new Info { Text = "Perintah cheat dinonaktifkan (jalankan server dengan --enable-cheat)" }, header.Seq);
             return;
         }
         Console.WriteLine($"[cheat] {EntityId}: {cmd}");
@@ -78,10 +78,10 @@ public partial class ServerPlayer
             if (sp.Length == 2 && ushort.TryParse(sp[1], out ushort wantType) && wantType >= 2000)
             {
                 ServerAnimal one = _world.Animals.SpawnAt(CurrentPosition, wantType, CurrentHeight);
-                string known = AnimalData.TryGet(wantType, out AnimalData.AnimalInfo ai) ? ai.ModelPath : "(ไม่รู้จักชนิดนี้)";
+                string known = AnimalData.TryGet(wantType, out AnimalData.AnimalInfo ai) ? ai.ModelPath : "(jenis tidak dikenal)";
                 // แนบ entity id มาด้วย — เทสจะได้ยิงใส่ "ตัวที่เพิ่งเสก" ได้แน่นอน ไม่ต้องเดาจาก AppearAnimal
                 // (พอมีระบบระยะมองเห็น สัตว์เดินเข้า/ออกจอตลอด ตัวที่ appear ล่าสุดมักไม่ใช่ตัวที่เสก)
-                Send(new Info { Text = $"เกิดสัตว์ type {one.EntityType} lv{one.Level} ข้างตัว [id={one.EntityId}] — โมเดล {known}" }, header.Seq);
+                Send(new Info { Text = $"Memunculkan hewan type {one.EntityType} lv{one.Level} di sebelahmu [id={one.EntityId}] — model {known}" }, header.Seq);
                 return;
             }
             if (sp.Length >= 3 && int.TryParse(sp[1], out int sx) && int.TryParse(sp[2], out int sy))
@@ -92,7 +92,7 @@ public partial class ServerPlayer
                     height = h;
                 }
                 ServerAnimal at = _world.Animals.SpawnAt(new WorldPosition(sx * 200f + 100f, sy * 200f + 100f), 0, height);
-                Send(new Info { Text = $"เกิดสัตว์ type {at.EntityType} lv{at.Level} ที่ tile {sx},{sy} ความสูง {height:F0}" }, header.Seq);
+                Send(new Info { Text = $"Memunculkan hewan type {at.EntityType} lv{at.Level} di tile {sx},{sy} tinggi {height:F0}" }, header.Seq);
                 return;
             }
         }
@@ -104,7 +104,7 @@ public partial class ServerPlayer
             string[] g = raw.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             if (g.Length < 2)
             {
-                Send(new Info { Text = "ใช้: cheat give <prototype> [จำนวน] เช่น `cheat give meat 10`" }, header.Seq);
+                Send(new Info { Text = "Pakai: cheat give <prototype> [jumlah], contoh `cheat give meat 10`" }, header.Seq);
                 return;
             }
             string proto = g[1];
@@ -147,10 +147,10 @@ public partial class ServerPlayer
             }
             MarkDirty();
             SendInventory();
-            string reply = $"ได้ {ItemNameData.NameOf(proto, proto)} x{give} (prototype={proto}{(giveLevel > 0 ? $" lv{giveLevel}" : "")})";
+            string reply = $"Dapat {ItemNameData.NameOf(proto, proto)} x{give} (prototype={proto}{(giveLevel > 0 ? $" lv{giveLevel}" : "")})";
             if (give < want)
             {
-                reply += $" — ขอ {want} แต่กระเป๋าเหลือที่แค่ {room} ช่อง";
+                reply += $" — minta {want} tapi tas hanya sisa {room} slot";
             }
             Send(new Info { Text = reply }, header.Seq);
             return;
@@ -160,7 +160,7 @@ public partial class ServerPlayer
         if (cmd == "shutdown")
         {
             _world.SaveAll(force: true);
-            Send(new Info { Text = "เซฟเสร็จแล้ว กำลังปิดเซิร์ฟ" }, header.Seq);
+            Send(new Info { Text = "Save selesai, server dimatikan" }, header.Seq);
             Environment.Exit(0);
             return;
         }
@@ -172,11 +172,11 @@ public partial class ServerPlayer
             if (parts.Length == 4 && _world.TryAddArtifactArchitect(parts[2], parts[3], EntityId, out AppearArtifact updated))
             {
                 _world.AnnounceArtifact(updated);
-                Send(new Info { Text = $"เพิ่ม architect {parts[3]} ให้ {parts[2]} แล้ว" }, header.Seq);
+                Send(new Info { Text = $"Architect {parts[3]} ditambahkan ke {parts[2]}" }, header.Seq);
             }
             else
             {
-                Send(new Info { Text = "ใช้: cheat architect add <artifactId> <entityId> (ต้องเป็นเจ้าของ artifact)" }, header.Seq);
+                Send(new Info { Text = "Pakai: cheat architect add <artifactId> <entityId> (harus pemilik artifact)" }, header.Seq);
             }
             return;
         }
@@ -189,11 +189,11 @@ public partial class ServerPlayer
             if (t.Length >= 3 && int.TryParse(t[1], out int tx) && int.TryParse(t[2], out int ty))
             {
                 ControlTeleport(tx, ty);
-                Send(new Info { Text = $"วาร์ปไป tile {tx},{ty}" }, header.Seq);
+                Send(new Info { Text = $"Warp ke tile {tx},{ty}" }, header.Seq);
             }
             else
             {
-                Send(new Info { Text = "ใช้: cheat tp <tileX> <tileY>" }, header.Seq);
+                Send(new Info { Text = "Pakai: cheat tp <tileX> <tileY>" }, header.Seq);
             }
             return;
         }
@@ -204,11 +204,11 @@ public partial class ServerPlayer
             if (int.TryParse(cmd.Substring(4).Trim(), out int amount) && amount > 0)
             {
                 GainExp(Math.Clamp(amount, 1, 1000000), "cheat");
-                Send(new Info { Text = $"ได้ exp {amount} — ตอนนี้เลเวล {Level} (exp รวม {TotalExp})" }, header.Seq);
+                Send(new Info { Text = $"Dapat exp {amount} — sekarang level {Level} (total exp {TotalExp})" }, header.Seq);
             }
             else
             {
-                Send(new Info { Text = "ใช้: cheat exp <จำนวน>" }, header.Seq);
+                Send(new Info { Text = "Pakai: cheat exp <jumlah>" }, header.Seq);
             }
             return;
         }
@@ -284,11 +284,11 @@ public partial class ServerPlayer
                 ServerPlayer[] online = _world.SnapshotPlayers();
                 if (online.Length == 0)
                 {
-                    Send(new Info { Text = "ไม่มีใครออนไลน์" }, header.Seq);
+                    Send(new Info { Text = "Tidak ada yang online" }, header.Seq);
                     break;
                 }
                 var sb = new StringBuilder();
-                sb.Append("ออนไลน์ ").Append(online.Length).Append(" คน:");
+                sb.Append("Online ").Append(online.Length).Append(" orang:");
                 for (int i = 0; i < online.Length; i++)
                 {
                     WorldPosition p = online[i].CurrentPosition;
@@ -315,7 +315,7 @@ public partial class ServerPlayer
                 {
                     ReviveAtSpawn();
                 }
-                Send(new Info { Text = "ฟื้นเต็ม เลือด/สตามินาเต็ม ความล้าเป็น 0" }, header.Seq);
+                Send(new Info { Text = "Pulih penuh, darah/stamina penuh, lelah 0" }, header.Seq);
                 break;
             case "checklist":
                 Send(new Info { Text = DescribeChecklist() }, header.Seq);
@@ -330,11 +330,11 @@ public partial class ServerPlayer
                 // ถ้าไม่มีของธรรมชาติในระยะเอื้อม ให้วาร์ปไปหาจุดที่ใกล้ที่สุดก่อน
                 // (บอทเทสไม่ได้เดินไปไหน ยืนอยู่จุดเกิดเฉย ๆ — ถ้าไม่ช่วยหาให้ก็เก็บอะไรไม่ได้เลย)
                 string result = ControlGather();
-                if (result.StartsWith("ไม่มีของธรรมชาติ", StringComparison.Ordinal)
+                if (result.StartsWith("Tidak ada objek alam", StringComparison.Ordinal)
                     && _world.Terrain.TryFindNaturalNear(CurrentPosition, 400, out Point2 far, out ushort _))
                 {
                     ControlTeleport(far.x, far.y);
-                    result = ControlGather() + $" (วาร์ปไป tile {far.x},{far.y} ให้ก่อน)";
+                    result = ControlGather() + $" (diwarp ke tile {far.x},{far.y} dulu)";
                 }
                 Send(new Info { Text = result }, header.Seq);
                 break;
@@ -365,7 +365,7 @@ public partial class ServerPlayer
             case "save":
                 // บังคับเซฟโลกเดี๋ยวนี้ — ปกติ autosave ทุก 60 วิ
                 // (เทสเรื่อง "รีสตาร์ทแล้วผลผลิตต้องไม่เกิดใหม่" ต้องใช้อันนี้)
-                Send(new Info { Text = $"เซฟโลกแล้ว {_world.SaveAll(force: true)} ไฟล์" }, header.Seq);
+                Send(new Info { Text = $"Dunia disimpan, {_world.SaveAll(force: true)} file" }, header.Seq);
                 break;
             case "abilities":
                 // ดูค่าสถานะ 8 ตัว + เลือด/สตามินาสูงสุด + พลังอาวุธที่ถืออยู่ (ไว้เทียบก่อน/หลังใส่ของ)
@@ -375,7 +375,7 @@ public partial class ServerPlayer
                 // ดูว่าสกิลที่เรียนไปมีผลเท่าไรแล้ว (ไว้เทียบก่อน/หลังเรียน)
                 Send(new Info
                 {
-                    Text = $"เลเวล {Level} · exp {TotalExp} (อีก {LevelData.ToNextLevel(TotalExp)} ขึ้นเลเวล) · แต้มสกิล {_skillPoints}\n"
+                    Text = $"Level {Level} · exp {TotalExp} ({LevelData.ToNextLevel(TotalExp)} lagi untuk naik level) · poin skill {_skillPoints}\n"
                            + DescribeSkillBonuses()
                 }, header.Seq);
                 break;
@@ -416,32 +416,32 @@ public partial class ServerPlayer
                     }
                     MarkDirty();
                     SendSkills();
-                    Send(new Info { Text = $"อัพเลเวล {Level} + ปลดสกิลเต็ม {granted} ตัวแล้ว (โหมดเทสเท่านั้น)" }, header.Seq);
+                    Send(new Info { Text = $"Naik ke level {Level} + membuka {granted} skill penuh (mode tes saja)" }, header.Seq);
                 }
                 break;
             // แบ็กอัพเซฟเดี๋ยวนี้ (ปกติทำเองทุก 4 ชม. ตาม config → Save.BackupIntervalHours)
             case "backup":
             {
                 _world.SaveAll(force: true);
-                string path = SaveBackup.RunOnce("สั่งจากคำสั่งทดสอบ");
-                Send(new Info { Text = path == null ? "แบ็กอัพไม่สำเร็จ — ดู log เซิร์ฟ" : "แบ็กอัพแล้ว: " + path }, header.Seq);
+                string path = SaveBackup.RunOnce("Dari perintah cheat");
+                Send(new Info { Text = path == null ? "Backup gagal — lihat log server" : "Backup selesai: " + path }, header.Seq);
                 break;
             }
             // ระบบป่วย — ทดสอบผลของสถานะป่วย (คราฟต์ช้า/เปลืองแรง/ล้าไว/เดินช้า)
             case "sick":
-                Send(new Info { Text = MakeSick("คำสั่งทดสอบ") ? "ป่วยแล้ว" : "ป่วยอยู่แล้ว หรือระบบป่วยปิดอยู่" }, header.Seq);
+                Send(new Info { Text = MakeSick("Perintah cheat") ? "Sekarang sakit" : "Sudah sakit, atau sistem penyakit nonaktif" }, header.Seq);
                 break;
             case "cure":
-                Send(new Info { Text = CureSickness() ? "หายป่วยแล้ว" : "ไม่ได้ป่วยอยู่" }, header.Seq);
+                Send(new Info { Text = CureSickness() ? "Sudah sembuh" : "Tidak sedang sakit" }, header.Seq);
                 break;
             case "add bonfire":
             case "add_bonfire":
                 lock (_inventory)
                 {
-                    _inventory.Add(MakeCapsuleItem("capsulated_bonfire", "กองไฟ", "furniture_workbench_bonfire"));
+                    _inventory.Add(MakeCapsuleItem("capsulated_bonfire", "Api unggun", "furniture_workbench_bonfire"));
                 }
                 SendInventory();
-                Send(new Info { Text = "ได้รับกองไฟ x1", }, header.Seq);
+                Send(new Info { Text = "Dapat api unggun x1", }, header.Seq);
                 break;
             // [แก้เอง] 25 ส.ค. 2026 — ไว้เทส TryStartResting/IsRestBlueprint จริงโดยไม่ต้องเดินไปหา
             // กองไฟที่มีอยู่ในโลก (วางที่ตำแหน่งปัจจุบันตรงๆ ข้ามขั้นตอนคลิกวางของผู้เล่น)
@@ -451,7 +451,7 @@ public partial class ServerPlayer
                 const string blueprintId = "camp_square_fire";
                 if (!RecipeData.BlueprintType.TryGetValue(blueprintId, out ushort entityType))
                 {
-                    Send(new Info { Text = $"ไม่มีข้อมูล blueprint '{blueprintId}'" }, header.Seq);
+                    Send(new Info { Text = $"Tidak ada data blueprint '{blueprintId}'" }, header.Seq);
                     break;
                 }
                 Point2 tile = new Point2((int)(CurrentPosition.x / 200f), (int)(CurrentPosition.y / 200f));
@@ -462,7 +462,7 @@ public partial class ServerPlayer
                     default, null, 1, blueprintId, BuildingState.Completed);
                 _world.AddArtifact(placed, blueprintId);
                 _world.AnnounceArtifact(placed);
-                Send(new Info { Text = $"วางกองไฟทดสอบที่ tile {tile.x},{tile.y} แล้ว" }, header.Seq);
+                Send(new Info { Text = $"Api unggun tes ditempatkan di tile {tile.x},{tile.y}" }, header.Seq);
                 break;
             }
             // ใช้ตรวจ render ของ blueprint ที่ประกอบจากหลาย slot โดยตรง
@@ -472,13 +472,13 @@ public partial class ServerPlayer
             {
                 if (!AllowFreeBuild)
                 {
-                    Send(new Info { Text = "การสร้างฟรีถูกปิดอยู่ — เปิด CraftMenu.AllowFreeBuild เฉพาะตอนทดสอบ" }, header.Seq);
+                    Send(new Info { Text = "Membangun gratis dinonaktifkan — aktifkan CraftMenu.AllowFreeBuild hanya saat tes" }, header.Seq);
                     break;
                 }
                 const string blueprintId = "tent";
                 if (!RecipeData.BlueprintType.TryGetValue(blueprintId, out ushort entityType))
                 {
-                    Send(new Info { Text = $"ไม่มีข้อมูล blueprint '{blueprintId}'" }, header.Seq);
+                    Send(new Info { Text = $"Tidak ada data blueprint '{blueprintId}'" }, header.Seq);
                     break;
                 }
                 Point2 tile = new Point2((int)(CurrentPosition.x / 200f), (int)(CurrentPosition.y / 200f));
@@ -493,54 +493,54 @@ public partial class ServerPlayer
                     default, null, 1, blueprintId, BuildingState.Completed);
                 _world.AddArtifact(placed, blueprintId);
                 _world.AnnounceArtifact(placed);
-                Send(new Info { Text = $"วางเต็นท์ทดสอบที่ tile {tile.x},{tile.y} แล้ว" }, header.Seq);
+                Send(new Info { Text = $"Tenda tes ditempatkan di tile {tile.x},{tile.y}" }, header.Seq);
                 break;
             }
             // เฟส C — ของสำหรับทดสอบระบบสวมใส่
             case "add axe":
             case "add_axe":
-                GiveEquipTestItem("axe_onehand_stone_01", "ขวานหิน", "weapon_axe_onehand_stone_2", header.Seq);
+                GiveEquipTestItem("axe_onehand_stone_01", "Kapak batu", "weapon_axe_onehand_stone_2", header.Seq);
                 break;
             case "add stone":
             case "add_stone":
                 // หิน 1 ก้อน — วัตถุดิบของสูตร blade_stone (มีด) ไว้เทสสายเครื่องมือ
-                GiveEquipTestItem("stone", "หิน", "icon_nat_stone", header.Seq);
+                GiveEquipTestItem("stone", "Batu", "icon_nat_stone", header.Seq);
                 break;
             case "add knife":
             case "add_knife":
                 // มีดหิน — ของจริงคราฟต์เองได้จากหิน (สูตร blade_stone) นี่เป็นทางลัดตอนเทส
-                GiveEquipTestItem("blade_stone", "ใบมีดหิน", "icon_nat_blade_stone", header.Seq);
+                GiveEquipTestItem("blade_stone", "Mata pisau batu", "icon_nat_blade_stone", header.Seq);
                 break;
             case "add pickaxe":
             case "add_pickaxe":
-                GiveEquipTestItem("pickaxe_wooden_01", "อีเต้อไม้", "weapon_pickaxe_wooden", header.Seq);
+                GiveEquipTestItem("pickaxe_wooden_01", "Cangkul kayu", "weapon_pickaxe_wooden", header.Seq);
                 break;
             case "add clothes":
             case "add_clothes":
-                GiveEquipTestItem("clothes_builder_01", "ชุดช่าง", "clothes_builder_01", header.Seq);
+                GiveEquipTestItem("clothes_builder_01", "Kit tukang", "clothes_builder_01", header.Seq);
                 break;
             // เฟส C — กล่องเก็บของ
             case "add box":
             case "add_box":
                 lock (_inventory)
                 {
-                    _inventory.Add(MakeCapsuleItem("capsulated_fur_box_03_leaf", "กล่องใบไม้", "furniture_box"));
+                    _inventory.Add(MakeCapsuleItem("capsulated_fur_box_03_leaf", "Kotak daun", "furniture_box"));
                 }
                 MarkDirty();
                 SendInventory();
-                Send(new Info { Text = "ได้กล่องใบไม้ x1 — วางลงพื้นแล้วเปิดใส่ของได้" }, header.Seq);
+                Send(new Info { Text = "Dapat kotak daun x1 — letakkan di tanah lalu buka untuk menyimpan" }, header.Seq);
                 break;
 
             // เฟส C — ทดสอบค่าสถานะ
             case "survival":
                 Send(new Info
                 {
-                    Text = $"เลือด {CurrentLife:F0}/{LifeMax:F0} · สตามินา {_stamina.ValueAt(Times.UnixTimeNow()):F0}/{StaminaMax:F0} · ความล้า {_fatigue.ValueAt(Times.UnixTimeNow()):F0}/{FatigueMax:F0}"
+                    Text = $"Darah {CurrentLife:F0}/{LifeMax:F0} · stamina {_stamina.ValueAt(Times.UnixTimeNow()):F0}/{StaminaMax:F0} · lelah {_fatigue.ValueAt(Times.UnixTimeNow()):F0}/{FatigueMax:F0}"
                 }, header.Seq);
                 break;
             case "rest":
                 RestoreSurvival(clearFatigue: true);
-                Send(new Info { Text = "พักผ่อนแล้ว — เลือด/สตามินาเต็ม ความล้าเป็น 0" }, header.Seq);
+                Send(new Info { Text = "Sudah istirahat — darah/stamina penuh, lelah 0" }, header.Seq);
                 break;
             // [แก้เอง] 25 ส.ค. 2026 — ทดสอบ TryStartResting จริง (ต้องมีกองไฟ/เต็นท์จริงในระยะเอื้อม
             // ไม่ได้ตั้งค่าตรงๆ เหมือน "rest" — ไว้เช็คว่า IsRestBlueprint จับ blueprint จริงในโลกได้ไหม)
@@ -550,7 +550,7 @@ public partial class ServerPlayer
                 break;
             case "tired":
                 SetGaugeValue("stamina", 0f);
-                Send(new Info { Text = "ตั้งสตามินาเป็น 0 (ลองเก็บของทันทีดูว่าโดนปฏิเสธไหม — ฟื้น 4/วิ)" }, header.Seq);
+                Send(new Info { Text = "Stamina diset 0 (coba mengumpulkan sekarang, harusnya ditolak — pulih 4/dtk)" }, header.Seq);
                 break;
             case "hurt":
                 bool dead = ApplyDamage(30f);
@@ -558,20 +558,20 @@ public partial class ServerPlayer
                 {
                     Die();          // เฟส C รอบ 2: บอกทุกคนว่าล้มแล้ว
                 }
-                Send(new Info { Text = $"โดน 30 ดาเมจ เหลือเลือด {CurrentLife:F0}{(dead ? " — ตายแล้ว" : "")}" }, header.Seq);
+                Send(new Info { Text = $"Kena 30 damage, darah tersisa {CurrentLife:F0}{(dead ? " — ตายแล้ว" : "")}" }, header.Seq);
                 break;
             case "spawn":
             case "spawn animal":
             {
                 // เรียกสัตว์มาเกิดตรงที่ยืนอยู่ — สัตว์ปกติกระจายในรัศมี 30 tile ซึ่งมักอยู่นอกจอ
                 ServerAnimal born = _world.Animals.SpawnAt(CurrentPosition);
-                Send(new Info { Text = $"เรียกสัตว์ type {born.EntityType} lv{born.Level} มาเกิดข้างตัวแล้ว [id={born.EntityId}]" }, header.Seq);
+                Send(new Info { Text = $"Memanggil hewan type {born.EntityType} lv{born.Level} di sebelahmu [id={born.EntityId}]" }, header.Seq);
                 break;
             }
             case "die":
                 SetGaugeValue("life", 0f);
                 Die();
-                Send(new Info { Text = "ตายแล้ว — ส่ง Revive เพื่อฟื้น" }, header.Seq);
+                Send(new Info { Text = "Sudah mati — kirim Revive untuk hidup lagi" }, header.Seq);
                 break;
             case "kill animal":
             case "kill_animal":
@@ -598,13 +598,13 @@ public partial class ServerPlayer
                 }
                 if (nearest == null)
                 {
-                    Send(new Info { Text = "ไม่มีสัตว์เป็น ๆ ในโลกเลย" }, header.Seq);
+                    Send(new Info { Text = "Tidak ada hewan hidup di dunia ini" }, header.Seq);
                     break;
                 }
                 _world.Animals.Damage(nearest.EntityId, nearest.LifeMax * 2f, EntityId);
                 Send(new Info
                 {
-                    Text = $"ฆ่า {nearest.EntityId} (type {nearest.EntityType} lv{nearest.Level}) ห่าง {MathF.Sqrt(best) / 200f:F1} tile — แตะซากเพื่อแล่ได้เลย"
+                    Text = $"Membunuh {nearest.EntityId} (type {nearest.EntityType} lv{nearest.Level}) jarak {MathF.Sqrt(best) / 200f:F1} tile — ketuk bangkainya untuk menguliti"
                 }, header.Seq);
                 break;
             }
@@ -622,17 +622,17 @@ public partial class ServerPlayer
                             continue;
                         }
                         float max = ToolDurability.MaxOf(it);
-                        lines.Add($"{it.Name} ({it.Prototype}) วัสดุระดับ {ToolDurability.TierOf(it.Prototype)} — {ToolDurability.RemainingOf(it):F0}/{max:F0}");
+                        lines.Add($"{it.Name} ({it.Prototype}) bahan tingkat {ToolDurability.TierOf(it.Prototype)} — {ToolDurability.RemainingOf(it):F0}/{max:F0}");
                     }
                 }
                 ToolConfig tc = ServerConfig.Current.Tools;
                 string head = tc.Enabled
-                    ? $"ระบบความทนทาน: เปิด (ฐาน {tc.DurabilityBase:F0} + {tc.DurabilityPerTier:F0}/ระดับ · ใช้ครั้งละ {tc.WearPerUse:F0})"
-                    : "ระบบความทนทาน: ปิดอยู่ (Tools.Enabled = false)";
+                    ? $"Sistem ketahanan: aktif (dasar {tc.DurabilityBase:F0} + {tc.DurabilityPerTier:F0}/tingkat · aus per pakai {tc.WearPerUse:F0})"
+                    : "Sistem ketahanan: nonaktif (Tools.Enabled = false)";
                 Send(new Info
                 {
                     Text = lines.Count == 0
-                        ? head + "\nไม่มีเครื่องมือในกระเป๋า"
+                        ? head + "\nTidak ada alat di tas"
                         : head + "\n" + string.Join("\n", lines)
                 }, header.Seq);
                 break;
@@ -652,24 +652,24 @@ public partial class ServerPlayer
                 }
                 MarkDirty();
                 SendInventory();
-                Send(new Info { Text = $"เททิ้งของในกระเป๋า {before} ชิ้น" }, header.Seq);
+                Send(new Info { Text = $"Membuang {before} barang dari tas" }, header.Seq);
                 break;
             }
             // ล้าเต็มหลอด — ใช้เทสว่าเลือดไหลลงจนตายจริงไหม
             case "burnout":
                 SetGaugeValue("fatigue", ServerConfig.Current.Survival.FatigueMax);
-                Send(new Info { Text = $"ตั้งความล้าเป็น {ServerConfig.Current.Survival.FatigueMax:F0} (เต็มหลอด) — เลือดจะเริ่มไหลลง" }, header.Seq);
+                Send(new Info { Text = $"Lelah diset {ServerConfig.Current.Survival.FatigueMax:F0} (penuh) — darah akan mulai turun" }, header.Seq);
                 break;
             case "exhaust":
                 SetGaugeValue("fatigue", 90f);
-                Send(new Info { Text = "ตั้งความล้า 90 (เกิน danger 85 → ค่าใช้จ่ายสตามินา x2)" }, header.Seq);
+                Send(new Info { Text = "Lelah diset 90 (di atas batas bahaya 85 → biaya stamina x2)" }, header.Seq);
                 break;
             case "reload gather":
             case "reload gathering":
             {
                 string loaded = GatheringTools.ReloadNow();
                 int cleared = _world.ForgetNaturalGeneratorCache();
-                Send(new Info { Text = loaded + $" · ล้าง cache จุดเก็บของ {cleared} จุด (ต้นไม้ที่แตะไปแล้วจะใช้ค่าใหม่รอบหน้า)" }, header.Seq);
+                Send(new Info { Text = loaded + $" · cache titik kumpul dibersihkan {cleared} titik (pohon yang sudah disentuh memakai nilai baru berikutnya)" }, header.Seq);
                 break;
             }
             default:
@@ -711,19 +711,19 @@ public partial class ServerPlayer
         if (!IsAdmin)
         {
             Console.WriteLine($"[control] ปฏิเสธ {Name} ({EntityId}): ไม่ใช่ admin");
-            Send(new Info { Text = "คำสั่ง control ใช้ได้เฉพาะ admin (ตั้งด้วย --admin <ชื่อ|entityId> ตอนเปิดเซิร์ฟ)" }, header.Seq);
+            Send(new Info { Text = "Perintah control hanya untuk admin (set dengan --admin <nama|entityId> saat menjalankan server)" }, header.Seq);
             return;
         }
         string[] a = raw.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         if (a.Length < 3)
         {
-            Send(new Info { Text = "ใช้: control <ชื่อ|id> <tp|walk|stop|gather|attack|craft|eat|place|bag|prof|spawn|kill|heal|give|travel|say|status> [args]" }, header.Seq);
+            Send(new Info { Text = "Pakai: control <nama|id> <tp|walk|stop|gather|attack|craft|eat|place|bag|prof|spawn|kill|heal|give|travel|say|status> [args]" }, header.Seq);
             return;
         }
         ServerPlayer target = _world.FindPlayerByNameOrId(a[1]);
         if (target == null)
         {
-            Send(new Info { Text = $"ไม่เจอผู้เล่น '{a[1]}' ที่ออนไลน์อยู่" }, header.Seq);
+            Send(new Info { Text = $"Pemain '{a[1]}' tidak ditemukan online" }, header.Seq);
             return;
         }
         string verb = a[2].ToLower();
@@ -735,24 +735,24 @@ public partial class ServerPlayer
             {
                 if (a.Length < 5 || !int.TryParse(a[3], out int tx) || !int.TryParse(a[4], out int ty))
                 {
-                    reply = $"ใช้: control {a[1]} {verb} <tileX> <tileY>";
+                    reply = $"Pakai: control {a[1]} {verb} <tileX> <tileY>";
                     break;
                 }
                 if (verb == "tp")
                 {
                     target.ControlTeleport(tx, ty);
-                    reply = $"ย้าย {target.Name} ไป tile {tx},{ty}";
+                    reply = $"Memindahkan {target.Name} ke tile {tx},{ty}";
                 }
                 else
                 {
                     target.ControlWalk(tx, ty);
-                    reply = $"สั่ง {target.Name} เดินไป tile {tx},{ty}";
+                    reply = $"Menyuruh {target.Name} berjalan ke tile {tx},{ty}";
                 }
                 break;
             }
             case "stop":
                 target.ControlStop();
-                reply = $"{target.Name} หยุดเดิน";
+                reply = $"{target.Name} berhenti berjalan";
                 break;
             case "gather":
                 reply = target.ControlGather();
@@ -785,7 +785,7 @@ public partial class ServerPlayer
                 reply = target.DescribeQuests();
                 break;
             case "travel":
-                reply = a.Length >= 4 ? target.TravelTo(a[3]) : "ใช้: control <ชื่อ> travel <รหัสเกาะ>";
+                reply = a.Length >= 4 ? target.TravelTo(a[3]) : "Pakai: control <nama> travel <id pulau>";
                 break;
             case "give":
                 reply = target.ControlGive(a.Length >= 4 ? a[3].ToLower() : "");
@@ -794,7 +794,7 @@ public partial class ServerPlayer
             {
                 string text = raw.Substring(raw.IndexOf(" say ", StringComparison.OrdinalIgnoreCase) + 5);
                 target.ControlSay(text);
-                reply = $"{target.Name} พูดว่า: {text}";
+                reply = $"{target.Name} berkata: {text}";
                 break;
             }
             case "status":
@@ -806,7 +806,7 @@ public partial class ServerPlayer
                 // เดินแบบนับจากที่ยืนอยู่ — สคริปต์เทสใช้อันนี้ ไม่ใช่ walk ที่เป็นพิกัดตายตัว
                 if (a.Length < 5 || !int.TryParse(a[3], out int gx) || !int.TryParse(a[4], out int gy))
                 {
-                    reply = $"ใช้: control {a[1]} go <dx> <dy>";
+                    reply = $"Pakai: control {a[1]} go <dx> <dy>";
                     break;
                 }
                 reply = target.ControlGoRelative(gx, gy);
@@ -829,7 +829,7 @@ public partial class ServerPlayer
                 reply = target.ControlProficiency();
                 break;
             default:
-                reply = $"ไม่รู้จักคำสั่ง '{verb}' (tp/walk/stop/gather/attack/craft/eat/place/bag/prof/give/heal/kill/spawn/say/status)";
+                reply = $"Perintah '{verb}' tidak dikenal (tp/walk/stop/gather/attack/craft/eat/place/bag/prof/give/heal/kill/spawn/say/status)";
                 break;
         }
         Console.WriteLine("[control] {0} สั่ง {1}: {2}", Name, target.Name, reply);
@@ -852,7 +852,7 @@ public partial class ServerPlayer
         MarkDirty();
         SendInventory();
         bool known = EquipData.Weapons.ContainsKey(prototype) || EquipData.Armors.ContainsKey(prototype);
-        Send(new Info { Text = $"ได้ {name} x1 (prototype={prototype}, รู้จักโมเดล: {(known ? "ใช่" : "ไม่")})" }, replyOf);
+        Send(new Info { Text = $"Dapat {name} x1 (prototype={prototype}, model dikenal: {(known ? "ใช่" : "ไม่")})" }, replyOf);
     }
 
     /// <summary>
@@ -874,7 +874,7 @@ public partial class ServerPlayer
             _statusEffects.Clear();
             MarkDirty();
             SendStatusEffects();
-            return "ล้างบัฟทั้งหมดแล้ว";
+            return "Semua buff dihapus";
         }
         double now = Durango.Utils.Times.UnixTimeNow();
         _statusEffects.RemoveAll(x => x.Id == "food:" + effId || x.EffectId == effId);
@@ -889,7 +889,7 @@ public partial class ServerPlayer
         });
         MarkDirty();
         SendStatusEffects();
-        return $"ติดบัฟ '{effId}' {seconds:F0} วิแล้ว";
+        return $"Buff '{effId}' aktif {seconds:F0} dtk";
     }
 
     /// <summary>
@@ -900,10 +900,10 @@ public partial class ServerPlayer
     {
         // ไม่ต้องพึ่ง CraftMenu.AllowFreeBuild — ทั้งช่อง cheat ถูกกันด้วย --enable-cheat อยู่แล้ว
         // (เหมือน give/spawn/maxskills) และคำสั่งนี้ใช้ตรวจโมเดลอย่างเดียว
-        if (string.IsNullOrEmpty(blueprintId)) { return "ใช้: cheat place real <blueprintId>"; }
+        if (string.IsNullOrEmpty(blueprintId)) { return "Pakai: cheat place real <blueprintId>"; }
         if (!RecipeData.BlueprintType.TryGetValue(blueprintId, out ushort entityType))
         {
-            return $"ไม่มีข้อมูล blueprint '{blueprintId}'";
+            return $"Tidak ada data blueprint '{blueprintId}'";
         }
         Point2 tile = new Point2((int)(CurrentPosition.x / 200f), (int)(CurrentPosition.y / 200f));
         for (int i = 0; i < 8 && _world.HasArtifactAt(tile); i++) { tile = new Point2(tile.x + 1, tile.y); }
@@ -914,7 +914,7 @@ public partial class ServerPlayer
         _world.AddArtifact(placed, blueprintId);
         _world.AnnounceArtifact(placed);
         int n = placed.Display.Parts?.Count ?? 0;
-        string parts = n == 0 ? "(ว่าง — client จะโชว์นั่งร้าน!)" : string.Join(", ", placed.Display.Parts);
-        return $"วาง '{blueprintId}' (เสร็จแล้ว) ที่ tile {tile.x},{tile.y} · โมเดล {n} ชิ้น: {parts}";
+        string parts = n == 0 ? "(kosong — client akan menampilkan perancah!)" : string.Join(", ", placed.Display.Parts);
+        return $"Menempatkan '{blueprintId}' (selesai) di tile {tile.x},{tile.y} · {n} model: {parts}";
     }
 }

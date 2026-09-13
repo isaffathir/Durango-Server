@@ -138,7 +138,7 @@ public sealed partial class AnimalSpawner
         {
             SpawnTable.Entry e = SpawnTable.Find(pair.Key);
             int size = AnimalData.TryGet(pair.Key, out AnimalData.AnimalInfo info) ? info.SizeLevel : 1;
-            lines.Add($"{e?.Name ?? pair.Key.ToString()} (ขนาด {size}) ×{count[pair.Key]} ใกล้ฝั่งสุด {pair.Value} tile / ต้องการ {InlandFor(pair.Key)}");
+            lines.Add($"{e?.Name ?? pair.Key.ToString()} (ukuran {size}) ×{count[pair.Key]} terdekat ke pantai {pair.Value} tile / butuh {InlandFor(pair.Key)}");
         }
         lines.Sort();
         for (int i = 0; i < lines.Count; i++)
@@ -177,7 +177,7 @@ public sealed partial class AnimalSpawner
             {
                 float lr = SpawnTable.LifeRatio(e.EntityType, e.MinLevel);
                 float dr = SpawnTable.DamageRatio(e.EntityType, e.MinLevel);
-                parts.Add($"{e.Name} เลือด×{lr:F2} ดาเมจ×{dr:F2}");
+                parts.Add($"{e.Name} darah×{lr:F2} damage×{dr:F2}");
             }
             Console.WriteLine("[animal] พลังรายชนิด (เทียบ {0}): {1}",
                 ServerConfig.Current.Animals.SpeciesReference, string.Join(" · ", parts));
@@ -193,7 +193,7 @@ public sealed partial class AnimalSpawner
                 if (!seen.Add(a.EntityType)) { continue; }
                 float def = SpawnTable.DefenseFor(a.EntityType, a.Level);
                 float reduce = 1f - ServerPlayer.ArmorScaleFor(def);
-                defParts.Add($"{NameOf(a.EntityType)} lv{a.Level} def {def:F0} ลด {reduce:P0}");
+                defParts.Add($"{NameOf(a.EntityType)} lv{a.Level} def {def:F0} kurang {reduce:P0}");
             }
             Console.WriteLine("[animal] เกราะรายชนิด (K={0}, scale={1}, cap {2:P0}): {3}",
                 ServerConfig.Current.Combat.ArmorDefenseK, defCfg.Scale, ServerConfig.Current.Combat.ArmorMaxReduce, string.Join(" · ", defParts));
@@ -1329,7 +1329,7 @@ public sealed partial class AnimalSpawner
         // ถ้าไม่ล้างตรงนี้ ตีแล้วมันจะยืนเฉยรอหมดเวลาพักก่อนค่อยขยับ = "สวนกลับช้าเกินไป"
         animal.NextMoveAt = now;
         Console.WriteLine("[animal] {0} (type {1}) {2} {3}", animal.EntityId, animal.EntityType,
-            flee ? "ตกใจวิ่งหนี" : "สู้กลับ", attackerId);
+            flee ? "Kaget dan lari" : "Melawan", attackerId);
     }
 
     /// <summary>คืน true ถ้าตัวนี้มี AI คุมอยู่ (ไล่/หนี) — ผู้เรียกจะได้ไม่สั่งเดินสุ่มทับ</summary>

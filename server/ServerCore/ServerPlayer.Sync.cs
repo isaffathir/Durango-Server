@@ -63,7 +63,7 @@ public partial class ServerPlayer
         {
             lock (_inventory)
             {
-                return $"กระเป๋าเต็ม ({_inventory.Count}/{PlayerInventoryMaxSize} ช่อง) — ทิ้งหรือฝากของเข้าโกดังอย่างน้อย 1 ชิ้นก่อนถึงจะเก็บเพิ่มได้";
+                return $"Tas penuh ({_inventory.Count}/{PlayerInventoryMaxSize} slot) — buang atau simpan minimal 1 barang ke gudang dulu";
             }
         }
     }
@@ -222,17 +222,17 @@ public partial class ServerPlayer
         //
         // Epic = หมวดเนื้อเรื่อง (sunset) — ตรงกับของแท้ (Offline/Player.cs ส่ง Epic = "sunset")
         //         คลิกแล้ว client เปิดหน้า Story (chapters ของข้อมูลเกม — มี 8 บทของสาย K อยู่แล้ว)
-        // Categories = แท็บย่อย — ของเราเพิ่ม "เควสประจำวัน" (Features.QuestChecklist) เปลี่ยนจาก
+        // Categories = แท็บย่อย — ของเราเพิ่ม "Quest harian" (Features.QuestChecklist) เปลี่ยนจาก
         // "รายการตรวจเซิร์ฟ" ตามที่ผู้เล่นใช้เป็นช่องทางเทสเซิร์ฟช่วยเหลือ
         // **ห้ามใส่ sunset ลง Categories ด้วย** — client กรองหมวดที่ == EpicCategory ออกจากแท็บ
-        // แล้วตอน Epic เปิดหน้า Story มันจะสร้าง tab "เนื้อเรื่อง" ซ้ำกันในหน้าเควส
+        // แล้วตอน Epic เปิดหน้า Story มันจะสร้าง tab "Cerita" ซ้ำกันในหน้าเควส
         QuestCategory[] tabs = ServerConfig.Current.Features.QuestChecklist
             ? new[]
             {
                 new QuestCategory
                 {
                     Category = QuestData.ChecklistCategory,
-                    Name = "เควสประจำวัน",
+                    Name = "Quest harian",
                     Faction = null,
                     Season = null,
                     UnreceivedCount = CountUnclaimedQuests(QuestData.ChecklistCategory)
@@ -245,7 +245,7 @@ public partial class ServerPlayer
             Epic = new QuestCategory
             {
                 Category = QuestData.MainCategory,
-                Name = "เนื้อเรื่อง",
+                Name = "Cerita",
                 Faction = null,
                 Season = null,
                 UnreceivedCount = CountUnclaimedQuests(QuestData.MainCategory)

@@ -33,19 +33,19 @@ public partial class ServerPlayer
     {
         if (IslandRegistry.All.Count == 0)
         {
-            return "เซิร์ฟนี้เปิดแบบเกาะเดียว (ไม่ได้ใส่ --island)";
+            return "Server ini berjalan mode satu pulau (tanpa --island)";
         }
         var sb = new StringBuilder();
-        sb.Append("เกาะทั้งหมด (คุณเลเวล ").Append(Level).Append("):");
+        sb.Append("Semua pulau (levelmu ").Append(Level).Append("):");
         for (int i = 0; i < IslandRegistry.All.Count; i++)
         {
             IslandInfo isle = IslandRegistry.All[i];
             bool here = IslandRegistry.Current != null && isle.Id == IslandRegistry.Current.Id;
             bool canGo = Level >= isle.RequiredLevel;
             sb.Append("\n  ").Append(isle.Id).Append(" | ").Append(isle.Name)
-              .Append(" | สัตว์ lv").Append(isle.MinLevel).Append('-').Append(isle.MaxLevel)
-              .Append(" | ต้องเลเวล ").Append(isle.RequiredLevel).Append('+')
-              .Append(here ? "  ← อยู่ที่นี่" : (canGo ? "  (ไปได้)" : "  (เลเวลไม่ถึง)"));
+              .Append(" | hewan lv").Append(isle.MinLevel).Append('-').Append(isle.MaxLevel)
+              .Append(" | butuh level ").Append(isle.RequiredLevel).Append('+')
+              .Append(here ? "  ← kamu di sini" : (canGo ? "  (bisa dikunjungi)" : "  (level belum cukup)"));
         }
         return sb.ToString();
     }
@@ -58,28 +58,28 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.IslandTravel)
         {
-            return "การเดินทางข้ามเกาะยังปิดอยู่ในรอบนี้ (เปิดที่ Features.IslandTravel ใน config.json)";
+            return "Perjalanan antar pulau nonaktif di ronde ini (aktifkan Features.IslandTravel di config.json)";
         }
         if (IslandRegistry.Current == null)
         {
-            return "เซิร์ฟนี้เปิดแบบเกาะเดียว เดินทางไม่ได้ (ต้องเปิดด้วย --island)";
+            return "Server ini mode satu pulau, tidak bisa bepergian (jalankan dengan --island)";
         }
         IslandInfo dest = IslandRegistry.Find(islandId);
         if (dest == null)
         {
-            return $"ไม่มีเกาะ '{islandId}' — มีอยู่: {string.Join(", ", IslandRegistry.Ids())}";
+            return $"Tidak ada pulau '{islandId}' — yang ada: {string.Join(", ", IslandRegistry.Ids())}";
         }
         if (dest.Id == IslandRegistry.Current.Id)
         {
-            return $"อยู่ที่ {dest.Name} อยู่แล้ว";
+            return $"Sudah berada di {dest.Name}";
         }
         if (Dead)
         {
-            return "ตายอยู่ เดินทางไม่ได้ — ฟื้นก่อน";
+            return "Sedang mati, tidak bisa bepergian — pulih dulu";
         }
         if (Level < dest.RequiredLevel)
         {
-            return $"{dest.Name} ต้องเลเวล {dest.RequiredLevel} ขึ้นไป (ตอนนี้ {Level})";
+            return $"{dest.Name} butuh level {dest.RequiredLevel} ke atas (sekarang {Level})";
         }
 
         // เซฟก่อนตัดสาย ไม่งั้นของที่เก็บมาหลัง autosave ครั้งล่าสุดหายทั้งหมด
@@ -88,9 +88,9 @@ public partial class ServerPlayer
 
         Console.WriteLine("[island] {0} เดินทาง {1} → {2} ({3})", Name, IslandRegistry.Current.Id, dest.Id, dest.Address);
         Send(new Info { Text = GotoPrefix + dest.Address });
-        Send(new Info { Text = $"กำลังเดินทางไป {dest.Name}..." });
+        Send(new Info { Text = $"Berangkat ke {dest.Name}..." });
         Send(new Emigrated { Type = Shared.Teleport.TeleportType.Unknown });
-        return $"ส่ง {Name} ไป {dest.Name} ({dest.Address}) แล้ว";
+        return $"{Name} dikirim ke {dest.Name} ({dest.Address})";
     }
 
     /// <summary>ตรวจว่าคำขอเดินทางมาจาก dock ที่มีอยู่จริงและผู้เล่นยืนอยู่ใกล้ dock</summary>
@@ -129,7 +129,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.IslandTravel)
         {
-            RejectFeatureDisabled("IslandTravel", "GetIslandTravelOptions", "การเดินทางข้ามเกาะยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("IslandTravel", "GetIslandTravelOptions", "Perjalanan antar pulau belum aktif di ronde ini", header);
             return;
         }
         if (!IsAtPort(msg.EntityId, msg.Tile))
@@ -169,38 +169,38 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.IslandTravel)
         {
-            RejectFeatureDisabled("IslandTravel", "TravelByRegion", "การเดินทางข้ามเกาะยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("IslandTravel", "TravelByRegion", "Perjalanan antar pulau belum aktif di ronde ini", header);
             return;
         }
         if (!IsAtPort(msg.EntityId, msg.Tile))
         {
-            Send(new Info { Text = "ต้องอยู่ที่ท่าเรือก่อนจึงจะย้ายเกาะได้" }, header.Seq);
+            Send(new Info { Text = "Harus berada di pelabuhan untuk pindah pulau" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         IslandInfo destination = IslandRegistry.Find(msg.RegionId);
         if (destination == null)
         {
-            Send(new Info { Text = "ไม่พบเกาะปลายทาง" }, header.Seq);
+            Send(new Info { Text = "Pulau tujuan tidak ditemukan" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         if (IslandRegistry.Current != null
             && string.Equals(destination.Id, IslandRegistry.Current.Id, StringComparison.OrdinalIgnoreCase))
         {
-            Send(new Info { Text = "คุณอยู่เกาะนี้อยู่แล้ว" }, header.Seq);
+            Send(new Info { Text = "Kamu sudah berada di pulau ini" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         if (Dead)
         {
-            Send(new Info { Text = "ต้องฟื้นก่อนจึงจะเดินทางได้" }, header.Seq);
+            Send(new Info { Text = "Harus pulih dulu sebelum bepergian" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         if (Level < destination.RequiredLevel)
         {
-            Send(new Info { Text = $"เกาะนี้ต้องเลเวล {destination.RequiredLevel} ขึ้นไป" }, header.Seq);
+            Send(new Info { Text = $"Pulau ini butuh level {destination.RequiredLevel} ke atas" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -237,7 +237,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.IslandTravel)
         {
-            RejectFeatureDisabled("IslandTravel", "DepartTutorial", "การเดินทางข้ามเกาะยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("IslandTravel", "DepartTutorial", "Perjalanan antar pulau belum aktif di ronde ini", header);
             return;
         }
         Console.WriteLine("[tutorial] {0} สั่งออกเรือ (entity {1})", Name, msg.EntityId);
@@ -259,12 +259,12 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.IslandTravel)
         {
-            RejectFeatureDisabled("IslandTravel", "DepartTutorialFor", "การเดินทางข้ามเกาะยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("IslandTravel", "DepartTutorialFor", "Perjalanan antar pulau belum aktif di ronde ini", header);
             return;
         }
         Console.WriteLine("[tutorial] {0} ออกเรือไป {1} — ส่ง Emigrated ให้กลับหน้า title", Name, msg.TargetRegionId);
         Save();
-        Send(new Info { Text = "ออกเรือสำเร็จ — กลับหน้า title เพื่อเข้าเกาะจริง" }, header.Seq);
+        Send(new Info { Text = "Berhasil berlayar — kembali ke layar judul untuk masuk pulau tujuan" }, header.Seq);
         Send(new Emigrated { Type = Shared.Teleport.TeleportType.Unknown }, header.Seq);
     }
 }

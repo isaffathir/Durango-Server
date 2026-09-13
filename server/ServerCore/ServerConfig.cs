@@ -860,7 +860,7 @@ public sealed class FeatureConfig
     public bool Quests { get; set; }
 
     /// <summary>
-    /// เอา "เควสประจำวัน" (เดิม: รายการตรวจเซิร์ฟ) มาใส่เป็นเควส (ดู QuestData.Checklist)
+    /// เอา "Quest harian" (เดิม: รายการตรวจเซิร์ฟ) มาใส่เป็นเควส (ดู QuestData.Checklist)
     /// ปิดตัวนี้เมื่อเทสผ่านหมดแล้ว — เควสชุดตรวจจะหายไปทันทีโดยไม่กระทบสายสอนเล่น
     /// </summary>
     public bool QuestChecklist { get; set; }
@@ -1180,7 +1180,7 @@ public sealed class SurvivalConfig
             StaminaRegenPerSec = 1.2f,
             StaminaRegenWhileResting = 10f,    // นั่งพักที่กองไฟ = 10 วินาทีเต็ม
             StaminaRegenDelaySeconds = 4f,     // นานกว่าเวลาเก็บของ 1 ครั้ง (~2-3 วิ)
-            // ⚠️ ต้นฉบับไม่มีค่า "เก็บของ" ตรง ๆ ในข้อมูลที่ถอดมาได้
+            // ⚠️ ต้นฉบับไม่มีค่า "Mengumpulkan" ตรง ๆ ในข้อมูลที่ถอดมาได้
             //    แต่การกระทำเล็ก ๆ ทุกตัวใน constants.json อยู่ในช่วง 1-5
             //    (watering 1 · fertilizing 1 · put_water_in_container 2 · sprinkle_water 5)
             //    จึงลดจาก 6 มาที่ 2 ให้อยู่ในวงเดียวกัน

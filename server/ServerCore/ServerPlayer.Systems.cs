@@ -47,7 +47,7 @@ public partial class ServerPlayer
     private bool RejectMarketDisabled(PacketHeader header)
     {
         if (ServerConfig.Current.Features.Market) return true;
-        Send(new Info { Text = "ระบบตลาดยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem pasar belum aktif" }, header.Seq);
         return false;
     }
 
@@ -99,41 +99,41 @@ public partial class ServerPlayer
     private void HandleRegisterProduct(RegisterProduct msg, PacketHeader header)
     {
         if (!RejectMarketDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleRegisterMultipleProducts(RegisterMultipleProducts msg, PacketHeader header)
     {
         if (!RejectMarketDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleBuyProduct(BuyProduct msg, PacketHeader header)
     {
         if (!RejectMarketDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleUnregisterProduct(UnregisterProduct msg, PacketHeader header)
     {
         if (!RejectMarketDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleWithdrawProduct(WithdrawProduct msg, PacketHeader header)
     {
         if (!RejectMarketDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleAddToFavoriteProducts(AddToFavoriteProducts msg, PacketHeader header)
     {
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleRemoveFromFavoriteProducts(RemoveFromFavoriteProducts msg, PacketHeader header)
     {
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleGetFavoriteProducts(GetFavoriteProducts msg, PacketHeader header)
@@ -174,91 +174,91 @@ public partial class ServerPlayer
     private void HandleGetPreviewPet(GetPreviewPet msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.Taming) { RejectTamingDisabled(header); return; }
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private bool RejectTamingDisabled(PacketHeader header)
     {
-        Send(new Info { Text = "ระบบจับ/เลี้ยงสัตว์ยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem menjinakkan/memelihara hewan belum aktif" }, header.Seq);
         return false;
     }
 
     private void HandleStartDomestication(StartDomestication msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.Taming) { RejectTamingDisabled(header); return; }
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleFinishDomestication(FinishDomestication msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.Taming) { RejectTamingDisabled(header); return; }
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleCancelDomestication(CancelDomestication msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.Taming) { RejectTamingDisabled(header); return; }
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleUseTamingAction(UseTamingAction msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.Taming) { RejectTamingDisabled(header); return; }
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandlePutInCage(PutInCage msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.Taming) { RejectTamingDisabled(header); return; }
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleFeedInCage(FeedInCage msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.Livestock) { RejectLivestockDisabled(header); return; }
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private bool RejectLivestockDisabled(PacketHeader header)
     {
-        Send(new Info { Text = "ระบบปศุสัตว์ยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem peternakan belum aktif" }, header.Seq);
         return false;
     }
 
     private void HandleRenamePet(RenamePet msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.Taming) { RejectTamingDisabled(header); return; }
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleReleasePet(ReleasePet msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.Taming) { RejectTamingDisabled(header); return; }
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleGrazePets(GrazePets msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.Taming) { RejectTamingDisabled(header); return; }
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleGetAvailableTask(GetAvailableTask msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.Taming) { RejectTamingDisabled(header); return; }
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleGetMilestoneCandidate(GetMilestoneCandidate msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.Taming) { RejectTamingDisabled(header); return; }
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleAcceptMilestone(AcceptMilestone msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.Taming) { RejectTamingDisabled(header); return; }
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     // ── Factions ──────────────────────────────────────────────────────
@@ -294,7 +294,7 @@ public partial class ServerPlayer
     private bool RejectFactionDisabled(PacketHeader header)
     {
         if (ServerConfig.Current.Features.Factions) return true;
-        Send(new Info { Text = "ระบบ Faction ยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem Faction belum aktif" }, header.Seq);
         return false;
     }
 
@@ -302,14 +302,14 @@ public partial class ServerPlayer
     {
         if (!RejectFactionDisabled(header)) return;
         // ฟีเจอร์เปิดอยู่แต่ยังไม่ได้ทำ — ตอบ Info แทน Abort (Abort = เลิกเซสชัน ทำให้ผู้เล่นหลุดจากโลก)
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleReportFactionProp(ReportFactionProp msg, PacketHeader header)
     {
         if (!RejectFactionDisabled(header)) return;
         // ฟีเจอร์เปิดอยู่แต่ยังไม่ได้ทำ — ตอบ Info แทน Abort (Abort = เลิกเซสชัน ทำให้ผู้เล่นหลุดจากโลก)
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleGetFactionDeliveryCondition(GetFactionDeliveryCondition msg, PacketHeader header)
@@ -327,7 +327,7 @@ public partial class ServerPlayer
     {
         if (!RejectFactionDisabled(header)) return;
         // ฟีเจอร์เปิดอยู่แต่ยังไม่ได้ทำ — ตอบ Info แทน Abort (Abort = เลิกเซสชัน ทำให้ผู้เล่นหลุดจากโลก)
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     // ── Missions ──────────────────────────────────────────────────────
@@ -363,38 +363,38 @@ public partial class ServerPlayer
     private bool RejectMissionDisabled(PacketHeader header)
     {
         if (ServerConfig.Current.Features.Missions) return true;
-        Send(new Info { Text = "ระบบภารกิจยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem misi belum aktif" }, header.Seq);
         return false;
     }
 
     private void HandleAcceptMission(AcceptMission msg, PacketHeader header)
     {
         if (!RejectMissionDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleCancelMission(CancelMission msg, PacketHeader header)
     {
         if (!RejectMissionDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleShuffleMission(ShuffleMission msg, PacketHeader header)
     {
         if (!RejectMissionDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleRechargeMissionShuffleCount(RechargeMissionShuffleCount msg, PacketHeader header)
     {
         if (!RejectMissionDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleRecommendMissionImmediately(RecommendMissionImmediately msg, PacketHeader header)
     {
         if (!RejectMissionDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     // ── Attendance ────────────────────────────────────────────────────
@@ -418,20 +418,20 @@ public partial class ServerPlayer
     private bool RejectAttendanceDisabled(PacketHeader header)
     {
         if (ServerConfig.Current.Features.Attendance) return true;
-        Send(new Info { Text = "ระบบเข้าร่วมประจำวันยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem absen harian belum aktif" }, header.Seq);
         return false;
     }
 
     private void HandleGiveAttendanceReward(GiveAttendanceReward msg, PacketHeader header)
     {
         if (!RejectAttendanceDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleGiveAttendanceAppendix(GiveAttendanceAppendix msg, PacketHeader header)
     {
         if (!RejectAttendanceDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     // ── Cargo ─────────────────────────────────────────────────────────
@@ -456,49 +456,49 @@ public partial class ServerPlayer
     private bool RejectCargoDisabled(PacketHeader header)
     {
         if (ServerConfig.Current.Features.Cargo) return true;
-        Send(new Info { Text = "ระบบขนส่งยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem pengiriman belum aktif" }, header.Seq);
         return false;
     }
 
     private void HandleActivateCargoReceiver(ActivateCargoReceiver msg, PacketHeader header)
     {
         if (!RejectCargoDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleOpenGate(OpenGate msg, PacketHeader header)
     {
         if (!RejectCargoDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleCloseGate(CloseGate msg, PacketHeader header)
     {
         if (!RejectCargoDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleSendCargo(SendCargo msg, PacketHeader header)
     {
         if (!RejectCargoDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleReceiveCargoImmediately(ReceiveCargoImmediately msg, PacketHeader header)
     {
         if (!RejectCargoDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleOccupyCargoWarphole(OccupyCargoWarphole msg, PacketHeader header)
     {
         if (!RejectCargoDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleGetCargoWarpholeDefenseReward(GetCargoWarpholeDefenseReward msg, PacketHeader header)
     {
-        Send(new Info { Text = "รางวัลป้องกันจุดขนส่งยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Hadiah pertahanan titik pengiriman belum aktif" }, header.Seq);
     }
 
     // ── Archipelago ───────────────────────────────────────────────────
@@ -520,7 +520,7 @@ public partial class ServerPlayer
     private bool RejectArchipelagoDisabled(PacketHeader header)
     {
         if (ServerConfig.Current.Features.Archipelago) return true;
-        Send(new Info { Text = "ระบบหมู่เกาะยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem kepulauan belum aktif" }, header.Seq);
         return false;
     }
 
@@ -532,19 +532,19 @@ public partial class ServerPlayer
     private void HandleWarpToNextArchipelagoRegion(WarpToNextArchipelagoRegion msg, PacketHeader header)
     {
         if (!RejectArchipelagoDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleReissueArchipelagoTodos(ReissueArchipelagoTodos msg, PacketHeader header)
     {
         if (!RejectArchipelagoDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleRequestArchipelagoRegionClear(RequestArchipelagoRegionClear msg, PacketHeader header)
     {
         if (!RejectArchipelagoDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     // ── Band / Music ──────────────────────────────────────────────────
@@ -571,20 +571,20 @@ public partial class ServerPlayer
     private bool RejectBandDisabled(PacketHeader header)
     {
         if (ServerConfig.Current.Features.Band) return true;
-        Send(new Info { Text = "ระบบเพลง/ดนตรียังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem musik belum aktif" }, header.Seq);
         return false;
     }
 
     private void HandleGetMusic(GetMusic msg, PacketHeader header)
     {
         if (!RejectBandDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandlePlayMusic(PlayMusic msg, PacketHeader header)
     {
         if (!RejectBandDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleStopMusic(StopMusic msg, PacketHeader header)
@@ -595,36 +595,36 @@ public partial class ServerPlayer
     private void HandlePlaySharedMusic(PlaySharedMusic msg, PacketHeader header)
     {
         if (!RejectBandDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleChangeFollowMusic(ChangeFollowMusic msg, PacketHeader header)
     {
         if (!RejectBandDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleSaveMusicToSlot(SaveMusicToSlot msg, PacketHeader header)
     {
         if (!RejectBandDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleRemoveMusicFromSlot(RemoveMusicFromSlot msg, PacketHeader header)
     {
         if (!RejectBandDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandlePublishMusic(PublishMusic msg, PacketHeader header)
     {
         if (!RejectBandDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleGetSharedMusic(GetSharedMusic msg, PacketHeader header)
     {
-        Send(new Info { Text = "เพลงที่แชร์ยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Musik bersama belum aktif" }, header.Seq);
     }
 
     // ── Private Conversation (NPC) ────────────────────────────────────
@@ -639,14 +639,14 @@ public partial class ServerPlayer
     private bool RejectConversationDisabled(PacketHeader header)
     {
         if (ServerConfig.Current.Features.PrivateConversation) return true;
-        Send(new Info { Text = "ระบบแชทส่วนตัวยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem chat pribadi belum aktif" }, header.Seq);
         return false;
     }
 
     private void HandleInviteToConversation(InviteToConversation msg, PacketHeader header)
     {
         if (!RejectConversationDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleExitConversation(ExitConversation msg, PacketHeader header)
@@ -683,26 +683,26 @@ public partial class ServerPlayer
     private bool RejectAddOnsDisabled(PacketHeader header)
     {
         if (ServerConfig.Current.Features.AddOns) return true;
-        Send(new Info { Text = "ระบบ AddOns ยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem AddOns belum aktif" }, header.Seq);
         return false;
     }
 
     private void HandlePlaceAddOns(PlaceAddOns msg, PacketHeader header)
     {
         if (!RejectAddOnsDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandlePurchaseCommodityWithSteamDlc(PurchaseCommodityWithSteamDlc msg, PacketHeader header)
     {
         if (!RejectAddOnsDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandlePurchaseCommodityWithVoucher(PurchaseCommodityWithVoucher msg, PacketHeader header)
     {
         if (!RejectAddOnsDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     // ── Dye / Bleach ──────────────────────────────────────────────────
@@ -718,32 +718,32 @@ public partial class ServerPlayer
     private bool RejectDyeDisabled(PacketHeader header)
     {
         if (ServerConfig.Current.Features.DyeAndBleach) return true;
-        Send(new Info { Text = "ระบบย้อม/ฟอกสียังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem pewarnaan/pemutihan belum aktif" }, header.Seq);
         return false;
     }
 
     private void HandleDye(Dye msg, PacketHeader header)
     {
         if (!RejectDyeDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleBleach(Bleach msg, PacketHeader header)
     {
         if (!RejectDyeDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleEstimateDye(EstimateDye msg, PacketHeader header)
     {
         if (!RejectDyeDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     private void HandleEstimateBleach(EstimateBleach msg, PacketHeader header)
     {
         if (!RejectDyeDisabled(header)) return;
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     // ── Idle queries the client fires on join (empty replies keep unhandled_messages at 0) ──
@@ -925,7 +925,7 @@ public partial class ServerPlayer
     {
         EstateLicenses reply = BuildEstateLicenses();
         Console.WriteLine("[estate] {0} ขอใบสิทธิ์ (seq={1}) → ตอบ personal={2} largest={3}",
-            Name, header.Seq, reply.PersonalEstate.HasValue ? reply.PersonalEstate.Value.Size + " ช่อง" : "ไม่มี",
+            Name, header.Seq, reply.PersonalEstate.HasValue ? reply.PersonalEstate.Value.Size + " slot" : "Tidak ada",
             reply.LargestPersonalEstateSize);
         Send(reply, header.Seq);
     }
@@ -958,7 +958,7 @@ public partial class ServerPlayer
             return true;
         }
         string owner = string.IsNullOrEmpty(land.OwnerName) ? land.OwnerId : land.OwnerName;
-        reason = $"ที่ดินของ {owner} — เจ้าของยังไม่ให้สิทธิ์นี้";
+        reason = $"Tanah milik {owner} — pemilik belum memberi izin ini";
         return false;
     }
 
@@ -978,7 +978,7 @@ public partial class ServerPlayer
     private bool RejectEstateDisabled(PacketHeader header)
     {
         if (ServerConfig.Current.Features.LandPermission) return true;
-        Send(new Info { Text = "ระบบสิทธิ์ที่ดินยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem izin tanah belum aktif" }, header.Seq);
         return false;
     }
 
@@ -1073,7 +1073,7 @@ public partial class ServerPlayer
         EstateRecord? land = _world.Estates.FindByOwner(EntityId);
         if (land == null)
         {
-            Send(new Info { Text = "ยังไม่มีที่ดินจะวาร์ปกลับ" }, header.Seq);
+            Send(new Info { Text = "Belum punya tanah untuk warp kembali" }, header.Seq);
             return;
         }
         WarpTo(land.WarpPosition());
@@ -1087,7 +1087,7 @@ public partial class ServerPlayer
         EstateRecord? land = _world.Estates.FindByOwner(owner);
         if (land == null)
         {
-            Send(new Info { Text = "ไม่พบที่ดินที่จะไปเยี่ยม" }, header.Seq);
+            Send(new Info { Text = "Tanah yang akan dikunjungi tidak ditemukan" }, header.Seq);
             return;
         }
         WarpTo(land.WarpPosition());
@@ -1120,7 +1120,7 @@ public partial class ServerPlayer
 
     private void HandleChangeFarmingEncyclopediaMastery(ChangeFarmingEncyclopediaMastery msg, PacketHeader header)
     {
-        Send(new Info { Text = "คำสั่งนี้ยังไม่รองรับบนเซิร์ฟนี้" }, header.Seq);
+        Send(new Info { Text = "Perintah ini belum didukung di server ini" }, header.Seq);
     }
 
     // ── Engagement (no-op — ไม่มี state) ─────────────────────────────

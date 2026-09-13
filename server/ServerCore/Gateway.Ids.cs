@@ -164,9 +164,9 @@ public partial class Gateway
         };
 
         Console.WriteLine((ServerConfig.Current.PlayerIds?.Enabled ?? true)
-            ? "[id] เปิดหน้าสมัครไอดีที่ /id" + ((ServerConfig.Current.PlayerIds?.Required ?? false)
-                ? " (บังคับสมัครก่อนเล่น)" : " (สมัครหรือไม่ก็ได้)")
-            : "[id] ระบบไอดีปิดอยู่ (PlayerIds.Enabled=false)");
+            ? "[id] buka halaman pendaftaran ID di /id" + ((ServerConfig.Current.PlayerIds?.Required ?? false)
+                ? " (wajib daftar sebelum bermain)" : " (daftar tidak diwajibkan)")
+            : "[id] sistem ID nonaktif (PlayerIds.Enabled=false)");
     }
 
     // ---------- ตัวช่วย ----------
@@ -182,14 +182,14 @@ public partial class Gateway
             return true;
         }
         error = new WebServer.JsonResponse(
-            new JObject { ["ok"] = false, ["error"] = "ระบบไอดีปิดอยู่" }.ToString(),
+            new JObject { ["ok"] = false, ["error"] = "Sistem ID nonaktif" }.ToString(),
             HttpStatusCode.ServiceUnavailable);
         return false;
     }
 
     private static WebServer.Response IdError(string message) =>
         new WebServer.JsonResponse(
-            new JObject { ["ok"] = false, ["error"] = message ?? "ไม่สำเร็จ" }.ToString(),
+            new JObject { ["ok"] = false, ["error"] = message ?? "Gagal" }.ToString(),
             HttpStatusCode.BadRequest);
 
     /// <summary>ข้อมูลไอดี + รายชื่อตัวละคร ส่งกลับให้หน้าเว็บโชว์</summary>
@@ -204,7 +204,7 @@ public partial class Gateway
                 chars.Add(new JObject
                 {
                     ["entity_id"] = entityId,
-                    ["name"] = save?.Name ?? "(ไม่พบเซฟ)",
+                    ["name"] = save?.Name ?? "(save tidak ditemukan)",
                     ["level"] = save?.Level ?? 0
                 });
             }
@@ -249,7 +249,7 @@ public partial class Gateway
         if (path == null || !File.Exists(path))
         {
             return new WebServer.TextResponse("text/plain",
-                "web/id.html ไม่พบ (คาดว่าอยู่ที่ server/web/id.html)", HttpStatusCode.NotFound);
+                "web/id.html tidak ditemukan (seharusnya di server/web/id.html)", HttpStatusCode.NotFound);
         }
         try
         {
@@ -258,7 +258,7 @@ public partial class Gateway
         catch (Exception e)
         {
             return new WebServer.TextResponse("text/plain",
-                "อ่าน web/id.html ไม่สำเร็จ: " + e.Message, HttpStatusCode.InternalServerError);
+                "Gagal membaca web/id.html: " + e.Message, HttpStatusCode.InternalServerError);
         }
     }
 

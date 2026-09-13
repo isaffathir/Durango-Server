@@ -83,7 +83,7 @@ public partial class ServerPlayer
             {
                 if (Array.FindIndex(slots, s => s.Id == key) < 0)
                 {
-                    reason = $"ไม่มีช่อง '{key}' ในสูตรนี้";
+                    reason = $"Tidak ada slot '{key}' di resep ini";
                     return false;
                 }
             }
@@ -110,12 +110,12 @@ public partial class ServerPlayer
 
             if (ids.Count < slot.Min)
             {
-                reason = $"ช่อง '{slot.Id}' ต้องใส่อย่างน้อย {slot.Min} ชิ้น (ส่งมา {ids.Count})";
+                reason = $"Slot '{slot.Id}' butuh minimal {slot.Min} buah (dikirim {ids.Count})";
                 return false;
             }
             if (slot.Max > 0 && ids.Count > slot.Max)
             {
-                reason = $"ช่อง '{slot.Id}' ใส่ได้มากสุด {slot.Max} ชิ้น (ส่งมา {ids.Count})";
+                reason = $"Slot '{slot.Id}' maksimal {slot.Max} buah (dikirim {ids.Count})";
                 return false;
             }
 
@@ -126,17 +126,17 @@ public partial class ServerPlayer
                 if (!used.Add(id))
                 {
                     // ไอเทมชิ้นเดียวใส่ได้ช่องเดียว ไม่งั้นก้อนหิน 1 ก้อนจ่ายได้ทั้งสูตร
-                    reason = $"ใส่ไอเทม {id} ซ้ำมากกว่าหนึ่งช่อง";
+                    reason = $"Item {id} dimasukkan ke lebih dari satu slot";
                     return false;
                 }
                 if (_equippedItems.ContainsValue(id))
                 {
-                    reason = $"ไอเทม {id} ใส่อยู่บนตัว ถอดก่อนถึงจะเอามาคราฟต์ได้";
+                    reason = $"Item {id} sedang dipakai, lepas dulu sebelum dicraft";
                     return false;
                 }
                 if (IsItemLocked(id))
                 {
-                    reason = $"ไอเทม {id} ถูกล็อกอยู่ ปลดล็อกก่อนนำมาคราฟต์";
+                    reason = $"Item {id} terkunci, buka kuncinya dulu sebelum dicraft";
                     return false;
                 }
                 string proto = null;
@@ -145,7 +145,7 @@ public partial class ServerPlayer
                     int inv = _inventory.FindIndex(it => it.Id == id);
                     if (inv < 0)
                     {
-                        reason = $"ไม่มีไอเทม {id} อยู่ในกระเป๋า";
+                        reason = $"Tidak ada item {id} di tas";
                         return false;
                     }
                     proto = _inventory[inv].Prototype;
@@ -155,12 +155,12 @@ public partial class ServerPlayer
                 // เป็น tag ของไอเทมเหมือนกัน ต่างกันแค่บทบาทในสูตร
                 if (!MatchesAny(proto, slot.Tags))
                 {
-                    reason = $"ช่อง '{slot.Id}' ต้องการ {string.Join("/", DescribeRequirements(slot.Tags))} แต่ {proto} ไม่ใช่";
+                    reason = $"Slot '{slot.Id}' butuh {string.Join("/", DescribeRequirements(slot.Tags))} tapi {proto} bukan";
                     return false;
                 }
                 if (!MatchesAny(proto, slot.Materials))
                 {
-                    reason = $"ช่อง '{slot.Id}' ต้องทำจาก {string.Join("/", DescribeRequirements(slot.Materials))} แต่ {proto} ไม่ใช่";
+                    reason = $"Slot '{slot.Id}' harus dari {string.Join("/", DescribeRequirements(slot.Materials))} tapi {proto} bukan";
                     return false;
                 }
                 itemIds.Add(id);
@@ -196,30 +196,30 @@ public partial class ServerPlayer
         }
         if (!workbench.HasValue || string.IsNullOrEmpty(workbench.Value.EntityId))
         {
-            reason = $"สูตรนี้ต้องทำที่{WorkbenchNameOf(need)} แต่ไม่ได้บอกมาว่าใช้ตัวไหน";
+            reason = $"Resep ini harus dibuat di {WorkbenchNameOf(need)} tapi tidak disebutkan yang mana";
             return false;
         }
         string entityId = workbench.Value.EntityId;
         if (!_world.TryGetArtifact(entityId, out AppearArtifact artifact))
         {
-            reason = $"ไม่มีสิ่งปลูกสร้าง {entityId} อยู่จริง";
+            reason = $"Bangunan {entityId} tidak ada";
             return false;
         }
         // Occupied = ยังเป็นแค่ "ที่จองไว้" ยังไม่มีตัวของ · นอกนั้น (Built/Completed/Remodeling) ใช้ได้
         if (artifact.States.BuildingState == BuildingState.Occupied
             || artifact.States.BuildingState == BuildingState.Invalid)
         {
-            reason = "โต๊ะยังสร้างไม่เสร็จ";
+            reason = "Meja belum selesai dibangun";
             return false;
         }
         if (!IsWithinReach(artifact.Tile, WorkbenchRangeTiles))
         {
-            reason = "ยืนไกลจากโต๊ะเกินไป";
+            reason = "Terlalu jauh dari meja";
             return false;
         }
         if (!_world.TryGetArtifactBlueprint(entityId, out string blueprintId) || string.IsNullOrEmpty(blueprintId))
         {
-            reason = "ไม่รู้ว่าสิ่งปลูกสร้างนี้เป็นโต๊ะชนิดไหน";
+            reason = "Jenis meja bangunan ini tidak dikenal";
             return false;
         }
         for (int i = 0; i < need.Length; i++)
@@ -229,7 +229,7 @@ public partial class ServerPlayer
                 return true;
             }
         }
-        reason = $"{blueprintId} ใช้ทำสูตรนี้ไม่ได้ — ต้องเป็น{WorkbenchNameOf(need)}";
+        reason = $"{blueprintId} tidak bisa untuk resep ini — harus {WorkbenchNameOf(need)}";
         return false;
     }
 
@@ -238,7 +238,7 @@ public partial class ServerPlayer
     {
         if (need == null || need.Length == 0)
         {
-            return "โต๊ะ";
+            return "meja";
         }
         switch (need[0].Id)
         {
@@ -246,22 +246,22 @@ public partial class ServerPlayer
             case "kitchen":
             case "kitchen_lava":
             case "urban_kitchen":
-                return need[0].Level >= 40 ? "กองไฟใหญ่/เตา" : "กองไฟ";
-            case "cook_filter": return "เครื่องกรอง";
-            case "kiln": return "เตาเผา";
-            case "dryer": return "ราวตาก";
-            case "loom": return "กี่ทอผ้า";
-            case "table_clothes": return "โต๊ะตัดเสื้อ";
-            case "table_weapon": return "โต๊ะทำอาวุธ";
-            case "table_medicine": return "โต๊ะปรุงยา";
-            case "table_jewelry": return "โต๊ะเจียระไน";
+                return need[0].Level >= 40 ? "api unggun besar/tungku" : "Api unggun";
+            case "cook_filter": return "penyaring";
+            case "kiln": return "tanur";
+            case "dryer": return "rak jemur";
+            case "loom": return "alat tenun";
+            case "table_clothes": return "meja jahit";
+            case "table_weapon": return "meja senjata";
+            case "table_medicine": return "meja ramuan";
+            case "table_jewelry": return "meja asah";
             case "dye_work_table":
             case "dye_medicine_lab":
             case "urban_dye_medicine_lab":
-                return "โต๊ะย้อมสี";
-            case "fertilizer_maker": return "ที่หมักปุ๋ย";
-            case "alcohol_ripen": return "ถังหมัก";
-            default: return "โต๊ะช่าง";
+                return "meja pewarna";
+            case "fertilizer_maker": return "tempat kompos";
+            case "alcohol_ripen": return "tong fermentasi";
+            default: return "meja kerja";
         }
     }
 
@@ -556,7 +556,7 @@ public partial class ServerPlayer
             // ⇒ ของที่เราส่งไป ModifiableCount = 0 ถูกกรองทิ้งหมด ช่องเลยขึ้นว่า "ไม่มีของ"
             // ทั้งที่มีอยู่เต็มกระเป๋า และ **packet ไม่เคยถูกส่งมาถึง server เลย** (client กันไว้ก่อน)
             //
-            // ช่องที่ใช้ `required_tags` (เช่นช่อง "น้ำ" ของ boiled_meat) เป็น General
+            // ช่องที่ใช้ `required_tags` (เช่นช่อง "Air" ของ boiled_meat) เป็น General
             // จึงผ่านปกติ — นี่คือเหตุผลที่บางช่องมีของบางช่องว่าง
             ModifiableCount = 1,
             ModifiedCount = 0,
@@ -660,7 +660,7 @@ public partial class ServerPlayer
         string category = meta.Category ?? string.Empty;
         if ((category == "cook" || category == "cook_season2") && !ServerConfig.Current.Features.Cooking)
         {
-            return "ระบบทำอาหารยังไม่เปิดในรอบนี้";
+            return "Sistem memasak belum aktif di ronde ini";
         }
         return null;
     }
@@ -676,30 +676,30 @@ public partial class ServerPlayer
     {
         if (string.IsNullOrWhiteSpace(recipeId))
         {
-            return "ใช้: cheat why <ชื่อสูตร> เช่น `cheat why skewer` (เนื้อเสียบไม้)";
+            return "Pakai: cheat why <nama resep>, contoh `cheat why skewer` (sate daging)";
         }
         recipeId = recipeId.Trim();
         if (!RecipeRequirements.TryGet(recipeId, out RecipeRequirements.Slot[] slots))
         {
-            return $"ไม่มีสูตร '{recipeId}' ในเกม";
+            return $"Resep '{recipeId}' tidak ada di game";
         }
         RecipeMeta.TryGet(recipeId, out RecipeMeta.Info meta);
 
         var sb = new System.Text.StringBuilder();
-        sb.Append("สูตร ").Append(recipeId);
+        sb.Append("Resep ").Append(recipeId);
         if (meta != null)
         {
-            sb.Append(" (หมวด ").Append(meta.Category ?? "-").Append(")");
+            sb.Append(" (kategori ").Append(meta.Category ?? "-").Append(")");
         }
         sb.Append(NEWLINE);
 
         // 1) ระบบเปิดอยู่ไหม + เลเวล
         string blocked = BlockedByFeature(meta);
-        sb.Append(blocked == null ? "[/] ระบบเปิดอยู่" : "[x] " + blocked).Append(NEWLINE);
+        sb.Append(blocked == null ? "[/] sistem aktif" : "[x] " + blocked).Append(NEWLINE);
         if (meta != null)
         {
             bool lvOk = Level >= meta.MinLevel;
-            sb.AppendFormat("{0} เลเวล {1} (ต้องการ {2}){3}",
+            sb.AppendFormat("{0} level {1} (butuh {2}){3}",
                 lvOk ? "[/]" : "[x]", Level, meta.MinLevel, NEWLINE);
         }
 
@@ -709,11 +709,11 @@ public partial class ServerPlayer
             RecipeRequirements.Slot slot = slots[i];
             List<string> have = FindItemsForSlot(slot);
             bool ok = have.Count >= slot.Min;
-            sb.AppendFormat("{0} ช่อง '{1}' ต้องการ {2} ชิ้น — ในกระเป๋ามีที่ใช้ได้ {3} ชิ้น",
+            sb.AppendFormat("{0} slot '{1}' butuh {2} buah — di tas ada {3} yang bisa dipakai",
                 ok ? "[/]" : "[x]", slot.Id, slot.Min, have.Count);
             if (!ok)
             {
-                sb.Append(" · รับ: ").Append(DescribeSlotWants(slot));
+                sb.Append(" · menerima: ").Append(DescribeSlotWants(slot));
             }
             sb.Append(NEWLINE);
         }
@@ -721,27 +721,27 @@ public partial class ServerPlayer
         // 3) โต๊ะ/เตา
         if (meta != null && meta.Workbench != null && meta.Workbench.Length > 0)
         {
-            sb.AppendFormat("[?] ต้องยืนที่ {0} (client เป็นคนเลือกให้ตอนกดคราฟต์){1}",
+            sb.AppendFormat("[?] harus berdiri di {0} (client memilihnya saat menekan craft){1}",
                 DescribeTags(meta.Workbench), NEWLINE);
         }
         else
         {
-            sb.Append("[/] ไม่ต้องใช้โต๊ะ/เตา").Append(NEWLINE);
+            sb.Append("[/] tidak butuh meja/tungku").Append(NEWLINE);
         }
 
         // 4) เครื่องมือ — อันนี้แหละที่มักเป็นตัวบล็อกจริง
         if (meta != null && meta.Tools != null && meta.Tools.Length > 0)
         {
             string held = FindHeldToolFor(meta.Tools);
-            sb.AppendFormat("{0} ต้องมีเครื่องมือ {1}{2}{3}",
+            sb.AppendFormat("{0} butuh alat {1}{2}{3}",
                 held == null ? "[x]" : "[/]",
                 DescribeTags(meta.Tools),
-                held == null ? " — ไม่มีในกระเป๋า" : " — มี " + ItemNameData.NameOf(held, held),
+                held == null ? " — tidak ada di tas" : " — ada " + ItemNameData.NameOf(held, held),
                 NEWLINE);
         }
         else
         {
-            sb.Append("[/] ไม่ต้องใช้เครื่องมือ").Append(NEWLINE);
+            sb.Append("[/] tidak butuh alat").Append(NEWLINE);
         }
         return sb.ToString();
     }
@@ -772,7 +772,7 @@ public partial class ServerPlayer
     /// 🐛 รอบแรกเขียนผิด: เทียบ slot.Materials กับ item.Prototype ตรง ๆ
     ///    แต่ในข้อมูลเกม **ทั้ง Tags และ Materials เป็นชื่อ tag เหมือนกัน** ต่างแค่บทบาทในสูตร
     ///    (สูตร boiled_meat ขอ materials = ["meat"] ซึ่งคือ tag "meat" ไม่ใช่ prototype "meat")
-    ///    ⇒ เนื้อกิ้งก่า/เนื้อสันใน ที่มี tag meat จะถูกนับว่า "ไม่มี" ทั้งที่ใช้ได้จริง
+    ///    ⇒ เนื้อกิ้งก่า/เนื้อสันใน ที่มี tag meat จะถูกนับว่า "Tidak ada" ทั้งที่ใช้ได้จริง
     /// </summary>
     private static bool SlotAccepts(RecipeRequirements.Slot slot, Item item)
     {
@@ -804,7 +804,7 @@ public partial class ServerPlayer
         {
             parts.AddRange(DescribeRequirements(slot.Materials));
         }
-        return parts.Count == 0 ? "อะไรก็ได้" : string.Join(" / ", parts);
+        return parts.Count == 0 ? "apa saja" : string.Join(" / ", parts);
     }
 
     private static string DescribeTags(RecipeMeta.Tag[] tags)
@@ -849,7 +849,7 @@ public partial class ServerPlayer
         if (!ServerConfig.Current.Features.Crafting)
         {
             Console.WriteLine("[feature] ปฏิเสธ {0}: ระบบคราฟต์ปิดอยู่ในรอบนี้ (Features.Crafting)", Name);
-            Send(new Info { Text = "ระบบคราฟต์ยังไม่เปิดในรอบนี้" }, header.Seq);
+            Send(new Info { Text = "Sistem craft belum aktif di ronde ini" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -876,7 +876,7 @@ public partial class ServerPlayer
         if ((RecipeData.IsEventRecipe(msg.RecipeId, meta?.Category) || RecipeData.IsSystemRecipeCategory(meta?.Category)) && !IsAdmin)
         {
             Console.WriteLine("[craft] ปฏิเสธ {0} สูตร {1}: เป็นของอีเวนต์/ระบบ — admin เท่านั้น", Name, msg.RecipeId);
-            Send(new Info { Text = "สูตรนี้ใช้ได้แค่แอดมิน" }, header.Seq);
+            Send(new Info { Text = "Resep ini hanya untuk admin" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -893,7 +893,7 @@ public partial class ServerPlayer
         {
             Console.WriteLine("[craft] ปฏิเสธ {0} สูตร {1}: ต้องเลเวล {2} (ตอนนี้ {3})",
                 Name, msg.RecipeId, meta.MinLevel, Level);
-            Send(new Info { Text = $"สูตรนี้ต้องเลเวล {meta.MinLevel}" }, header.Seq);
+            Send(new Info { Text = $"Resep ini butuh level {meta.MinLevel}" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -905,7 +905,7 @@ public partial class ServerPlayer
         {
             Console.WriteLine("[craft] ปฏิเสธ {0} สูตร {1}: ยังไม่ปลดล็อก (ต้องเรียนสกิลที่เกี่ยวข้องก่อน)",
                 Name, msg.RecipeId);
-            Send(new Info { Text = "สูตรนี้ยังไม่ปลดล็อก — เรียนสกิลที่เกี่ยวข้องก่อน" }, header.Seq);
+            Send(new Info { Text = "Resep ini belum terbuka — pelajari skill terkait dulu" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -941,7 +941,7 @@ public partial class ServerPlayer
             if (alreadyDone != null)
             {
                 Console.WriteLine("[craft] ปฏิเสธ {0} สูตร {1}: '{2}' แปรรูปมาแล้ว", Name, msg.RecipeId, alreadyDone);
-                Send(new Info { Text = $"{alreadyDone} แปรรูปมาแล้ว — ทำซ้ำอีกรอบไม่ได้" }, header.Seq);
+                Send(new Info { Text = $"{alreadyDone} sudah diolah — tidak bisa diulang" }, header.Seq);
                 Send(Aborts.Reason(), header.Seq);
                 return;
             }
@@ -974,7 +974,7 @@ public partial class ServerPlayer
         if (meta != null && meta.Type == 2)
         {
             Console.WriteLine("[craft] ปฏิเสธ {0} สูตร {1}: สูตรแก้ทรงเสื้อยังไม่รองรับ", Name, msg.RecipeId);
-            Send(new Info { Text = "สูตรแก้ทรงเสื้อยังไม่เปิดในรอบนี้" }, header.Seq);
+            Send(new Info { Text = "Resep ubah bentuk pakaian belum aktif di ronde ini" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -1008,7 +1008,7 @@ public partial class ServerPlayer
             });
         if (craftBefore != null && craftBefore.IsCancelled)
         {
-            Send(new Info { Text = craftBefore.CancelReason ?? "mod ยกเลิกการคราฟต์" }, header.Seq);
+            Send(new Info { Text = craftBefore.CancelReason ?? "mod membatalkan craft" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -1112,7 +1112,7 @@ public partial class ServerPlayer
             if (outcome != Result.Success)
             {
                 Console.WriteLine("[craft] {0} สูตร {1}: {2} (สำเร็จ {3:P0} · สำเร็จมาก {4:P1} · ความยาก {5:0.#} vs ชำนาญ {6})",
-                    Name, msg.RecipeId, outcome == Result.Failure ? "ล้มเหลว" : "สำเร็จมาก!", successRate, greatRate, 0.5f * resultLevel, craftSkill);
+                    Name, msg.RecipeId, outcome == Result.Failure ? "Gagal" : "Sukses besar!", successRate, greatRate, 0.5f * resultLevel, craftSkill);
             }
             Send(new Crafted
             {

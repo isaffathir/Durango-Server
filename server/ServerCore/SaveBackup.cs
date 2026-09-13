@@ -48,7 +48,7 @@ public static class SaveBackup
         if (!cfg.BackupEnabled) { return; }
         if (nowMs < _nextBackupAt) { return; }
         _nextBackupAt = nowMs + IntervalMs(cfg);
-        RunOnce("ตามรอบเวลา");
+        RunOnce("Sesuai siklus waktu");
     }
 
     /// <summary>แบ็กอัพเดี๋ยวนี้ — คืน path ที่เขียน (null = ไม่สำเร็จ/ไม่มีอะไรให้แบ็กอัพ)</summary>

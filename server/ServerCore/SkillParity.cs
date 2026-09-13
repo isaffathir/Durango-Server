@@ -55,7 +55,7 @@ public static class SkillParity
         }
 
         Console.WriteLine($"[skill-parity] โหนด {SkillNodeData.Map.Count} · สกิลในตาราง client {SkillData.SkillCategory.Count} · " +
-            $"client-ไม่มีโหนด {missingNodes} · โหนด-ไม่มีใน client {extraNodes}");
+            $"client tanpa node {missingNodes} · node tidak ada di client {extraNodes}");
         if (missingNodes == 0 && extraNodes == 0)
         {
             Console.WriteLine("[skill-parity] ตารางสกิลสองฝั่งตรงกัน");

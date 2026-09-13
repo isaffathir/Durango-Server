@@ -211,7 +211,7 @@ public static class WorkbenchTagData
                 {
                     want += (i > 0 ? "/" : string.Empty) + need[i].Id + " " + need[i].Level;
                 }
-                missing.Add(pair.Key + " ต้องการ " + want);
+                missing.Add(pair.Key + " butuh " + want);
             }
         }
         return missing;

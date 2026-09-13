@@ -66,7 +66,7 @@ public class RadiotowerServer
         Port = port;
         _listener.ClientAccepted += ClientAccepted;
         Console.WriteLine($"[radiotower] listening on 0.0.0.0:{port}"
-            + (_gameServer != null ? " (ตรวจ session token)" : " ⚠️ ไม่มี auth"));
+            + (_gameServer != null ? " (memeriksa session token)" : " ⚠️ tanpa auth"));
         return true;
     }
 
@@ -103,7 +103,7 @@ public class RadiotowerServer
             if (!Authorize(client, tune))
             {
                 Console.WriteLine($"[radiotower] ปฏิเสธ Tune ของ {tune.EntityId ?? "(ไม่ระบุ)"}: token ไม่ถูกต้อง");
-                try { connection.Send(Aborts.Reason("session token ไม่ถูกต้อง — ต่อแชทไม่ได้"), header.Seq); } catch (Exception) { }
+                try { connection.Send(Aborts.Reason("session token tidak valid — tidak bisa masuk chat"), header.Seq); } catch (Exception) { }
                 try { connection.Close(); } catch (Exception) { }
                 return;
             }
@@ -144,7 +144,7 @@ public class RadiotowerServer
             Console.WriteLine($"[radiotower] {client.Name ?? "?"} ส่ง {name} ({header.TypeCode}) ที่ยังไม่รองรับ — ตอบ Abort");
             if (header.Seq != 0)
             {
-                try { connection.Send(new Abort { Text = "ระบบนี้ยังไม่เปิดในรุ่นนี้ (" + name + ")" }, header.Seq); } catch (Exception) { }
+                try { connection.Send(new Abort { Text = "Sistem ini belum aktif di versi ini (" + name + ")" }, header.Seq); } catch (Exception) { }
             }
         };
         connection.StartReceive();

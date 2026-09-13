@@ -112,10 +112,10 @@ public static class BanList
                 if (!byId && !byName) { continue; }
                 string until = b.Until > 0
                     ? DateTimeOffset.FromUnixTimeSeconds((long)b.Until).ToLocalTime().ToString("d MMM HH:mm")
-                    : "ถาวร";
+                    : "permanen";
                 return string.IsNullOrWhiteSpace(b.Reason)
-                    ? $"ถูกระงับการเข้าเล่น ({until})"
-                    : $"ถูกระงับการเข้าเล่น: {b.Reason} ({until})";
+                    ? $"Diblokir dari permainan ({until})"
+                    : $"Diblokir dari permainan: {b.Reason} ({until})";
             }
         }
         return null;
@@ -145,7 +145,7 @@ public static class BanList
             SaveLocked();
         }
         Console.WriteLine("[ban] แบน {0} ({1}) — {2} · หมดอายุ {3}",
-            entry.Name, entry.EntityId, entry.Reason, entry.Until > 0 ? entry.Until.ToString("F0") : "ถาวร");
+            entry.Name, entry.EntityId, entry.Reason, entry.Until > 0 ? entry.Until.ToString("F0") : "permanen");
         return entry;
     }
 

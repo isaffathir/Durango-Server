@@ -57,7 +57,7 @@ public static partial class QuestData
         /// <summary>เก็บเกี่ยวได้กี่ชิ้น (Param = prototype ของผลผลิต · ว่าง = อะไรก็ได้)</summary>
         Harvest,
 
-        // ── ตัวนับที่เพิ่มมาเพื่อ "เควสประจำวัน" (ดู Checklist ข้างล่าง) ──
+        // ── ตัวนับที่เพิ่มมาเพื่อ "Quest harian" (ดู Checklist ข้างล่าง) ──
         /// <summary>รดน้ำต้นไม้กี่ครั้ง</summary>
         Water,
         /// <summary>ใส่ปุ๋ยกี่ครั้ง</summary>
@@ -132,7 +132,7 @@ public static partial class QuestData
     public const string MainCategory = "sunset";
 
     /// <summary>
-    /// หมวดของ "เควสประจำวัน" (เดิม: รายการตรวจเซิร์ฟ) — โผล่เป็น **แท็บแยก** ในหน้าต่างเควส
+    /// หมวดของ "Quest harian" (เดิม: รายการตรวจเซิร์ฟ) — โผล่เป็น **แท็บแยก** ในหน้าต่างเควส
     ///
     /// 💡 ชื่อแท็บมาจาก <c>QuestCategory.Name</c> ที่ **server ส่งเอง** ⇒ ใส่ภาษาไทยได้เลย
     ///    (ต่างจากชื่อเควสรายอันที่ client หยิบจากตารางในตัวเกมเป็นเกาหลี)
@@ -169,53 +169,53 @@ public static partial class QuestData
     {
         new Quest("event_2018_fall_3_17_any_gathering_01", MainCategory, Goal.Gather, null, 10,
             null, new Reward(20, 0, ("stem", 3)),
-            "เก็บของจากธรรมชาติ 10 ครั้ง — กดค้างที่ต้นไม้หรือพุ่มไม้รอบตัว"),
+            "Kumpulkan bahan dari alam 10 kali — tekan dan tahan pohon atau semak di sekitarmu"),
 
         new Quest("daily_weaponcrafting_b_01", MainCategory, Goal.Craft, "tool", 5,
             "event_2018_fall_3_17_any_gathering_01", new Reward(30, 1),
-            "คราฟต์เครื่องมือ 5 ชิ้น — ไม่มีขวานก็ตัดไม้ไม่ได้ ไม่มีมีดก็แล่ซากไม่ได้"),
+            "Buat 5 alat — tanpa kapak tidak bisa menebang, tanpa pisau tidak bisa menguliti"),
 
         new Quest("customize_estate_quest_05", MainCategory, Goal.GatherItem, "wood_log", 10,
             "daily_weaponcrafting_b_01", new Reward(40, 0, ("stem", 6)),
-            "เก็บท่อนซุง 10 อัน — ต้องมีขวานถึงจะตัดไม้ใหญ่ได้ (แพต้องใช้ 4 อัน)"),
+            "Kumpulkan 10 batang kayu — butuh kapak untuk menebang pohon besar (rakit butuh 4)"),
 
         new Quest("anniversary_1st_03", MainCategory, Goal.Hunt, null, 1,
             "customize_estate_quest_05", new Reward(40, 0),
-            "ล่าสัตว์ให้ได้ 1 ตัว — แตะตัวสัตว์แล้วกดปุ่มโจมตี"),
+            "Buru 1 hewan — ketuk hewannya lalu tekan tombol serang"),
 
         new Quest("permanent_butchery_meat_01", MainCategory, Goal.Butcher, null, 10,
             "anniversary_1st_03", new Reward(50, 1),
-            "แล่ซากให้ได้ 10 ชิ้น — ต้องถือมีดและออกจากโหมดต่อสู้ก่อนถึงจะแตะซากได้"),
+            "Kuliti bangkai sampai 10 bagian — pegang pisau dan keluar dari mode bertarung dulu"),
 
         new Quest("permanent_cooking_any_01", MainCategory, Goal.Cook, null, 5,
             "permanent_butchery_meat_01", new Reward(60, 0),
-            "ทำอาหาร 5 ครั้ง — เนื้อดิบให้พลังแค่ 60% และทำให้ล้าเพิ่ม เอาไปย่างที่กองไฟก่อน"),
+            "Masak 5 kali — daging mentah hanya memberi 60% tenaga dan menambah lelah, panggang di api unggun dulu"),
 
         new Quest("daily_constructing_a_01", MainCategory, Goal.Build, null, 2,
             "permanent_cooking_any_01", new Reward(60, 1),
-            "สร้างสิ่งปลูกสร้าง 2 อย่าง — ลองวางกองไฟกับกล่องเก็บของดู"),
+            "Bangun 2 bangunan — coba pasang api unggun dan kotak penyimpanan"),
 
         new Quest("story_enter_safehouse", MainCategory, Goal.Build, "tutorial_boat", 1,
             "daily_constructing_a_01", new Reward(150, 2, ("stem", 10)),
-            "ต่อแพหนีเกาะ! ใช้ท่อนซุง 4 + ก้าน 6 — นี่คือทางออกจากอังโครา"),
+            "Buat rakit untuk kabur dari pulau! Butuh 4 kayu + 6 ranting — ini jalan keluar dari Ancora"),
 
         // ── เนื้อเรื่องจริงของเกม ต่อจากต่อแพ (หมวด "sunset") ──
         // ใช้ id จริงจากตาราง quests_for_client — client หยิบชื่อ/คำอธิบาย/ไอคอนจากตารางให้เอง
         new Quest("story_custom_event_meet_k", MainCategory, Goal.Reach, "north_beach", 1,
             "story_enter_safehouse", new Reward(80, 1),
-            "ขึ้นฝั่งแล้วเดินไปที่หาดทางเหนือ — เจอหญิงสาวปริศนา K ยืนรออยู่"),
+            "Setelah mendarat, berjalanlah ke pantai utara — wanita misterius K menunggu di sana"),
 
         new Quest("story_enter_personal", MainCategory, Goal.Craft, null, 5,
             "story_custom_event_meet_k", new Reward(100, 1),
-            "K ฝากให้คุ้นเคยกับดูแรงโก — คราฟต์สิ่งของ 5 ชิ้นจากโต๊ะงาน"),
+            "K memintamu mengenal Durango — buat 5 barang di meja kerja"),
 
         new Quest("story_enter_risky", MainCategory, Goal.Hunt, null, 3,
             "story_enter_personal", new Reward(120, 1),
-            "ประกาศตัวเป็นผู้บุกเบิก! ออกไปล่าสัตว์ 3 ตัวตามทุ่งรอบเกาะ"),
+            "Nyatakan dirimu sebagai pionir! Buru 3 hewan di padang sekitar pulau"),
 
         new Quest("story_level_16", MainCategory, Goal.Level, null, 16,
             "story_enter_risky", new Reward(200, 2),
-            "ถึงเลเวล 16 — พิสูจน์ว่าอยู่รอดในดูแรงโกได้จริง (เควสจากเนื้อเรื่อง: ถึง Lv.16)")
+            "Capai level 16 — buktikan kamu bisa bertahan di Durango (quest cerita: capai Lv.16)")
     };
 
     /// <summary>
@@ -254,64 +254,64 @@ public static partial class QuestData
         // ── ระบบปลูกผัก (ทำใหม่ล่าสุด ยังไม่เคยเจอตัวเกมจริง) ──────────
         new Quest("permanent_farming_seed_01", ChecklistCategory, Goal.Plant, "corn_seed", 4,
             null, new Reward(20, 0),
-            "[ตรวจ] ปลูกเมล็ดข้าวโพด 4 ครั้ง — สร้างแปลงผักก่อน แล้วแตะแปลงเลือก \"ปลูก\""),
+            "[Cek] Tanam benih jagung 4 kali — buat petak kebun dulu, lalu ketuk petak dan pilih \"Tanam\""),
 
         new Quest("event_1_farming_cherry_01", ChecklistCategory, Goal.Water, null, 2,
             null, new Reward(15, 0),
-            "[ตรวจ] รดน้ำต้นไม้ 2 ครั้ง — ไม่รดน้ำต้นจะตายตอนโตครบ"),
+            "[Cek] Siram tanaman 2 kali — tanpa disiram tanaman mati saat dewasa"),
 
         new Quest("event_1_farming_cherry_02", ChecklistCategory, Goal.Fertilize, null, 2,
             null, new Reward(15, 0),
-            "[ตรวจ] ใส่ปุ๋ย 2 ครั้ง — ปุ๋ยเป็นตัวกำหนดว่าจะได้ผลผลิตกี่ชิ้น"),
+            "[Cek] Beri pupuk 2 kali — pupuk menentukan jumlah hasil panen"),
 
         new Quest("event_1_gathering_cherry_bough_01", ChecklistCategory, Goal.Harvest, null, 3,
             null, new Reward(25, 0),
-            "[ตรวจ] เก็บเกี่ยวผลผลิต 3 ชิ้น — แตะแปลงที่โตแล้วเลือก \"เก็บ\""),
+            "[Cek] Panen 3 hasil — ketuk petak yang sudah dewasa lalu pilih \"Panen\""),
 
         new Quest("event_newyear_2019_quest_04", ChecklistCategory, Goal.DrawWater, null, 1,
             null, new Reward(15, 0),
-            "[ตรวจ] ตักน้ำ 1 ครั้ง — ต้องถือภาชนะและยืนใกล้แม่น้ำ/ทะเลสาบ"),
+            "[Cek] Ambil air 1 kali — pegang wadah dan berdiri dekat sungai/danau"),
 
         // ── ระบบที่สายสอนเล่นไม่ได้แตะ ────────────────────────────────
         new Quest("urban_weapon_event_04", ChecklistCategory, Goal.Equip, null, 2,
             null, new Reward(20, 0),
-            "[ตรวจ] สวมอุปกรณ์ 2 ชิ้น — ดูว่าตัวละครเปลี่ยนหน้าตาและค่าพลังขึ้นจริงไหม"),
+            "[Cek] Pakai 2 perlengkapan — lihat apakah penampilan dan status karakter berubah"),
 
         new Quest("urban_weapon_event_10", ChecklistCategory, Goal.HuntRanged, null, 1,
             null, new Reward(30, 0),
-            "[ตรวจ] ล่าสัตว์ด้วยธนู 1 ตัว — เทสสายโจมตีระยะไกล (คนละระบบกับตีประชิด)"),
+            "[Cek] Buru 1 hewan dengan busur — menguji serangan jarak jauh (beda sistem dengan jarak dekat)"),
 
         new Quest("mainstory_chapter4_6", ChecklistCategory, Goal.Repair, null, 1,
             null, new Reward(20, 0),
-            "[ตรวจ] ซ่อมของ 1 ครั้ง — ใช้เครื่องมือจนความทนทานลด แล้วซ่อมด้วยชุดซ่อม"),
+            "[Cek] Perbaiki 1 barang — pakai alat sampai ketahanannya turun, lalu perbaiki dengan kit perbaikan"),
 
         new Quest("estate_build_lv55_02", ChecklistCategory, Goal.Store, null, 3,
             null, new Reward(20, 0),
-            "[ตรวจ] เอาของเก็บเข้ากล่อง 3 ชิ้น — วางกล่องแล้วแตะเปิด ลองหยิบออกด้วย"),
+            "[Cek] Simpan 3 barang ke kotak — pasang kotak, ketuk untuk membuka, coba ambil lagi"),
 
         new Quest("permanent_level_skill_gathering_10", ChecklistCategory, Goal.LearnSkill, null, 1,
             null, new Reward(20, 0),
-            "[ตรวจ] เรียนสกิล 1 อัน — เปิดหน้าสกิล ใช้แต้มที่ได้จากการขึ้นเลเวล"),
+            "[Cek] Pelajari 1 skill — buka halaman skill, pakai poin dari naik level"),
 
         new Quest("mainstory_chapter1_5", ChecklistCategory, Goal.Revive, null, 1,
             null, new Reward(20, 0),
-            "[ตรวจ] ตายแล้วฟื้น 1 ครั้ง — ดูว่าจอเด้งกลับจุดเกิดและของไม่หาย"),
+            "[Cek] Mati lalu hidup lagi 1 kali — pastikan kembali ke titik lahir dan barang tidak hilang"),
 
         new Quest("urban_cook_event_06", ChecklistCategory, Goal.Eat, null, 1,
             null, new Reward(15, 0),
-            "[ตรวจ] กินอาหาร 1 ครั้ง — ดูว่าสตามินาขึ้นและความล้าลดจริง"),
+            "[Cek] Makan 1 kali — pastikan stamina naik dan lelah berkurang"),
 
         new Quest("daily_survival_rest", ChecklistCategory, Goal.Rest, null, 1,
             null, new Reward(15, 0),
-            "[ตรวจ] นั่งพักที่กองไฟหรือเต็นท์ 1 ครั้ง — ต้องติดบัพพักและฟื้นค่าเหนื่อยจริง"),
+            "[Cek] Istirahat di api unggun atau tenda 1 kali — harus dapat buff istirahat dan lelah pulih"),
 
         new Quest("daily_local_warp", ChecklistCategory, Goal.WarpLocal, null, 1,
             null, new Reward(20, 0),
-            "[ตรวจ] วาปภายในเกาะ 1 ครั้ง — ต้องย้ายตำแหน่งไปยัง warphole ที่สร้างจริง"),
+            "[Cek] Warp dalam pulau 1 kali — harus berpindah ke warphole yang benar-benar dibangun"),
 
         new Quest("daily_island_travel", ChecklistCategory, Goal.IslandTravel, null, 1,
             null, new Reward(30, 0),
-            "[ตรวจ] ย้ายเกาะผ่านท่าเรือ 1 ครั้ง — ต้อง handoff ไปเซิร์ฟเวอร์เกาะปลายทางสำเร็จ")
+            "[Cek] Pindah pulau lewat pelabuhan 1 kali — handoff ke server pulau tujuan harus berhasil")
     };
 
     /// <summary>สายสอนเล่น + รายการตรวจ (รายการตรวจถูกกรองออกตอนส่งถ้าปิดใน config)</summary>
@@ -396,28 +396,28 @@ public static partial class QuestData
             Quest q = All[i];
             if (string.IsNullOrWhiteSpace(q.Id))
             {
-                problems.Add($"เควสลำดับ {i + 1}: ไม่มี id");
+                problems.Add($"Quest urutan {i + 1}: tidak ada id");
                 continue;
             }
             if (!seen.Add(q.Id))
             {
-                problems.Add($"{q.Id}: id ซ้ำในตาราง (ความคืบหน้าจะเดินสองเด้งต่อการกระทำครั้งเดียว)");
+                problems.Add($"{q.Id}: id ganda di tabel (progres bertambah dua kali per aksi)");
             }
             if (q.Count < 1)
             {
-                problems.Add($"{q.Id}: Count = {q.Count} (ต้องอย่างน้อย 1 ไม่งั้นจบตั้งแต่ทำครั้งแรก)");
+                problems.Add($"{q.Id}: Count = {q.Count} (minimal 1, kalau tidak selesai sejak aksi pertama)");
             }
             if (q.Prize == null)
             {
-                problems.Add($"{q.Id}: ไม่มีรางวัล (Prize เป็น null)");
+                problems.Add($"{q.Id}: tidak ada hadiah (Prize null)");
             }
             if (string.IsNullOrWhiteSpace(q.Thai))
             {
-                problems.Add($"{q.Id}: ไม่มีข้อความไทย — ผู้เล่นจะไม่รู้ว่าต้องทำอะไรจนกว่าจะเปิดแค็ตตาล็อกไทย");
+                problems.Add($"{q.Id}: tidak ada teks — pemain tidak tahu harus apa sampai membuka jendela quest");
             }
             if (string.IsNullOrWhiteSpace(q.Category))
             {
-                problems.Add($"{q.Id}: ไม่ได้ระบุหมวด");
+                problems.Add($"{q.Id}: kategori tidak diisi");
             }
         }
 
@@ -427,7 +427,7 @@ public static partial class QuestData
             Quest q = All[i];
             if (!string.IsNullOrEmpty(q.Requires) && !ById.ContainsKey(q.Requires))
             {
-                problems.Add($"{q.Id}: Requires ชี้ไป '{q.Requires}' ซึ่งไม่มีในตาราง ⇒ เควสนี้ไม่มีวันเปิด");
+                problems.Add($"{q.Id}: Requires menunjuk '{q.Requires}' yang tidak ada di tabel ⇒ quest ini tidak akan pernah terbuka");
             }
         }
 
@@ -441,7 +441,7 @@ public static partial class QuestData
             {
                 if (!path.Add(cur.Id) || ++guard > All.Length + 1)
                 {
-                    problems.Add($"{All[i].Id}: สาย Requires วนกลับมาหาตัวเอง ⇒ ทั้งวงไม่มีวันเปิด");
+                    problems.Add($"{All[i].Id}: rantai Requires berputar ke dirinya sendiri ⇒ seluruh rantai tidak akan terbuka");
                     break;
                 }
                 if (!ById.TryGetValue(cur.Requires, out cur))

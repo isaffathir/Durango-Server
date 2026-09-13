@@ -46,7 +46,7 @@ public static class DataDriftCheck
         // 스밀로돈 (Smilodon) — มีใน entity_types/animal.json และ collectible_names.json
         // แต่ค้นใน StreamingAssets/AssetBundles ทั้ง 4,315 ไฟล์แล้ว **ไม่มี prefab ของมันเลย**
         // client build นี้ไม่ได้แถมโมเดลมา ⇒ ถ้าเติมเข้าตารางแล้วเสก จะไม่มีอะไรให้เรนเดอร์
-        { "2047", "ไม่มี prefab ใน client build นี้ (ค้น AssetBundles 4,315 ไฟล์แล้วไม่เจอ)" },
+        { "2047", "Tidak ada prefab di build client ini (sudah dicari di 4.315 file AssetBundles)" },
     };
 
     /// <summary>คืน 0 ถ้าไม่มีอะไรหลุด · 1 ถ้ามี (ใช้เป็น exit code ได้)</summary>
@@ -120,8 +120,8 @@ public static class DataDriftCheck
 
         Console.WriteLine();
         Console.WriteLine(problems == 0
-            ? "ผลตรวจ: ตรงกันทุกชั้น"
-            : $"ผลตรวจ: มี {problems} ชั้นที่ข้อมูลไม่ครบ (ดูรายการข้างบน)");
+            ? "Hasil pemeriksaan: cocok di semua lapisan"
+            : $"Hasil pemeriksaan: {problems} lapisan datanya tidak lengkap (lihat daftar di atas)");
         return problems == 0 ? 0 : 1;
     }
 
@@ -139,12 +139,12 @@ public static class DataDriftCheck
         var server = new HashSet<string>(AnimalData.All.Keys.Select(k => k.ToString()));
         return new Result
         {
-            Name = "สัตว์",
+            Name = "Hewan",
             Game = game.Count,
             Server = server.Count,
             MissingInServer = game.Except(server).OrderBy(x => x).ToList(),
             ExtraInServer = server.Except(game).OrderBy(x => x).ToList(),
-            Note = "ขาด = เสกไม่ได้ / ไม่มีข้อมูลตัวนั้น",
+            Note = "hilang = tidak bisa dimunculkan / tidak ada datanya",
         };
     }
 
@@ -156,11 +156,11 @@ public static class DataDriftCheck
         var need = new HashSet<ushort>(AnimalData.All.Keys);
         return new Result
         {
-            Name = "อนิเมชันสัตว์",
+            Name = "Animasi hewan",
             Game = need.Count,
             Server = have.Count,
             MissingInServer = need.Except(have).Select(x => x.ToString()).OrderBy(x => x).ToList(),
-            Note = "ขาด = สัตว์ตัวนั้นเกิดมาแล้วยืนแข็ง",
+            Note = "hilang = hewan itu muncul lalu berdiri kaku",
         };
     }
 
@@ -171,11 +171,11 @@ public static class DataDriftCheck
         var need = new HashSet<ushort>(AnimalData.All.Keys);
         return new Result
         {
-            Name = "สูตรพลังสัตว์",
+            Name = "Rumus kekuatan hewan",
             Game = need.Count,
             Server = have.Count,
             MissingInServer = need.Except(have).Select(x => x.ToString()).OrderBy(x => x).ToList(),
-            Note = "ขาด = ตกไปใช้สูตรกลาง (แข็งเท่าแร็ปเตอร์)",
+            Note = "hilang = memakai rumus umum (sekeras raptor)",
         };
     }
 
@@ -188,11 +188,11 @@ public static class DataDriftCheck
         var server = new HashSet<string>(AnimalKindData.All.Keys.Select(k => k.ToString()));
         return new Result
         {
-            Name = "ประเภทสัตว์ (kind)",
+            Name = "Jenis hewan (kind)",
             Game = game.Count,
             Server = server.Count,
             MissingInServer = game.Except(server).OrderBy(x => x).ToList(),
-            Note = "ขาด = ฝูงชนิดนั้นใช้นิสัย/คูลดาวน์กลาง",
+            Note = "hilang = kawanan jenis itu memakai perilaku/cooldown umum",
         };
     }
 
@@ -223,7 +223,7 @@ public static class DataDriftCheck
             Game = game.Count,
             Server = server.Count,
             MissingInServer = game.Except(server).OrderBy(x => x).ToList(),
-            Note = "ขาด = เกาะนั้นตกไปใช้ตาราง Spawn แบบเดิม",
+            Note = "hilang = pulau itu memakai tabel Spawn lama",
         };
     }
 
@@ -236,11 +236,11 @@ public static class DataDriftCheck
         var server = new HashSet<string>(ItemLevelData.Prototypes.Keys);
         return new Result
         {
-            Name = "ช่วงเลเวลไอเทม",
+            Name = "Rentang level item",
             Game = game.Count,
             Server = server.Count,
             MissingInServer = game.Except(server).OrderBy(x => x).ToList(),
-            Note = "ขาด = ไม่ clamp เลเวลผลลัพธ์ของชิ้นนั้น",
+            Note = "hilang = level hasil item itu tidak dibatasi",
         };
     }
 
@@ -253,11 +253,11 @@ public static class DataDriftCheck
         var server = new HashSet<string>(BlueprintEffortData.All.Keys);
         return new Result
         {
-            Name = "effort สิ่งปลูกสร้าง",
+            Name = "effort bangunan",
             Game = game.Count,
             Server = server.Count,
             MissingInServer = game.Except(server).OrderBy(x => x).ToList(),
-            Note = "ขาด = ใช้สูตร effort_standard.build แทน",
+            Note = "hilang = memakai rumus effort_standard.build",
         };
     }
 
@@ -271,11 +271,11 @@ public static class DataDriftCheck
         List<string> miss = game.Except(server).OrderBy(x => x).ToList();
         return new Result
         {
-            Name = "ไอเทม (prototype)",
+            Name = "Item (prototype)",
             Game = game.Count,
             Server = server.Count,
             MissingInServer = miss,
-            Note = "ขาด = เสกด้วย give/it ไม่ได้",
+            Note = "hilang = tidak bisa dimunculkan dengan give/it",
         };
     }
 
@@ -289,11 +289,11 @@ public static class DataDriftCheck
         var server = new HashSet<string>(RecipeData.RecipeInfo.Keys);
         return new Result
         {
-            Name = "สูตรคราฟต์",
+            Name = "Resep craft",
             Game = game.Count,
             Server = server.Count,
             MissingInServer = game.Except(server).OrderBy(x => x).ToList(),
-            Note = "ขาด = คราฟต์สูตรนั้นไม่ได้",
+            Note = "hilang = resep itu tidak bisa dicraft",
         };
     }
 
@@ -305,11 +305,11 @@ public static class DataDriftCheck
         var server = new HashSet<string>(BlueprintRequirements.Blueprints.Keys);
         return new Result
         {
-            Name = "blueprint สิ่งปลูกสร้าง",
+            Name = "blueprint bangunan",
             Game = game.Count,
             Server = server.Count,
             MissingInServer = game.Except(server).OrderBy(x => x).ToList(),
-            Note = "ขาด = สร้างสิ่งนั้นไม่ได้",
+            Note = "hilang = bangunan itu tidak bisa dibuat",
         };
     }
 }

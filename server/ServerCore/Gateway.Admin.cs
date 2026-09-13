@@ -770,7 +770,7 @@ public partial class Gateway
         {
             if (!GameServer.CheatsEnabled)
             {
-                return AdminError("คำสั่งทดสอบถูกปิดอยู่ (เปิดเซิร์ฟด้วย --enable-cheat ถึงจะใช้ได้)");
+                return AdminError("Perintah cheat dinonaktifkan (jalankan server dengan --enable-cheat)");
             }
             string entityId = Field(postData, "entity_id");
             string command = Field(postData, "command");

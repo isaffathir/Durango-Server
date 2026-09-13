@@ -84,7 +84,7 @@ public partial class ServerPlayer
         if (levelAfter > levelBefore)
         {
             Console.WriteLine("[proficiency] {0}: {1} เลเวล {2} → {3}", Name, category, levelBefore, levelAfter);
-            Send(new Info { Text = $"ความชำนาญ{ProficiencyNameOf(category)}ขึ้นเป็นเลเวล {levelAfter}" });
+            Send(new Info { Text = $"Keahlian {ProficiencyNameOf(category)} naik ke level {levelAfter}" });
             SendSkills();       // หน้าสกิลต้องอัปเดตทันที ไม่ใช่รอเปิดเมนูใหม่
             // ความชำนาญป้อนค่า Derived ability ด้วย (ServerPlayer.Abilities.DerivedAbilityValue) ⇒
             // เกณฑ์ RecipeGateData/BlueprintGateData เปลี่ยน ต้อง push เมนูคราฟต์ใหม่เหมือนตอนขึ้นเลเวล
@@ -104,18 +104,18 @@ public partial class ServerPlayer
     {
         switch (category)
         {
-            case Category.Survival: return "การเอาชีวิตรอด";
-            case Category.MeleeCombat: return "การต่อสู้ระยะประชิด";
-            case Category.RangedCombat: return "การต่อสู้ระยะไกล";
-            case Category.Defense: return "การป้องกัน";
-            case Category.Butchery: return "การชำแหละ";
-            case Category.Gathering: return "การเก็บของ";
-            case Category.Cooking: return "การทำอาหาร";
-            case Category.Weaponcrafting: return "การทำอาวุธ";
-            case Category.Armorcrafting: return "การทำเครื่องแต่งกาย";
-            case Category.Constructing: return "การก่อสร้าง";
-            case Category.Farming: return "การเพาะปลูก";
-            case Category.Process: return "การแปรรูป";
+            case Category.Survival: return "Bertahan hidup";
+            case Category.MeleeCombat: return "Pertarungan jarak dekat";
+            case Category.RangedCombat: return "Pertarungan jarak jauh";
+            case Category.Defense: return "Pertahanan";
+            case Category.Butchery: return "Menguliti";
+            case Category.Gathering: return "Mengumpulkan";
+            case Category.Cooking: return "Memasak";
+            case Category.Weaponcrafting: return "Pembuatan senjata";
+            case Category.Armorcrafting: return "Pembuatan pakaian";
+            case Category.Constructing: return "Konstruksi";
+            case Category.Farming: return "Bercocok tanam";
+            case Category.Process: return "Pengolahan";
             default: return category.ToString();
         }
     }

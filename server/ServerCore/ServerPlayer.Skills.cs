@@ -42,7 +42,7 @@ public partial class ServerPlayer
         if (!ServerConfig.Current.Features.Skills)
         {
             Console.WriteLine("[feature] ปฏิเสธ {0}: ระบบสกิลปิดอยู่ในรอบนี้ (Features.Skills)", Name);
-            Send(new Info { Text = "ระบบสกิลยังไม่เปิดในรอบนี้" }, header.Seq);
+            Send(new Info { Text = "Sistem skill belum aktif di ronde ini" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -162,7 +162,7 @@ public partial class ServerPlayer
         Console.WriteLine("[skill] untrain {0}/{1} lv={2}", msg.SkillId, msg.SubId, msg.Level);
         if (!string.IsNullOrEmpty(msg.VoucherId))
         {
-            Send(new Info { Text = "การใช้ voucher ยกเลิกสกิลยังไม่เปิดในรอบนี้" }, header.Seq);
+            Send(new Info { Text = "Voucher reset skill belum aktif di ronde ini" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }

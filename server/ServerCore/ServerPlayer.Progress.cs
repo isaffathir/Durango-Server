@@ -65,7 +65,7 @@ public partial class ServerPlayer
             _skillPoints += gainedLevels * Rates.SkillPointsPerLevel;
             // เลือด/สตามินาสูงสุดผูกกับเลเวล — ต้องเติมให้เต็มใหม่ ไม่งั้นหลอดยาวขึ้นแต่ค่าเท่าเดิม
             RestoreSurvival(clearFatigue: false);
-            CheckLevelQuests();          // เควสแบบ "ถึงเลเวล N" วัดจากค่าปัจจุบัน ไม่ใช่นับสะสม
+            CheckLevelQuests();          // เควสแบบ "Capai level N" วัดจากค่าปัจจุบัน ไม่ใช่นับสะสม
             Console.WriteLine("[level] ⭐ {0} ขึ้นเลเวล {1} → {2} (exp {3}, แต้มสกิล +{4})",
                 Name, before, after, TotalExp, gainedLevels * Rates.SkillPointsPerLevel);
             SendSkills();
@@ -99,7 +99,7 @@ public partial class ServerPlayer
     // — คนละหลอดกัน: เลเวลให้แต้มสกิลไปกดเรียน · ความชำนาญขึ้นเองจากการทำซ้ำ
     public void GainExpForKill(int animalLevel, Shared.Skill.Category combatCategory = Shared.Skill.Category.MeleeCombat)
     {
-        GainExp(Rates.KillBase + animalLevel * Rates.KillPerLevel, "ล่าสัตว์");
+        GainExp(Rates.KillBase + animalLevel * Rates.KillPerLevel, "Berburu");
         QuestProgress(QuestData.Goal.Hunt);
         if (combatCategory == Shared.Skill.Category.RangedCombat)
         {
@@ -113,7 +113,7 @@ public partial class ServerPlayer
 
     public void GainExpForGather()
     {
-        GainExp(Rates.Gather, "เก็บของ");
+        GainExp(Rates.Gather, "Mengumpulkan");
         GainProficiency(Shared.Skill.Category.Gathering);
         QuestProgress(QuestData.Goal.Gather);
     }
@@ -126,7 +126,7 @@ public partial class ServerPlayer
 
     public void GainExpForButchery()
     {
-        GainExp(Rates.Butchery, "แล่เนื้อ");
+        GainExp(Rates.Butchery, "Menguliti");
         GainProficiency(Shared.Skill.Category.Butchery);
         QuestProgress(QuestData.Goal.Butcher);
     }
@@ -134,7 +134,7 @@ public partial class ServerPlayer
     /// <param name="meta">สูตรที่เพิ่งทำ — ใช้ตัดสินว่าความชำนาญเข้าหมวดไหน (ทำอาหาร/ทำอาวุธ/แปรรูป)</param>
     public void GainExpForCraft(RecipeMeta.Info meta = null)
     {
-        GainExp(Rates.Craft, "คราฟต์");
+        GainExp(Rates.Craft, "Craft");
         GainProficiency(CraftCategoryOf(meta));
         QuestProgress(QuestData.Goal.Craft);
         if (meta != null && !string.IsNullOrEmpty(meta.Category))
@@ -159,7 +159,7 @@ public partial class ServerPlayer
     /// <param name="blueprintId">แบบที่สร้าง — เควส "ต่อแพ" เจาะจง blueprint `tutorial_boat`</param>
     public void GainExpForBuild(string blueprintId = null)
     {
-        GainExp(Rates.Build, "สร้างของ");
+        GainExp(Rates.Build, "Membuat barang");
         GainProficiency(Shared.Skill.Category.Constructing);
         QuestProgress(QuestData.Goal.Build);
         if (!string.IsNullOrEmpty(blueprintId))
@@ -171,7 +171,7 @@ public partial class ServerPlayer
     /// <param name="seedPrototype">เมล็ดที่ลง — เควสบางอันเจาะจงชนิดพืช</param>
     public void GainExpForPlant(string seedPrototype = null)
     {
-        GainExp(Rates.Plant, "ปลูกผัก");
+        GainExp(Rates.Plant, "Menanam");
         GainProficiency(Shared.Skill.Category.Farming);
         QuestProgress(QuestData.Goal.Plant);
         if (!string.IsNullOrEmpty(seedPrototype))
@@ -184,7 +184,7 @@ public partial class ServerPlayer
     /// <param name="productPrototype">ผลผลิตที่ได้ เช่น corn_crop</param>
     public void GainExpForHarvest(string productPrototype = null)
     {
-        GainExp(Rates.Harvest, "เก็บเกี่ยว");
+        GainExp(Rates.Harvest, "Memanen");
         GainProficiency(Shared.Skill.Category.Farming);
         QuestProgress(QuestData.Goal.Harvest);
         if (!string.IsNullOrEmpty(productPrototype))

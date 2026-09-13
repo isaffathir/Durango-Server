@@ -101,21 +101,21 @@ public partial class ServerPlayer
             ApplyDrinkWater();
             Send(default(OK), header.Seq);
         });
-        AckOnly<WashBody>("ล้างตัว — ยังไม่มีค่าความสกปรกฝั่งเซิร์ฟ");
+        AckOnly<WashBody>("Membersihkan diri — server belum menghitung kotoran");
 
         // ตั้งค่า/ติ๊กถูกใจ — เซิร์ฟยังไม่เก็บ แต่ client แค่รอ ack
-        AckOnly<SetSocialOptions>("ตัวเลือกโซเชียล");
-        AckOnly<SetTimelineOption>("ตัวเลือกไทม์ไลน์");
-        AckOnly<SetRecipeLike>("ถูกใจสูตร");
-        AckOnly<SetBlueprintLike>("ถูกใจพิมพ์เขียว");
-        AckOnly<ToggleConversationNotification>("แจ้งเตือนบทสนทนา");
-        AckOnly<ToggleStatusEffect>("เปิด/ปิดไอคอนสถานะ");
-        AckOnly<GiveUpDistribution>("ยกเลิกแจกของ");
+        AckOnly<SetSocialOptions>("Opsi sosial");
+        AckOnly<SetTimelineOption>("Opsi timeline");
+        AckOnly<SetRecipeLike>("Suka resep");
+        AckOnly<SetBlueprintLike>("Suka blueprint");
+        AckOnly<ToggleConversationNotification>("Notifikasi percakapan");
+        AckOnly<ToggleStatusEffect>("Tampilkan/sembunyikan ikon status");
+        AckOnly<GiveUpDistribution>("Batalkan bagi-bagi");
 
         // แคลนยังไม่เปิด (เลื่อนหลัง S8) — client ถามตอนเข้าเกมทุกครั้ง ตอบ ack ให้เลิกรอ
-        AckOnly<GetClanNotificationEnabled>("แคลน");
-        AckOnly<ToggleClanNotification>("แคลน");
-        AckOnly<ResubscribeClanChannel>("แคลน");
+        AckOnly<GetClanNotificationEnabled>("Klan");
+        AckOnly<ToggleClanNotification>("Klan");
+        AckOnly<ResubscribeClanChannel>("Klan");
 
         // แจ้งเหตุจาก client — ไม่ต้องตอบ
         Ignore<PlayerDrawLine>();
@@ -138,7 +138,7 @@ public partial class ServerPlayer
             }
             if (header.Seq != 0)
             {
-                Send(new Abort { Text = "ระบบนี้ยังไม่เปิดในรุ่นนี้ (" + name + ")" }, header.Seq);
+                Send(new Abort { Text = "Sistem ini belum aktif di versi ini (" + name + ")" }, header.Seq);
             }
         };
     }

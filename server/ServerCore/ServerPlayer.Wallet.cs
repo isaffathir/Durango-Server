@@ -32,7 +32,7 @@ public partial class ServerPlayer
 
     private bool RejectWalletDisabled(PacketHeader header)
     {
-        Send(new Info { Text = "ระบบกระเป๋าเงินยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem dompet belum aktif" }, header.Seq);
         Send(Aborts.Reason(), header.Seq);
         return false;
     }
@@ -62,7 +62,7 @@ public partial class ServerPlayer
         long balance = GetWalletBalance(DurangoCoinCurrency);
         if (balance < amount)
         {
-            Send(new Info { Text = $"DurangoCoin ไม่พอ (มี {balance}, ต้องการ {amount})" }, header.Seq);
+            Send(new Info { Text = $"DurangoCoin tidak cukup (punya {balance}, butuh {amount})" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }

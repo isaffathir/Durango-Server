@@ -82,7 +82,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.WarpAccelerator)
         {
-            RejectFeatureDisabled("WarpAccelerator", "Accelerate", "วาร์ปเรกเซเลอเรเตอร์ยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("WarpAccelerator", "Accelerate", "Warp Accelerator belum aktif di ronde ini", header);
             return;
         }
         if (!CheckWarpAcceleratorAccess(msg.EntityId, out _))
@@ -94,14 +94,14 @@ public partial class ServerPlayer
             Send(new Info { Text = reason });
             return;
         }
-        Send(new Info { Text = $"เริ่มกิจกรรมวาร์ปเรกเซเลอเรเตอร์แล้ว — รอ {WarpCfg.WaitSeconds:F0} วิก่อนคลื่นแรก" });
+        Send(new Info { Text = $"Event Warp Accelerator dimulai — tunggu {WarpCfg.WaitSeconds:F0} dtk sebelum gelombang pertama" });
     }
 
     private void HandleParticipateAcceleration(ParticipateAcceleration msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.WarpAccelerator)
         {
-            RejectFeatureDisabled("WarpAccelerator", "ParticipateAcceleration", "วาร์ปเรกเซเลอเรเตอร์ยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("WarpAccelerator", "ParticipateAcceleration", "Warp Accelerator belum aktif di ronde ini", header);
             return;
         }
         if (!CheckWarpAcceleratorAccess(msg.EntityId, out _))
@@ -113,14 +113,14 @@ public partial class ServerPlayer
             Send(new Info { Text = reason });
             return;
         }
-        Send(new Info { Text = "เข้าร่วมกิจกรรมวาร์ปเรกเซเลอเรเตอร์แล้ว" });
+        Send(new Info { Text = "Bergabung ke event Warp Accelerator" });
     }
 
     private void HandleReceiveAcceleratorRewards(ReceiveAcceleratorRewards msg, PacketHeader header)
     {
         if (!ServerConfig.Current.Features.WarpAccelerator)
         {
-            RejectFeatureDisabled("WarpAccelerator", "ReceiveAcceleratorRewards", "วาร์ปเรกเซเลอเรเตอร์ยังไม่เปิดในรอบนี้", header);
+            RejectFeatureDisabled("WarpAccelerator", "ReceiveAcceleratorRewards", "Warp Accelerator belum aktif di ronde ini", header);
             return;
         }
         if (!CheckWarpAcceleratorAccess(msg.EntityId, out _))
@@ -170,8 +170,8 @@ public partial class ServerPlayer
         });
 
         string text = actual < amount
-            ? $"ได้รับ Warp Matter {actual} หน่วย (เกินโควตารายสัปดาห์ไป {amount - actual} หน่วย) — ยอดสะสม {_warpMatterBalance}"
-            : $"ได้รับ Warp Matter {actual} หน่วย — ยอดสะสม {_warpMatterBalance}";
+            ? $"Menerima {actual} Warp Matter (melebihi kuota mingguan {amount - actual}) — total {_warpMatterBalance}"
+            : $"Menerima {actual} Warp Matter — total {_warpMatterBalance}";
         Send(new Info { Text = text });
         Console.WriteLine("[warp-accel] {0} ได้รับ Warp Matter {1} (ยอดรวม {2}, สัปดาห์นี้ {3}/{4})",
             Name, actual, _warpMatterBalance, _weeklyWarpMatterAcquired, cap);

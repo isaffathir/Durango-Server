@@ -14,7 +14,7 @@ namespace DurangoServer.Core;
 /// ตัวใหญ่ (size_level 4: สเตโก/ไทรเซรา/พาราซอโร) ให้เนื้อเยอะกว่าตัวเล็กชัดเจน
 /// เพื่อให้ "ล่าตัวใหญ่คุ้มกว่า" ตามที่เกมออกแบบไว้
 ///
-/// ต้องมี "มีด" (ไอเทมที่มี tag `knife`) ถึงจะแล่ได้ — server ตรวจเองไม่เชื่อ client
+/// ต้องมี "Pisau" (ไอเทมที่มี tag `knife`) ถึงจะแล่ได้ — server ตรวจเองไม่เชื่อ client
 /// </summary>
 public static class ButcheryData
 {
@@ -39,19 +39,19 @@ public static class ButcheryData
     }
 
     // ── ชิ้นส่วนมาตรฐาน (ชื่อไทย + ไอคอนจริงของเกม) ──────────────────────
-    private static Part Meat(int n) => new Part("meat", "เนื้อ", "icon_nat_meat", n, 2.5f);
-    private static Part MeatLizard(int n) => new Part("meat_lizard", "เนื้อกิ้งก่า", "icon_nat_meat_lizard", n, 2.0f);
-    private static Part Hide(int n) => new Part("leather_raw", "หนังดิบ", "icon_nat_leather", n, 3.0f);
-    private static Part HideScrap(int n) => new Part("leather_raw_narrow", "เศษหนัง", "icon_nat_leather", n, 2.0f);
-    private static Part HideWide(int n) => new Part("leather_raw_wide", "หนังผืนใหญ่", "icon_nat_leather", n, 4.0f);
-    private static Part HideArmored(int n) => new Part("leather_raw_armored", "หนังเกราะ", "icon_nat_leather_armored", n, 4.5f);
-    private static Part BoneLeg(int n) => new Part("bone_leg", "กระดูกขา", "icon_nat_bone", n, 3.0f);
-    private static Part BoneLegThick(int n) => new Part("bone_leg_thick", "กระดูกขาใหญ่", "bone_leg_big", n, 4.5f);
-    private static Part BoneRib(int n) => new Part("bone_rib", "กระดูกซี่โครง", "icon_nat_bone_rib", n, 3.5f);
-    private static Part BoneHead(int n) => new Part("bone_head", "กะโหลก", "icon_nat_bone_head", n, 4.0f);
-    private static Part Horn(int n) => new Part("bone_horn", "เขา", "icon_nat_bone_horn_big", n, 4.0f);
-    private static Part Tooth(int n) => new Part("bone_tooth", "เขี้ยว", "icon_nat_bone_claw", n, 2.5f);
-    private static Part Feather(int n) => new Part("feather", "ขนนก", "icon_nat_feather", n, 1.5f);
+    private static Part Meat(int n) => new Part("meat", "Daging", "icon_nat_meat", n, 2.5f);
+    private static Part MeatLizard(int n) => new Part("meat_lizard", "Daging kadal", "icon_nat_meat_lizard", n, 2.0f);
+    private static Part Hide(int n) => new Part("leather_raw", "Kulit mentah", "icon_nat_leather", n, 3.0f);
+    private static Part HideScrap(int n) => new Part("leather_raw_narrow", "Potongan kulit", "icon_nat_leather", n, 2.0f);
+    private static Part HideWide(int n) => new Part("leather_raw_wide", "Kulit lembaran besar", "icon_nat_leather", n, 4.0f);
+    private static Part HideArmored(int n) => new Part("leather_raw_armored", "Kulit lapis baja", "icon_nat_leather_armored", n, 4.5f);
+    private static Part BoneLeg(int n) => new Part("bone_leg", "Tulang kaki", "icon_nat_bone", n, 3.0f);
+    private static Part BoneLegThick(int n) => new Part("bone_leg_thick", "Tulang kaki besar", "bone_leg_big", n, 4.5f);
+    private static Part BoneRib(int n) => new Part("bone_rib", "Tulang rusuk", "icon_nat_bone_rib", n, 3.5f);
+    private static Part BoneHead(int n) => new Part("bone_head", "Tengkorak", "icon_nat_bone_head", n, 4.0f);
+    private static Part Horn(int n) => new Part("bone_horn", "Tanduk", "icon_nat_bone_horn_big", n, 4.0f);
+    private static Part Tooth(int n) => new Part("bone_tooth", "Taring", "icon_nat_bone_claw", n, 2.5f);
+    private static Part Feather(int n) => new Part("feather", "Bulu", "icon_nat_feather", n, 1.5f);
 
     /// <summary>ซากของสัตว์ 10 ชนิดในเกาะเริ่มต้น → ชิ้นส่วนที่แล่ได้</summary>
     public static readonly Dictionary<ushort, Part[]> Map = new Dictionary<ushort, Part[]>
@@ -85,7 +85,7 @@ public static class ButcheryData
     private static readonly Part[] Fallback = { Meat(2), Hide(1) };
 
     /// <summary>
-    /// แล่เนื้อต้อง "มีด" — ไอเทมที่มี tag `knife` (ดู ItemTagData)
+    /// แล่เนื้อต้อง "Pisau" — ไอเทมที่มี tag `knife` (ดู ItemTagData)
     /// มีดหินคราฟต์ได้จากหิน+เชือก จึงไม่ได้ปิดทางผู้เล่นใหม่
     /// </summary>
     public static readonly Dictionary<string, int> KnifeNeeded = new Dictionary<string, int> { { "knife", 1 } };

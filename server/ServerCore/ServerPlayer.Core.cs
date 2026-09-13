@@ -272,7 +272,7 @@ public partial class ServerPlayer
             int level = save["appear_player"]?.Value<int>("Level") ?? 0;
             if (level > 0 && !_levelFromClient && GameServer.TrustClientProfile)
             {
-                Level = ClampLevel(level, "ไฟล์เซฟเกาะ");
+                Level = ClampLevel(level, "File save pulau");
             }
             // เฟส C: อ่านเพศจากไฟล์เดียวกับที่เอา Display มา ไม่งั้นอาจได้ display หญิง
             // แต่ EntityType ชาย → เลือกโมเดลเกราะผิดเพศ
@@ -627,7 +627,7 @@ public partial class ServerPlayer
         {
             if (!ServerConfig.Current.Features.Emotes)
             {
-                RejectFeatureDisabled("Emotes", "PlayEmoticon", "ระบบอีโมติคอนยังไม่เปิดในรอบนี้", header);
+                RejectFeatureDisabled("Emotes", "PlayEmoticon", "Sistem emotikon belum aktif di ronde ini", header);
                 return;
             }
             // M-1: บังคับ EntityId เป็นของจริง ไม่งั้นสั่งให้ตัวละครคนอื่นเล่นท่าทางได้
@@ -905,7 +905,7 @@ public partial class ServerPlayer
                 {
                     _lastSpeedWarnAt = nowSec;
                     Console.WriteLine("[move] ปฏิเสธ {0}: ขยับ {1:F0} หน่วยใน {2:F2} วิ (เพดาน {3:F0}){4}",
-                        Name, dist, dt, allowed, blatant ? " — ดึงกลับที่เดิม" : "");
+                        Name, dist, dt, allowed, blatant ? " — ditarik kembali ke posisi semula" : "");
                 }
                 return false;
             }
@@ -925,7 +925,7 @@ public partial class ServerPlayer
         {
             StopResting();        // ลุกเดินจริงแล้วเลิกพัก ความล้ากลับไปไต่ขึ้นตามเวลา
         }
-        CheckReachQuests();       // เควส "เดินไปถึงจุด" (เช่น ไปหาดเหนือเจอ K)
+        CheckReachQuests();       // เควส "Sampai di titik tujuan" (เช่น ไปหาดเหนือเจอ K)
         MarkDirty();              // GP-07
         return true;
     }
@@ -987,9 +987,9 @@ public partial class ServerPlayer
     /// <summary>
     /// [4 ก.ย. 2026] popup ประกาศสำหรับเกมของแท้ (มือถือ): packet <c>Info</c> ของเกมต้นฉบับ **ไม่แสดงอะไรบนจอ**
     /// (GameManager.DefaultInfoHandler ดูแค่ "##goto") — ที่แสดงได้คือ <c>RadioNotice</c> ในช่องแชทระบบ
-    /// ซึ่ง SocialSystem.OnSay เรียก UIManager.SystemMsg ให้เอง (+ ขึ้นเป็นบรรทัดในแท็บ "ระบบ" ด้วย)
+    /// ซึ่ง SocialSystem.OnSay เรียก UIManager.SystemMsg ให้เอง (+ ขึ้นเป็นบรรทัดในแท็บ "Sistem" ด้วย)
     /// </summary>
-    public void SendNotice(string text, string speaker = "ประกาศ")
+    public void SendNotice(string text, string speaker = "Pengumuman")
     {
         if (string.IsNullOrEmpty(text)) return;
         Send(new SayInExclusiveChannel
@@ -1005,7 +1005,7 @@ public partial class ServerPlayer
         });
     }
 
-    public void SendSystemChat(string text, string speaker = "ระบบ")
+    public void SendSystemChat(string text, string speaker = "Sistem")
     {
         if (string.IsNullOrEmpty(text)) return;
         Send(new SayInExclusiveChannel

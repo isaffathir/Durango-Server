@@ -388,7 +388,7 @@ public partial class ServerPlayer
             if (fatigueDraining)
             {
                 Console.WriteLine("[survival] {0} ล้าเต็มหลอด — เลือดเริ่มไหลลง (เหลือ {1:F0})", Name, _life.Value);
-                Send(new Info { Text = "เหนื่อยจนหมดแรงแล้ว — เลือดกำลังลดลง รีบไปพักที่สิ่งก่อสร้างสำหรับพักผ่อน" });
+                Send(new Info { Text = "Kelelahan total — darah menurun, segera istirahat di bangunan tempat istirahat" });
             }
         }
 
@@ -459,21 +459,21 @@ public partial class ServerPlayer
         EnsureSurvival();
         if (Cfg.RestFatiguePerSec <= 0f)
         {
-            return "ระบบพักผ่อนปิดอยู่";
+            return "Sistem istirahat nonaktif";
         }
         if (Dead)
         {
-            return "ตายอยู่ พักไม่ได้";
+            return "Sedang mati, tidak bisa istirahat";
         }
         if (!_world.IsRestSpotNear(artifactId, CurrentPosition, Cfg.RestRangeTiles * 200f, out string spotName))
         {
-            return "ต้องอยู่ใกล้สิ่งก่อสร้างที่ใช้พักได้ถึงจะพักได้";
+            return "Harus dekat bangunan tempat istirahat untuk beristirahat";
         }
         double now = Times.UnixTimeNow();
         _fatigue.Settle(now);
         if (_fatigue.Value <= 0f)
         {
-            return "ยังไม่เหนื่อยเลย";
+            return "Belum lelah";
         }
         _resting = true;
         _restStartedAt = now;
@@ -487,7 +487,7 @@ public partial class ServerPlayer
         SetRestStatusEffect(enabled: true);
         PushGauges("fatigue", "stamina");
         Console.WriteLine("[rest] {0} เริ่มพักที่ {1} (ล้า {2:F0})", Name, spotName, _fatigue.Value);
-        return $"กำลังพักที่{spotName} — ความล้าลดลงเรื่อย ๆ (ขยับหรือทำอะไรก็หลุด)";
+        return $"Beristirahat di {spotName} — lelah berkurang perlahan (bergerak atau beraksi akan membatalkan)";
     }
 
     /// <summary>เลิกพัก — ความล้ากลับไปไต่ขึ้นตามเวลาเหมือนเดิม</summary>

@@ -103,7 +103,7 @@ public partial class ServerPlayer
         ClearStatusEffect(CleanStatusEffectId);
         if (ApplyTimedStatusEffect(DirtyStatusEffectId, 0, level))
         {
-            Send(new Info { Text = "ตัวเปื้อนโคลนแล้ว — ลงน้ำเพื่อล้างตัว" });
+            Send(new Info { Text = "Badan kotor lumpur — masuk ke air untuk membersihkan diri" });
         }
         SendStatusEffects();
         RefreshFatigueFromStatusEffects();
@@ -128,7 +128,7 @@ public partial class ServerPlayer
             // อยู่ในน้ำ/กลางฝน = เปียกและต่ออายุไปเรื่อย ๆ พอขึ้นฝั่งค่อยนับถอยหลัง 120 วิ
             if (ApplyTimedStatusEffect(WetStatusEffectId, WetSeconds))
             {
-                Send(new Info { Text = inWater ? "ตัวเปียกน้ำแล้ว" : "โดนฝนจนตัวเปียก" });
+                Send(new Info { Text = inWater ? "Badan basah" : "Kehujanan sampai basah" });
             }
             changed = true;
         }
@@ -138,7 +138,7 @@ public partial class ServerPlayer
         {
             ClearStatusEffect(DirtyStatusEffectId);
             ApplyTimedStatusEffect(CleanStatusEffectId, CleanSeconds);
-            Send(new Info { Text = "ล้างตัวในน้ำแล้ว — หายสกปรก" });
+            Send(new Info { Text = "Sudah mandi di air — kotoran hilang" });
             changed = true;
         }
 

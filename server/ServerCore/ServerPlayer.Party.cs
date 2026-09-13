@@ -47,7 +47,7 @@ public partial class ServerPlayer
     /// </summary>
     private bool RejectPartyDisabled(PacketHeader header)
     {
-        Send(new Info { Text = "ระบบปาร์ตี้ยังไม่เปิดใช้งาน" }, header.Seq);
+        Send(new Info { Text = "Sistem party belum aktif" }, header.Seq);
         Send(Aborts.Reason(), header.Seq);
         return false;
     }
@@ -75,7 +75,7 @@ public partial class ServerPlayer
         }
         if (_partyId != null)
         {
-            Send(new Info { Text = "คุณอยู่ในปาร์ตี้อยู่แล้ว" }, header.Seq);
+            Send(new Info { Text = "Kamu sudah berada di party" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -109,28 +109,28 @@ public partial class ServerPlayer
         }
         if (msg.InviteeEntityId == EntityId)
         {
-            Send(new Info { Text = "เชิญตัวเองไม่ได้" }, header.Seq);
+            Send(new Info { Text = "Tidak bisa mengundang diri sendiri" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         if (_partyId != null && !_partyLeader)
         {
-            Send(new Info { Text = "เฉพาะหัวหน้าปาร์ตี้เท่านั้นที่เชิญได้" }, header.Seq);
+            Send(new Info { Text = "Hanya ketua party yang bisa mengundang" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         ServerPlayer invitee = _world.FindPlayer(msg.InviteeEntityId);
         if (invitee == null)
         {
-            Send(new Info { Text = "ไม่พบผู้เล่นนี้ออนไลน์อยู่" }, header.Seq);
+            Send(new Info { Text = "Pemain ini tidak ditemukan online" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
         if (invitee._partyId != null)
         {
             Send(new Info { Text = invitee._partyId == _partyId
-                ? "ผู้เล่นนี้อยู่ในปาร์ตี้นี้อยู่แล้ว"
-                : "ผู้เล่นนี้อยู่ในปาร์ตี้อื่นอยู่แล้ว" }, header.Seq);
+                ? "Pemain ini sudah berada di party ini"
+                : "Pemain ini sudah berada di party lain" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -151,7 +151,7 @@ public partial class ServerPlayer
         // ไม่งั้น GetPartyMembers/BuildPartyInfo ไม่เห็นเขาและตอนออกก็ลบไม่ถูก
         if (!_world.TryAddToParty(_partyId, invitee, MaxPartySize))
         {
-            Send(new Info { Text = "ปาร์ตี้เต็มแล้ว (สูงสุด 4 คน)" }, header.Seq);
+            Send(new Info { Text = "Party penuh (maksimal 4 orang)" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -274,7 +274,7 @@ public partial class ServerPlayer
         }
         if (member == this)
         {
-            Send(new Info { Text = "หัวหน้าไม่สามารถเตะตัวเองได้" }, header.Seq);
+            Send(new Info { Text = "Ketua tidak bisa mengeluarkan diri sendiri" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -306,7 +306,7 @@ public partial class ServerPlayer
         ServerPlayer newLeader = _world.FindPlayer(msg.MemberEntityId);
         if (newLeader == null || newLeader._partyId != _partyId || !newLeader._partyAccepted)
         {
-            Send(new Info { Text = "เลือกได้เฉพาะสมาชิกที่ยอมรับเข้าปาร์ตี้แล้ว" }, header.Seq);
+            Send(new Info { Text = "Hanya anggota yang sudah menerima undangan yang bisa dipilih" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }

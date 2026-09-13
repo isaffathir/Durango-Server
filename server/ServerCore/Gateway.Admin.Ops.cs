@@ -97,7 +97,7 @@ public partial class Gateway
             }
             Console.WriteLine("[admin] แบน {0} ({1}) · {2} · {3}",
                 name, id, string.IsNullOrWhiteSpace(reason) ? "ไม่ระบุเหตุผล" : reason,
-                hours > 0 ? hours + " ชม." : "ถาวร");
+                hours > 0 ? hours + " ชม." : "permanen");
             return AdminOk(new JObject
             {
                 ["message"] = (p != null ? "เตะออกและแบนแล้ว: " : "แบนแล้ว (ตอนนี้ไม่ได้ออนไลน์): ") + name,

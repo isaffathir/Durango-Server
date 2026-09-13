@@ -431,13 +431,13 @@ public partial class ServerPlayer
         if (brokenName != null)
         {
             Console.WriteLine("[tool] {0}: {1} พังแล้ว", Name, brokenName);
-            Send(new Info { Text = $"{brokenName} พังแล้ว — ต้องคราฟต์อันใหม่" });
+            Send(new Info { Text = $"{brokenName} rusak — craft yang baru" });
         }
         else if (left <= max * 0.2f && left + wear > max * 0.2f)
         {
             // เตือนครั้งเดียวตอนข้ามเส้น 20% ไม่ใช่ทุกครั้งที่ใช้หลังจากนั้น
             Console.WriteLine("[tool] {0}: เครื่องมือเหลือ {1:F0}/{2:F0}", Name, left, max);
-            Send(new Info { Text = $"เครื่องมือใกล้พังแล้ว (เหลือ {left:F0}/{max:F0})" });
+            Send(new Info { Text = $"Alat hampir rusak (sisa {left:F0}/{max:F0})" });
         }
     }
 
@@ -458,16 +458,16 @@ public partial class ServerPlayer
     {
         switch (tag)
         {
-            case "axe": return "ขวาน";
-            case "axe_onehand_tool": return "ขวานมือเดียว (หรือมีด/ดาบหิน ถ้าสูตรรับ)";
-            case "axe_twohand_tool": return "ขวานสองมือ";
-            case "hammer_onehand": return "ค้อนมือเดียว";
-            case "hammer_twohand": return "ค้อนสองมือ";
-            case "knife": return "มีด";
-            case "pickaxe": return "อีเต้อ";
-            case "shovel": return "พลั่ว";
-            case "hammer": return "ค้อน";
-            case "sickle": return "เคียว";
+            case "axe": return "Kapak";
+            case "axe_onehand_tool": return "Kapak satu tangan (atau pisau/pedang batu jika resep menerima)";
+            case "axe_twohand_tool": return "Kapak dua tangan";
+            case "hammer_onehand": return "Palu satu tangan";
+            case "hammer_twohand": return "Palu dua tangan";
+            case "knife": return "Pisau";
+            case "pickaxe": return "Cangkul";
+            case "shovel": return "Sekop";
+            case "hammer": return "Palu";
+            case "sickle": return "Sabit";
             default: return tag;
         }
     }
@@ -501,7 +501,7 @@ public partial class ServerPlayer
             }
             return list;
         }
-        // [4 ก.ย. 2026] เดิม fallback เป็น "ใบไม้" อย่างเดียวเสมอ ⇒ เกาะที่ชนิดของธรรมชาติไม่อยู่ใน
+        // [4 ก.ย. 2026] เดิม fallback เป็น "Daun" อย่างเดียวเสมอ ⇒ เกาะที่ชนิดของธรรมชาติไม่อยู่ใน
         // NaturalData.Map (เช่นเกาะหิมะ) **ทุกต้นทุกก้อนหินให้ใบไม้หมด** — เจ้าของแจ้งเป็นบั๊ก
         // ตอนนี้เดาจากช่วง id แทน: 11xxx=พืช · 12xxx/13xxx/15xxx=หิน/แร่ · 14xxx=ต้นไม้
         float fbEffort = effortFormula ? effortCfg.CollectSeconds(level) : 1f;
@@ -516,27 +516,27 @@ public partial class ServerPlayer
         }
         if (entityType >= 14000 && entityType < 15000)
         {
-            AddFb("wood_bough", "กิ่งไม้", "icon_nat_wood_branch", ToolRequirementFor("wood_bough"));
-            AddFb("wood_log", "ท่อนไม้", "icon_nat_wood_log", ToolRequirementFor("wood_log"));
-            AddFb("leaf", "ใบไม้", "icon_nat_leaf", bareHands);
+            AddFb("wood_bough", "Ranting", "icon_nat_wood_branch", ToolRequirementFor("wood_bough"));
+            AddFb("wood_log", "Kayu gelondongan", "icon_nat_wood_log", ToolRequirementFor("wood_log"));
+            AddFb("leaf", "Daun", "icon_nat_leaf", bareHands);
         }
         else if (entityType >= 12000 && entityType < 14000)
         {
-            AddFb("stone", "หิน", "icon_nat_mine_stone", ToolRequirementFor("stone"));
-            AddFb("stone_big", "หินก้อนใหญ่", "icon_nat_mine_rock", ToolRequirementFor("stone_big"));
+            AddFb("stone", "Batu", "icon_nat_mine_stone", ToolRequirementFor("stone"));
+            AddFb("stone_big", "Batu besar", "icon_nat_mine_rock", ToolRequirementFor("stone_big"));
         }
         else if (entityType >= 15000 && entityType < 16000)
         {
-            AddFb("stone", "หิน", "icon_nat_mine_stone", ToolRequirementFor("stone"));
-            AddFb("stone_big", "หินก้อนใหญ่", "icon_nat_mine_rock", ToolRequirementFor("stone_big"));
+            AddFb("stone", "Batu", "icon_nat_mine_stone", ToolRequirementFor("stone"));
+            AddFb("stone_big", "Batu besar", "icon_nat_mine_rock", ToolRequirementFor("stone_big"));
         }
         else
         {
             // 11xxx (พืช/พุ่ม) และชนิดที่ไม่รู้จักจริง ๆ
-            AddFb("leaf", "ใบไม้", "icon_nat_leaf", bareHands);
+            AddFb("leaf", "Daun", "icon_nat_leaf", bareHands);
             if (entityType >= 11000 && entityType < 12000)
             {
-                AddFb("stem", "ลำต้น", "icon_nat_fiber_reed", ToolRequirementFor("stem"));
+                AddFb("stem", "Batang", "icon_nat_fiber_reed", ToolRequirementFor("stem"));
             }
         }
         return list;
@@ -547,7 +547,7 @@ public partial class ServerPlayer
         if (!ServerConfig.Current.Features.Gathering)
         {
             Console.WriteLine("[feature] ปฏิเสธ {0}: ระบบเก็บของปิดอยู่ในรอบนี้ (Features.Gathering)", Name);
-            Send(new Info { Text = "ระบบเก็บของยังไม่เปิดในรอบนี้" }, header.Seq);
+            Send(new Info { Text = "Sistem mengumpulkan belum aktif di ronde ini" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -615,7 +615,7 @@ public partial class ServerPlayer
             });
         if (gatherBefore != null && gatherBefore.IsCancelled)
         {
-            Send(new Info { Text = gatherBefore.CancelReason ?? "mod ยกเลิกการเก็บของ" }, header.Seq);
+            Send(new Info { Text = gatherBefore.CancelReason ?? "mod membatalkan pengumpulan" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -702,7 +702,7 @@ public partial class ServerPlayer
             {
                 MakeDirty();
             }
-            NoteGatheredItem(item.Prototype);          // เควสที่เจาะจงของ เช่น "เก็บท่อนซุง 10 อัน"
+            NoteGatheredItem(item.Prototype);          // เควสที่เจาะจงของ เช่น "Kumpulkan 10 batang kayu"
             if (bonusItem)
             {
                 NoteGatheredItem(extra.Prototype);     // สกิลเก็บของทำให้ได้ 2 ชิ้น — นับทั้งคู่
@@ -721,7 +721,7 @@ public partial class ServerPlayer
     {
         if (!ServerConfig.Current.Features.Butchery)
         {
-            Send(new Info { Text = "ระบบแล่ซากยังไม่เปิดในรอบนี้" }, header.Seq);
+            Send(new Info { Text = "Sistem menguliti belum aktif di ronde ini" }, header.Seq);
             Send(Aborts.Reason(), header.Seq);
             return;
         }
@@ -762,7 +762,7 @@ public partial class ServerPlayer
         IModEventContext? beforeButchery = PluginManager.Instance?.FireEvent("butchery.before", this, true, false,
             new Dictionary<string, string>(StringComparer.Ordinal) { ["entity_id"] = corpse.EntityId, ["generator_id"] = msg.GeneratorId ?? "", ["tool_item_id"] = msg.ToolItemId ?? "" });
         if (beforeButchery?.IsCancelled == true)
-        { Send(new Info { Text = beforeButchery.CancelReason ?? "การแล่ถูกยกเลิกโดยม็อด" }, header.Seq); Send(Aborts.Reason(), header.Seq); return; }
+        { Send(new Info { Text = beforeButchery.CancelReason ?? "Menguliti dibatalkan oleh mod" }, header.Seq); Send(Aborts.Reason(), header.Seq); return; }
         if (!TrySpendStamina(StaminaCostCollect, ActionKind.Collect))
         {
             Console.WriteLine("[survival] {0} สตามินาไม่พอสำหรับแล่เนื้อ", Name);
@@ -850,7 +850,7 @@ public partial class ServerPlayer
             // ⇒ ของที่เราส่งไป ModifiableCount = 0 ถูกกรองทิ้งหมด ช่องเลยขึ้นว่า "ไม่มีของ"
             // ทั้งที่มีอยู่เต็มกระเป๋า และ **packet ไม่เคยถูกส่งมาถึง server เลย** (client กันไว้ก่อน)
             //
-            // ช่องที่ใช้ `required_tags` (เช่นช่อง "น้ำ" ของ boiled_meat) เป็น General
+            // ช่องที่ใช้ `required_tags` (เช่นช่อง "Air" ของ boiled_meat) เป็น General
             // จึงผ่านปกติ — นี่คือเหตุผลที่บางช่องมีของบางช่องว่าง
             ModifiableCount = 1,
             ModifiedCount = 0,

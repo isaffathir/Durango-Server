@@ -161,7 +161,7 @@
   "Spawn": [
     {
       "Type": 2090,
-      "Name": "โคอีโลฟิซิสทุ่งหิมะ",
+      "Name": "Coelophysis Salju",
       "MinLevel": 10,
       "MaxLevel": 13,
       "Quota": 6,
@@ -172,7 +172,7 @@
     },
     {
       "Type": 2093,
-      "Name": "พาโวมิมัส",
+      "Name": "Pavomimus",
       "MinLevel": 10,
       "MaxLevel": 14,
       "Quota": 5,
@@ -183,7 +183,7 @@
     },
     {
       "Type": 2010,
-      "Name": "แองคิโลซอรัส",
+      "Name": "Ankylosaurus",
       "MinLevel": 12,
       "MaxLevel": 17,
       "Quota": 4,
@@ -194,7 +194,7 @@
     },
     {
       "Type": 2000,
-      "Name": "สเตโกซอรัส",
+      "Name": "Stegosaurus",
       "MinLevel": 13,
       "MaxLevel": 18,
       "Quota": 3,
@@ -205,7 +205,7 @@
     },
     {
       "Type": 2008,
-      "Name": "แมมมอธ",
+      "Name": "Mammoth",
       "MinLevel": 14,
       "MaxLevel": 20,
       "Quota": 3,
@@ -216,7 +216,7 @@
     },
     {
       "Type": 2020,
-      "Name": "ไดร์วูล์ฟ",
+      "Name": "Dire Wolf",
       "MinLevel": 12,
       "MaxLevel": 16,
       "Quota": 3,
@@ -227,7 +227,7 @@
     },
     {
       "Type": 2070,
-      "Name": "หมาป่าขนขาว",
+      "Name": "Serigala Putih",
       "MinLevel": 15,
       "MaxLevel": 19,
       "Quota": 2,
@@ -238,7 +238,7 @@
     },
     {
       "Type": 2138,
-      "Name": "เสือเขี้ยวดาบขนขาว",
+      "Name": "Smilodon Putih",
       "MinLevel": 17,
       "MaxLevel": 20,
       "Quota": 1,
@@ -251,7 +251,7 @@
   "Zones": [
     {
       "Id": "snowfield",
-      "Name": "ทุ่งหิมะ",
+      "Name": "Padang Salju",
       "OffsetTileX": 0.0,
       "OffsetTileY": 0.0,
       "RadiusTiles": 40.0,
@@ -264,7 +264,7 @@
     },
     {
       "Id": "glacier",
-      "Name": "ธารน้ำแข็ง",
+      "Name": "Gletser",
       "OffsetTileX": 30.0,
       "OffsetTileY": 20.0,
       "RadiusTiles": 30.0,
@@ -275,7 +275,7 @@
     },
     {
       "Id": "wolf_den",
-      "Name": "ถ้ำหมาป่า",
+      "Name": "Gua Serigala",
       "OffsetTileX": -25.0,
       "OffsetTileY": -20.0,
       "RadiusTiles": 25.0,

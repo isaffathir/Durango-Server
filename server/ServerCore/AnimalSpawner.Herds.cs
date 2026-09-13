@@ -194,7 +194,7 @@ public sealed partial class AnimalSpawner
         Console.WriteLine("[herd] template {0} (เกาะ Lv.{1} · ตามเกม {2} ฝูง ~{3} ตัว) → scale ฝูง×{4:0.##} ตัว×{5:0.##}{9} = {6} ฝูง {7} ตัว · เลเวล {8}",
             template.Name, template.Level, CountHerds(template), template.TotalAnimals,
             cfg.CountScale, cfg.SizeScale, _herds.Count, total, DescribeHerdLevel(cfg, template),
-            cfg.MaxHerds > 0 ? $" เพดาน {cfg.MaxHerds} ฝูง" : "");
+            cfg.MaxHerds > 0 ? $" batas {cfg.MaxHerds} kawanan" : "");
         foreach (KeyValuePair<ushort, (int herds, int animals)> kv in perType)
         {
             Console.WriteLine("[herd]   {0,-5} {1,-16} {2,3} ฝูง {3,4} ตัว · {4}", kv.Key, kv.Value.herds > 0 ? NameOf(kv.Key) : "?",
@@ -240,15 +240,15 @@ public sealed partial class AnimalSpawner
     private static string DescribeHerdLevel(HerdConfig cfg, RegionTemplateData.Template t)
     {
         return cfg.LevelMin <= 0 && cfg.LevelMax <= 0
-            ? $"{t.Level} (ตาม template)"
-            : $"{cfg.LevelMin}-{cfg.LevelMax} (config · template ให้ {t.Level})";
+            ? $"{t.Level} (sesuai template)"
+            : $"{cfg.LevelMin}-{cfg.LevelMax} (config · template memberi {t.Level})";
     }
 
     private static string DescribeBehavior(ushort type)
     {
-        string src = SpawnTable.Find(type) != null ? "config" : "ข้อมูลเกม";
+        string src = SpawnTable.Find(type) != null ? "config" : "Data game";
         string kind = AnimalKindData.TryGet(type, out AnimalKindData.Info k) ? k.Kind.ToString() : "?";
-        return $"{kind} → {BehaviorOf(type)} · กัดทุก {AttackCooltimeOf(type):0.0} วิ ({src})";
+        return $"{kind} → {BehaviorOf(type)} · menggigit tiap {AttackCooltimeOf(type):0.0} dtk ({src})";
     }
 
     /// <summary>
@@ -523,9 +523,9 @@ public sealed partial class AnimalSpawner
     /// <summary>สรุปสถานะฝูงสำหรับ admin/log</summary>
     public string DescribeHerds()
     {
-        if (!_herdMode) { return "โหมดตาราง Spawn (ไม่มีฝูง)"; }
+        if (!_herdMode) { return "Mode tabel Spawn (tanpa kawanan)"; }
         int total = 0, pending = 0;
         foreach (Herd h in _herds) { total += AliveMembers(h); pending += h.PendingAt.Count; }
-        return $"template {_template?.Name} · {_herds.Count} ฝูง · {total} ตัว · รอเติม {pending}";
+        return $"template {_template?.Name} · {_herds.Count} kawanan · {total} ekor · menunggu isi {pending}";
     }
 }

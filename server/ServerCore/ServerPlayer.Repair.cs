@@ -178,7 +178,7 @@ public partial class ServerPlayer
                 _inventory[index] = item;
             }
         }
-        if (brokenName != null) Send(new Info { Text = $"{brokenName} พังแล้ว" });
+        if (brokenName != null) Send(new Info { Text = $"{brokenName} rusak" });
         return true;
     }
 

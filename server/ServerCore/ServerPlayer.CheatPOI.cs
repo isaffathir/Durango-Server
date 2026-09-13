@@ -69,8 +69,8 @@ public partial class ServerPlayer
             case "remove": return POIRemove(a);
             case "add":    return POIAdd(a);
             default:
-                return "ใช้: cheat poi list | check | tp <id> | move <id> <x> <y> | here <id> | remove <id> | add <blueprint> <x> <y>\n"
-                     + "blueprint ที่วางได้: " + string.Join(" · ", POIBlueprints.Keys);
+                return "Pakai: cheat poi list | check | tp <id> | move <id> <x> <y> | here <id> | remove <id> | add <blueprint> <x> <y>\n"
+                     + "blueprint yang bisa ditempatkan: " + string.Join(" · ", POIBlueprints.Keys);
         }
     }
 
@@ -120,8 +120,8 @@ public partial class ServerPlayer
         if (entries.Count == 0)
         {
             return onlyProblems
-                ? $"POI ทุกชิ้นวางถูกที่ (ตรวจแล้ว {ListPOI(world).Count} สิ่งปลูกสร้าง)"
-                : "ยังไม่มี POI ในโลกนี้";
+                ? $"Semua POI di tempat yang benar ({ListPOI(world).Count} bangunan diperiksa)"
+                : "Belum ada POI di dunia ini";
         }
         var sb = new StringBuilder();
         int bad = 0;
@@ -131,11 +131,11 @@ public partial class ServerPlayer
             sb.Append(e.ShortId)
               .Append("  ").Append(e.Blueprint)
               .Append("  tile ").Append(e.TileX).Append(',').Append(e.TileY)
-              .Append("  ห่างจุดเกิด ").Append(e.DistFromEntry).Append(" tile");
+              .Append("  jarak dari titik lahir ").Append(e.DistFromEntry).Append(" tile");
             sb.Append(e.Problem == null ? "  [ok]" : "  [x] " + e.Problem);
             sb.Append('\n');
         }
-        sb.Append("— รวม ").Append(entries.Count).Append(" ชิ้นที่แสดง · มีปัญหา ").Append(bad).Append(" ชิ้น");
+        sb.Append("— total ").Append(entries.Count).Append(" ditampilkan · bermasalah ").Append(bad).Append(" buah");
         return sb.ToString();
     }
 
@@ -164,7 +164,7 @@ public partial class ServerPlayer
             {
                 if (world.Terrain.LandDistance(art.Tile.x + x, art.Tile.y + y) < 1)
                 {
-                    return $"มีส่วนอยู่ในน้ำ (tile {art.Tile.x + x},{art.Tile.y + y})";
+                    return $"sebagian berada di air (tile {art.Tile.x + x},{art.Tile.y + y})";
                 }
             }
         }
@@ -173,14 +173,14 @@ public partial class ServerPlayer
         //    เดิมเช็คด้วย TouchesWater (ติดน้ำอะไรก็ได้) เปลี่ยนมาเช็ค TouchesRiver ให้ตรงกับกฎวางใหม่
         if (!fromGameFile && blueprint == "dock" && !world.TouchesRiver(art.Tile.x, art.Tile.y, new Point2(sx, sy)))
         {
-            return "ท่าเรือไม่ติดแม่น้ำ";
+            return "dermaga tidak bersebelahan dengan sungai";
         }
 
         // 2.5 หลุมวาร์ป/รอยแยกต้องอยู่บนเกาะ ไม่ใช่ริมน้ำ — [แก้เอง] เจ้าของสั่ง (คนละอันกับข้อ 1
         //     ที่เช็คแค่ "ไม่จมน้ำ" — ข้อนี้เช็คว่าลึกเข้าเกาะพอไหม ตรงกับ minInland ที่ยกเป็น 6-10 ตอนวางใหม่)
         if (!fromGameFile && blueprint != "dock" && world.Terrain.LandDistance(art.Tile.x, art.Tile.y) < 6)
         {
-            return "ใกล้น้ำเกินไป (ต้องอยู่บนเกาะ ไม่ใช่ริมฝั่ง)";
+            return "terlalu dekat air (harus di daratan, bukan tepi pantai)";
         }
 
         // 3. ของธรรมชาติทับตัว = หลุมโดนหิน/ต้นไม้บัง เดินเข้าไม่ถึง
@@ -197,7 +197,7 @@ public partial class ServerPlayer
         }
         if (under > 0)
         {
-            return $"มีต้นไม้/หินทับอยู่ {under} จุด";
+            return $"tertimpa pohon/batu di {under} titik";
         }
         return null;
     }
@@ -206,19 +206,19 @@ public partial class ServerPlayer
 
     private string POITeleport(string[] a)
     {
-        if (a.Length < 2) return "ใช้: cheat poi tp <id>";
+        if (a.Length < 2) return "Pakai: cheat poi tp <id>";
         if (!TryFindPOI(_world, a[1], out AppearArtifact art, out string err)) return err;
         // ยืนข้าง ๆ ไม่ใช่บนตัวมัน จะได้เห็นทั้งชิ้น
         int sx = art.Size.x <= 0 ? 1 : art.Size.x;
         ControlTeleport(art.Tile.x + sx + 1, art.Tile.y);
-        return $"วาร์ปไปข้าง {ShortPOIId(art.EntityId)} ที่ tile {art.Tile.x},{art.Tile.y} แล้ว";
+        return $"Warp ke sebelah {ShortPOIId(art.EntityId)} di tile {art.Tile.x},{art.Tile.y}";
     }
 
     private string POIMove(string[] a)
     {
         if (a.Length < 4 || !int.TryParse(a[2], out int tx) || !int.TryParse(a[3], out int ty))
         {
-            return "ใช้: cheat poi move <id> <tileX> <tileY>";
+            return "Pakai: cheat poi move <id> <tileX> <tileY>";
         }
         if (!TryFindPOI(_world, a[1], out AppearArtifact art, out string err)) return err;
         return MovePOITo(_world, art, tx, ty);
@@ -226,7 +226,7 @@ public partial class ServerPlayer
 
     private string POIMoveHere(string[] a)
     {
-        if (a.Length < 2) return "ใช้: cheat poi here <id>  (ย้ายมาตรงที่ยืนอยู่)";
+        if (a.Length < 2) return "Pakai: cheat poi here <id>  (pindahkan ke tempat berdiri)";
         if (!TryFindPOI(_world, a[1], out AppearArtifact art, out string err)) return err;
         WorldPosition at = CurrentPosition;
         return MovePOITo(_world, art, (int)(at.x / 200f), (int)(at.y / 200f));
@@ -239,27 +239,27 @@ public partial class ServerPlayer
         int sy = art.Size.y <= 0 ? 1 : art.Size.y;
         if (tx < 0 || ty < 0 || tx + sx > world.Terrain.Width || ty + sy > world.Terrain.Height)
         {
-            return $"tile {tx},{ty} อยู่นอกแผนที่ (แผนที่ {world.Terrain.Width}x{world.Terrain.Height})";
+            return $"tile {tx},{ty} di luar peta (peta {world.Terrain.Width}x{world.Terrain.Height})";
         }
         if (world.HasArtifactOverlapping(new Point2(tx, ty), new Point2(sx, sy), art.EntityId))
         {
-            return $"tile {tx},{ty} มีของอื่นวางอยู่แล้ว";
+            return $"tile {tx},{ty} sudah ditempati objek lain";
         }
         if (!world.MoveArtifact(art.EntityId, new Point2(tx, ty)))
         {
-            return "ย้ายไม่สำเร็จ (หา entity ไม่เจอ)";
+            return "Gagal memindahkan (entity tidak ditemukan)";
         }
         // ตรวจซ้ำที่ตำแหน่งใหม่แล้วบอกเลย จะได้ไม่ต้องสั่ง check เอง
         world.TryGetArtifact(art.EntityId, out AppearArtifact now);
         world.TryGetArtifactBlueprint(art.EntityId, out string bp);
         string problem = DescribePOIProblem(world, now, bp);
-        string head = $"ย้าย {ShortPOIId(art.EntityId)} ไป tile {tx},{ty} แล้ว";
+        string head = $"{ShortPOIId(art.EntityId)} dipindahkan ke tile {tx},{ty}";
         return problem == null ? head + " [ok]" : head + " ⚠️ " + problem;
     }
 
     private string POIRemove(string[] a)
     {
-        if (a.Length < 2) return "ใช้: cheat poi remove <id>";
+        if (a.Length < 2) return "Pakai: cheat poi remove <id>";
         return RemovePOI(_world, a[1]);
     }
 
@@ -270,18 +270,18 @@ public partial class ServerPlayer
         string id = art.EntityId;
         if (!world.RemoveArtifact(id))
         {
-            return "ลบไม่สำเร็จ";
+            return "Gagal menghapus";
         }
         world.AnnounceGone(id);
         // ⚠️ EnsureNaturalPOIs วางชุดที่ขาดกลับมาตอนเปิดเซิร์ฟใหม่ — ลบแล้วรีสตาร์ทมันจะโผล่ที่สุ่มใหม่
-        return $"ลบ {ShortPOIId(id)} แล้ว (เปิดเซิร์ฟใหม่ระบบจะสุ่มวางชุดนี้กลับมา ถ้าไม่อยากให้กลับมาต้องแก้ EnsureNaturalPOIs)";
+        return $"{ShortPOIId(id)} dihapus (saat server dimulai ulang, set ini akan diacak lagi; ubah EnsureNaturalPOIs jika tidak ingin kembali)";
     }
 
     private string POIAdd(string[] a)
     {
         if (a.Length < 4 || !int.TryParse(a[2], out int tx) || !int.TryParse(a[3], out int ty))
         {
-            return "ใช้: cheat poi add <blueprint> <tileX> <tileY>\nblueprint: " + string.Join(" · ", POIBlueprints.Keys);
+            return "Pakai: cheat poi add <blueprint> <tileX> <tileY>\nblueprint: " + string.Join(" · ", POIBlueprints.Keys);
         }
         return AddPOI(_world, a[1], tx, ty);
     }
@@ -292,16 +292,16 @@ public partial class ServerPlayer
         string bp = (blueprintRaw ?? string.Empty).ToLowerInvariant();
         if (!POIBlueprints.TryGetValue(bp, out var spec))
         {
-            return $"ไม่รู้จัก blueprint '{bp}' — ใช้ได้: " + string.Join(" · ", POIBlueprints.Keys);
+            return $"blueprint '{bp}' tidak dikenal — yang tersedia: " + string.Join(" · ", POIBlueprints.Keys);
         }
         var size = new Point2(spec.SizeX, spec.SizeY);
         if (tx < 0 || ty < 0 || tx + size.x > world.Terrain.Width || ty + size.y > world.Terrain.Height)
         {
-            return $"tile {tx},{ty} อยู่นอกแผนที่";
+            return $"tile {tx},{ty} di luar peta";
         }
         if (world.HasArtifactOverlapping(new Point2(tx, ty), size))
         {
-            return $"tile {tx},{ty} มีของอื่นวางอยู่แล้ว";
+            return $"tile {tx},{ty} sudah ditempati objek lain";
         }
         // id ต้องไม่ชนของเดิม และต้องไม่ขึ้นต้นด้วย poi_<bp>_ ที่ EnsureNaturalPOIs ใช้เช็ค
         // ไม่งั้นวางเองแล้วชุดอัตโนมัติจะคิดว่ามีแล้วเลยไม่วางให้ (หรือกลับกัน)
@@ -319,7 +319,7 @@ public partial class ServerPlayer
         world.AddArtifact(art, bp);
         world.AnnounceArtifact(art);
         string problem = DescribePOIProblem(world, art, bp);
-        string head = $"วาง {bp} ที่ tile {tx},{ty} แล้ว (id {ShortPOIId(id)})";
+        string head = $"{bp} ditempatkan di tile {tx},{ty} (id {ShortPOIId(id)})";
         return problem == null ? head + " [ok]" : head + " ⚠️ " + problem;
     }
 
@@ -333,7 +333,7 @@ public partial class ServerPlayer
         string want = (needle ?? string.Empty).ToLowerInvariant();
         if (want.Length == 0)
         {
-            error = "ต้องบอก id ด้วย (ดูจาก `cheat poi list`)";
+            error = "Sertakan id (lihat `cheat poi list`)";
             return false;
         }
         var hits = new List<AppearArtifact>();
@@ -367,7 +367,7 @@ public partial class ServerPlayer
         }
         if (hits.Count == 0)
         {
-            error = $"ไม่เจอ POI ที่ id มี '{needle}' (ดูรายชื่อด้วย `cheat poi list`)";
+            error = $"POI dengan id mengandung '{needle}' tidak ditemukan (lihat `cheat poi list`)";
             return false;
         }
         if (hits.Count > 1)
@@ -377,7 +377,7 @@ public partial class ServerPlayer
             {
                 names.Add(ShortPOIId(hits[i].EntityId));
             }
-            error = $"'{needle}' ตรงหลายอัน: " + string.Join(" · ", names) + " — พิมพ์ให้เจาะจงกว่านี้";
+            error = $"'{needle}' cocok dengan beberapa: " + string.Join(" · ", names) + " — ketik lebih spesifik";
             return false;
         }
         art = hits[0];
