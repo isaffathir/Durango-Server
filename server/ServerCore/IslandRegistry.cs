@@ -122,6 +122,9 @@ public sealed class IslandInfo
     public int GatewayPort { get; set; }
     public int GamePort { get; set; }
 
+    /// <summary>[isaf] Island the raft quest (QuestData.RaftQuestId) sends the player to when its reward is claimed. Empty = stay.</summary>
+    public string RaftDestination { get; set; }
+
     /// <summary>ที่อยู่ที่ client ใช้ต่อ (ตัวเกมต่อ gateway ก่อนเสมอ)</summary>
     public string Address => $"{Host}:{GatewayPort}";
 

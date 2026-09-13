@@ -251,6 +251,17 @@ public partial class ServerPlayer
             _grantingQuestReward = false;
         }
 
+        // [isaf] Story: the raft is the way off Ancora. Once its reward is claimed, ship the player
+        // to the island registered as RaftDestination (islands.json), i.e. their personal island.
+        if (q.Id == QuestData.RaftQuestId && !string.IsNullOrWhiteSpace(IslandRegistry.Current?.RaftDestination))
+        {
+            string dest = IslandRegistry.Current.RaftDestination;
+            Console.WriteLine("[story] {0} finished the raft — sailing to {1}", Name, dest);
+            Send(new Info { Text = "Rakit selesai. Kamu meninggalkan Ancora..." });
+            string result = TravelTo(dest);
+            Console.WriteLine("[story] travel result: {0}", result);
+        }
+
         Send(new QuestRewardResults
         {
             Category = q.Category,
