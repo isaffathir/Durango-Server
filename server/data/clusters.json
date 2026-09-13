@@ -1,0 +1,17 @@
+{
+  "clusters": {
+    "ancora": {
+      "name": { "en_US": "Ancora (Starter)", "id_ID": "Ancora (Pemula)", "ko_KR": "Ancora" },
+      "gateway_url_root": "http://192.168.1.2:8190",
+      "countries": ["ID"]
+    },
+    "personal": {
+      "name": { "en_US": "Personal Island", "id_ID": "Pulau Pribadi", "ko_KR": "Personal Island" },
+      "gateway_url_root": "http://192.168.1.2:8290",
+      "countries": []
+    }
+  },
+  "maintenance": null,
+  "urls": {},
+  "links": {}
+}

@@ -112,3 +112,5 @@ server/mods/*.dll
 # own tools (not game files)
 !tools/terraingen/
 !tools/terraingen/**
+!tools/androidclient/
+!tools/androidclient/**

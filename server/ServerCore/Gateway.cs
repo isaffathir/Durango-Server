@@ -248,6 +248,33 @@ public partial class Gateway
             };
             return new WebServer.JsonResponse(jObject.ToString());
         };
+        // [isaf] Online cluster list. The original client fetches
+        // http://k1server-clusters.k.nexon.com/live_v2.json before showing the title; our APK points that URL here.
+        // Serve data/clusters.json if present, otherwise one cluster that is this server itself.
+        _webServer.GetRoute["/live_v2.json"] = (HttpListenerRequest request, Dictionary<string, string> postData) =>
+        {
+            string custom = Path.Combine(DataDirectory() ?? "data", "clusters.json");
+            if (File.Exists(custom))
+            {
+                return new WebServer.JsonResponse(File.ReadAllText(custom));
+            }
+            string root = AssetBundleBase(request.UserHostName);
+            var cluster = new JObject
+            {
+                ["name"] = new JObject { ["en_US"] = _world.ServerName ?? "Durango", ["id_ID"] = _world.ServerName ?? "Durango" },
+                ["gateway_url_root"] = root,
+                ["countries"] = new JArray("ID"),
+            };
+            var set = new JObject
+            {
+                ["clusters"] = new JObject { ["isaf"] = cluster },
+                ["maintenance"] = null,
+                ["urls"] = new JObject(),
+                ["links"] = new JObject(),
+            };
+            Console.WriteLine("[clusters] served live_v2.json -> {0}", root);
+            return new WebServer.JsonResponse(set.ToString());
+        };
         _webServer.GetRoute["/notice"] = (HttpListenerRequest request, Dictionary<string, string> postData) =>
             new WebServer.JsonResponse("{}");
         // [เพิ่มเอง] 31 ส.ค. 2026 — ระบบ "คำตอบจากฝ่ายบริการลูกค้า"

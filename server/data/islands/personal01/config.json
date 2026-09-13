@@ -107,7 +107,7 @@
     "Text": "ทดสอบประกาศค้าง — ข้อความนี้โชว์ทุกคนที่เข้าเกม",
     "RepeatSeconds": 0.0
   },
-  "AssetBundleUrlBase": "http://your-domain.com",
+  "AssetBundleUrlBase": "http://192.168.1.2:8290",
   "CraftMenu": {
     "HiddenCategories": [
       "deco_and_installation",
