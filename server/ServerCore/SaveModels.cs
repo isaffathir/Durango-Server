@@ -235,6 +235,9 @@ public sealed class PlayerSave : SaveEnvelope
     /// </summary>
     public string LastIsland { get; set; }
 
+    /// <summary>[isaf] Island the player is travelling to (raft / travel command). Gateways route /entry there; cleared on arrival.</summary>
+    public string TravelTarget { get; set; }
+
     /// <summary>เวลาค้นหา POI ล่าสุด และ POI ที่ server ยืนยันว่าผู้เล่นค้นพบแล้ว</summary>
     public double LastPOISearchedAt { get; set; }
     public List<PoiDiscoverySave> ExploredPOIs { get; set; } = new List<PoiDiscoverySave>();

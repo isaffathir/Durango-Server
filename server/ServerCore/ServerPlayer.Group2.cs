@@ -27,7 +27,9 @@ public partial class ServerPlayer
 
     // ใช้ status effect จริงของเกมสำหรับการพัก ไม่ปนกับ SleepChecker/AFK
     // เพื่อให้ HUD แสดงไอคอนพัก (icon_se_rest) แทนไอคอน AFK
-    private const string RestStatusEffectId = "rest";
+    // [isaf] the client's Ancora guide (show_other_players_ancora → status_effect "rest_ancora") only
+    // completes with the tutorial variant of the rest effect
+    private static string RestStatusEffectId => GameServer.RegionRole == Shared.Region.Role.Tutorial ? "rest_ancora" : "rest";
     // id ตรงกับ status_effects.json ของเกมจริง (อย่าเปลี่ยน ไม่งั้น client หาไอคอน/ชื่อไม่เจอ)
     private const string ThirstStatusEffectId = "thirsty";
     private const string DrinkWaterStatusEffectId = "drink_water";
@@ -271,7 +273,8 @@ public partial class ServerPlayer
         switch (id)
         {
             // rest: -(0.15 + 0.0015*level) ความล้า · 0.45 + 0.05*level เลือด
-            case RestStatusEffectId:
+            case "rest":
+            case "rest_ancora":
                 return new[]
                 {
                     new EffectDetail { Type = EffectType.Survival, Key = "fatigue",

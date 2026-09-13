@@ -156,6 +156,12 @@ public partial class ServerPlayer
         // เดินทางมาจากเกาะอื่น = เกิดที่จุดเข้าเกมของเกาะนี้ (พิกัดของอีกเกาะอาจเป็นกลางทะเล/นอกแมพ)
         string here = IslandRegistry.Current?.Id;
         bool sameIsland = here == null || string.Equals(save.LastIsland, here, StringComparison.OrdinalIgnoreCase);
+        // [isaf] arrived where we were heading → the trip is over (gateways stop redirecting)
+        _travelTarget = string.IsNullOrWhiteSpace(save.TravelTarget)
+                        || here == null
+                        || string.Equals(save.TravelTarget, here, StringComparison.OrdinalIgnoreCase)
+            ? null
+            : save.TravelTarget;
         if (save.HasPosition && sameIsland)
         {
             _lastPosition = new WorldPosition(save.PosX, save.PosY);
@@ -286,6 +292,7 @@ public partial class ServerPlayer
             WeeklyWarpMatterAcquired = _weeklyWarpMatterAcquired,
             WeeklyWarpMatterRefreshAt = _weeklyWarpMatterRefreshAt,
             LastIsland = IslandRegistry.Current?.Id,
+            TravelTarget = _travelTarget,
             StarterGiven = _starterGiven,
             HasPosition = _hasPosition,
             PosX = _lastPosition.x,

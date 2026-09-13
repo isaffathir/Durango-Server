@@ -41,6 +41,9 @@ public partial class ServerPlayer
         { "camp_warphole",    (9101, 6, 6) },
         { "neutral_warphole", (9450, 6, 6) },
         { "warp_accelerator", (6282, 4, 4) },
+        // [isaf] Ancora tutorial props (placed by pois.yml camp_artifacts)
+        { "tutorial_bonfire",  (9001, 1, 1) },
+        { "tutorial_boat",     (9000, 4, 4) },
     };
 
     /// <summary>แถวข้อมูล POI แบบโครงสร้าง — admin panel ใช้แปลงเป็น JSON, คำสั่งแชทใช้ต่อเป็นข้อความ</summary>

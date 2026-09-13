@@ -133,6 +133,7 @@ public static class Program
                     if (Enum.TryParse(args[++i], true, out Shared.Region.Role parsedRole))
                     {
                         GameServer.RegionRole = parsedRole;
+                        GameServer.RegionRoleExplicit = true;
                     }
                     else
                     {
@@ -296,6 +297,18 @@ public static class Program
             ServerKnock.HostName = serverName;
             configPath = Path.Combine(dataDir, "islands", isle.Id, "config.json");
             Console.WriteLine($"[island] {isle}");
+            // [isaf] islands.json "Role" — e.g. Ancora = Tutorial so the client runs its own tutorial guide
+            if (!GameServer.RegionRoleExplicit && !string.IsNullOrWhiteSpace(isle.Role))
+            {
+                if (Enum.TryParse(isle.Role.Trim(), true, out Shared.Region.Role isleRole))
+                {
+                    GameServer.RegionRole = isleRole;
+                }
+                else
+                {
+                    Console.WriteLine($"[warn] islands.json Role '{isle.Role}' tidak dikenal — pakai {GameServer.RegionRole}");
+                }
+            }
         }
         Console.WriteLine($"terrain: {terrainId} | data dir: {dataDir}");
 

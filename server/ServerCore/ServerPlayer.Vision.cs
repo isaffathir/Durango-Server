@@ -192,6 +192,12 @@ public partial class ServerPlayer
         {
             return;
         }
+        if (art.EntityType == TutorialBoatEntityType)
+        {
+            // [isaf] Ancora raft: TutorialIslandSystem on the client only listens for AppearTutorialBoat
+            Send(MakeAppearTutorialBoat(art));
+            return;
+        }
         Send(art);
     }
 

@@ -483,6 +483,15 @@ public partial class Gateway
             string entryBuild = request.QueryString["build"] ?? "";
             bool entryAndroid = IsAndroidPlatform(entryPlatform);
             _gameServer.RegisterClientInfo(entryEntity, entryPlatform, entryBuild);
+            // [isaf] multi-island: send the player to the island they belong to (travel target / last island /
+            // start island for new characters) — the client always re-knocks the cluster it already has
+            string frontend = ResolveTcpHost(request) + ":" + _gameServer.Port;
+            IslandInfo routed = ResolvePlayerIsland(entryEntity);
+            if (routed != null)
+            {
+                frontend = routed.Host + ":" + routed.GamePort;
+                Console.WriteLine("[gateway] /entry {0} → pulau {1} ({2})", entryEntity, routed.Id, frontend);
+            }
             return new WebServer.JsonResponse(new JObject
             {
                 // ต้องใช้พอร์ต "ที่เปิดฟังจริง" ไม่ใช่ค่าคงที่ — ไม่งั้นพอรันด้วย --game-port อื่น
@@ -490,7 +499,7 @@ public partial class Gateway
                 // host: ใช้ --public-host ถ้าระบุ (กรณี Cloudflare Tunnel ให้ใส่ 127.0.0.1
                 // เพราะ client ต่อผ่าน cloudflared access tcp บนเครื่องตัวเอง)
                 // ถ้าไม่ระบุ ใช้ host ที่ client เรียก gateway มา (กรณีเล่นในวงแลน)
-                ["frontend_addresses"] = new JArray(ResolveTcpHost(request) + ":" + _gameServer.Port),
+                ["frontend_addresses"] = new JArray(frontend),
                 ["radiotower_addresses"] = _radiotowerPort > 0
                     ? new JArray(ResolveTcpHost(request) + ":" + _radiotowerPort)
                     : new JArray(),
@@ -605,8 +614,127 @@ public partial class Gateway
         return host;
     }
 
+    /// <summary>
+    /// [isaf] Which island's frontend should this player connect to?
+    ///   - travelling (raft / cheat travel): PlayerSave.TravelTarget
+    ///   - otherwise the island they were last on (PlayerSave.LastIsland)
+    ///   - brand-new character (no save): the Start island (Ancora)
+    /// Returns null when the answer is "this island" (or single-island mode).
+    /// </summary>
+    private static IslandInfo ResolvePlayerIsland(string entityId)
+    {
+        IslandInfo here = IslandRegistry.Current;
+        if (here == null)
+        {
+            return null;
+        }
+        string target = null;
+        try
+        {
+            PlayerSave save = string.IsNullOrEmpty(entityId) ? null : SaveStore.Peek<PlayerSave>(SaveStore.PlayerPath(entityId));
+            if (save == null)
+            {
+                target = IslandRegistry.StartIsland()?.Id;
+            }
+            else
+            {
+                target = !string.IsNullOrWhiteSpace(save.TravelTarget) ? save.TravelTarget : save.LastIsland;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("[gateway] baca save {0} gagal: {1}", entityId, e.Message);
+            return null;
+        }
+        if (string.IsNullOrWhiteSpace(target) || string.Equals(target, here.Id, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+        IslandInfo dest = IslandRegistry.Find(target);
+        return dest == null || dest.Id == here.Id ? null : dest;
+    }
+
+    private static readonly System.Net.Http.HttpClient TerrainProxyHttp = new System.Net.Http.HttpClient
+    {
+        Timeout = TimeSpan.FromSeconds(20)
+    };
+    private static readonly Dictionary<string, byte[]> _terrainProxyCache = new Dictionary<string, byte[]>(StringComparer.Ordinal);
+
+    /// <summary>
+    /// [isaf] /terrains/&lt;islandId&gt;/... for an island served by another process: fetch it from that
+    /// island's gateway (terrain files never change while running, so cache forever).
+    /// </summary>
+    private WebServer.RouteFunction ProxyTerrain(IslandInfo island, string rest)
+    {
+        return (HttpListenerRequest request, Dictionary<string, string> postData) =>
+        {
+            string remote = "http://" + island.Host + ":" + island.GatewayPort + "/terrains/1" + rest;
+            byte[] content;
+            lock (_terrainProxyCache)
+            {
+                _terrainProxyCache.TryGetValue(remote, out content);
+            }
+            if (content == null)
+            {
+                try
+                {
+                    content = TerrainProxyHttp.GetByteArrayAsync(remote).GetAwaiter().GetResult();
+                    lock (_terrainProxyCache)
+                    {
+                        _terrainProxyCache[remote] = content;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("[terrain] proxy {0} gagal: {1}", remote, e.Message);
+                    return new WebServer.NotFountResponse();
+                }
+            }
+            if (rest.Length == 0)
+            {
+                return new WebServer.JsonResponse(Encoding.UTF8.GetString(content));
+            }
+            return new WebServer.BinaryReponse { Content = content, ETag = TerrainETag(content) };
+        };
+    }
+
     private WebServer.RouteFunction UnhandledUrl(string url)
     {
+        // [isaf] /terrains/<islandId>[/...] — Welcome.Region.TerrainId is the island id now. Our own island
+        // (or the legacy "1") is served locally; other islands are proxied to their gateway.
+        if (url.StartsWith("/terrains/", StringComparison.OrdinalIgnoreCase))
+        {
+            string tail = url.Substring("/terrains/".Length);
+            int q = tail.IndexOf('?');
+            if (q >= 0) tail = tail.Substring(0, q);
+            int slash = tail.IndexOf('/');
+            string terrainId = slash < 0 ? tail : tail.Substring(0, slash);
+            string rest = slash < 0 ? string.Empty : tail.Substring(slash);
+            bool local = terrainId == "1"
+                         || (IslandRegistry.Current != null && string.Equals(terrainId, IslandRegistry.Current.Id, StringComparison.OrdinalIgnoreCase));
+            if (!local)
+            {
+                IslandInfo other = IslandRegistry.Find(terrainId);
+                if (other != null)
+                {
+                    return ProxyTerrain(other, rest);
+                }
+            }
+            else if (terrainId != "1")
+            {
+                if (rest.Length == 0)
+                {
+                    return (HttpListenerRequest request, Dictionary<string, string> postData) =>
+                        new WebServer.JsonResponse(JsonConvert.SerializeObject(_world.Terrain.Info));
+                }
+                if (rest == "/whole_biomes")
+                {
+                    return (HttpListenerRequest request, Dictionary<string, string> postData) =>
+                        new WebServer.BinaryReponse { Content = _world.Terrain.Biomes };
+                }
+                url = "/terrains/1" + rest;
+            }
+        }
         // [Android · ROADMAP-ANDROID ด่าน 2] APK ที่แพตช์ string CDN ให้ชี้มาเซิร์ฟเรา (tools/AndroidApk/) จะขอ
         // http://<เรา>/<live|release>/<android|windows|ios>/Info.5.2.1.json และ .../<bundle> ตามรูปแบบ CDN เดิม
         // ({0}=live/release ตาม Debug.isDebugBuild, {1}=platform — ดู client/Durango.Offline/Gateway.cs:47)

@@ -63,6 +63,9 @@ public class GameServer
     /// </summary>
     public static Role RegionRole = Role.Sandbox;
 
+    /// <summary>true when --region-role was given on the command line (then islands.json Role is ignored)</summary>
+    public static bool RegionRoleExplicit;
+
     /// <summary>รายชื่อ admin (entity id หรือชื่อตัวละคร) — ตั้งด้วย <c>--admin</c> ซ้ำได้หลายครั้ง</summary>
     private static readonly HashSet<string> _admins = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -156,7 +159,73 @@ public class GameServer
             }
             _sessions[token] = new Session { EntityId = entityId, Data = data, IssuedAt = now };
         }
+        SaveSharedSession(token, entityId, data, now);
         return token;
+    }
+
+    // ── [isaf] sessions shared between island processes ─────────────────────────────
+    // Every island runs as its own process but all of them share the saves folder. When the
+    // gateway of island A redirects a player to island B's frontend (/entry → frontend_addresses)
+    // the token was issued by A, so B must be able to validate it: A writes it to
+    // saves/sessions/<token>.json and B loads it on first sight.
+    private sealed class SharedSessionFile
+    {
+        public string EntityId;
+        public double IssuedAt;
+        public PlayerData Data;
+    }
+
+    private static string SharedSessionPath(string token)
+    {
+        return Path.Combine(SaveStore.Root, "sessions", token + ".json");
+    }
+
+    private static void SaveSharedSession(string token, string entityId, PlayerData data, double issuedAt)
+    {
+        try
+        {
+            string path = SharedSessionPath(token);
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            File.WriteAllText(path, JsonConvert.SerializeObject(new SharedSessionFile { EntityId = entityId, IssuedAt = issuedAt, Data = data }));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("[session] tidak bisa menulis session bersama: {0}", e.Message);
+        }
+    }
+
+    /// <summary>Token not issued by this process — look for one written by another island's gateway.</summary>
+    private Session LoadSharedSession(string token)
+    {
+        if (string.IsNullOrEmpty(token) || token.Length > 128 || token.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+        {
+            return null;
+        }
+        try
+        {
+            string path = SharedSessionPath(token);
+            if (!File.Exists(path))
+            {
+                return null;
+            }
+            SharedSessionFile f = JsonConvert.DeserializeObject<SharedSessionFile>(File.ReadAllText(path));
+            if (f == null || string.IsNullOrEmpty(f.EntityId) || Times.UnixTimeNow() - f.IssuedAt > SessionTtlSeconds)
+            {
+                return null;
+            }
+            Session s = new Session { EntityId = f.EntityId, Data = f.Data, IssuedAt = f.IssuedAt };
+            lock (_sessionLock)
+            {
+                _sessions[token] = s;
+            }
+            Console.WriteLine("[session] token dari gateway pulau lain diterima untuk {0}", f.EntityId);
+            return s;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("[session] session bersama rusak: {0}", e.Message);
+            return null;
+        }
     }
 
     /// <summary>
@@ -180,6 +249,7 @@ public class GameServer
                     session = s;
                 }
             }
+            session ??= LoadSharedSession(auth.SessionToken);
         }
 
         if (session == null)
@@ -656,6 +726,7 @@ public class GameServer
                     session = s;
                 }
             }
+            session ??= LoadSharedSession(sessionToken);
         }
 
         if (session == null)
@@ -688,7 +759,9 @@ public class GameServer
         msg.Region = new Region
         {
             Id = "1",
-            TerrainId = "1",
+            // [isaf] terrain id = island id so the client fetches the right map even when the gateway
+            // it talks to belongs to another island (Gateway proxies /terrains/<island>/...)
+            TerrainId = IslandRegistry.Current?.Id ?? "1",
             // [4 ก.ย. 2026] override เลเวลเกาะที่โชว์ให้ client (config RegionTemplateId) — เกาะเริ่มต้น Lv10
             TemplateId = string.IsNullOrWhiteSpace(ServerConfig.Current.RegionTemplateId)
                 ? _world.Terrain.Info.region_template

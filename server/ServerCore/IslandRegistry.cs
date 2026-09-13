@@ -64,6 +64,19 @@ public static class IslandRegistry
         return false;
     }
 
+    /// <summary>[isaf] The island flagged Start=true (falls back to the first island).</summary>
+    public static IslandInfo StartIsland()
+    {
+        for (int i = 0; i < _all.Count; i++)
+        {
+            if (_all[i].Start)
+            {
+                return _all[i];
+            }
+        }
+        return _all.Count > 0 ? _all[0] : null;
+    }
+
     public static IslandInfo Find(string islandId)
     {
         for (int i = 0; i < _all.Count; i++)
@@ -124,6 +137,16 @@ public sealed class IslandInfo
 
     /// <summary>[isaf] Island the raft quest (QuestData.RaftQuestId) sends the player to when its reward is claimed. Empty = stay.</summary>
     public string RaftDestination { get; set; }
+
+    /// <summary>
+    /// [isaf] Region role sent in Welcome for this island (Tutorial / Rural / Personal ...).
+    /// Drives the client's built-in play guide: "Tutorial" turns Ancora into the real tutorial island
+    /// (K, the dog Pia, the raft). Empty = keep the process-wide default (--region-role / Sandbox).
+    /// </summary>
+    public string Role { get; set; }
+
+    /// <summary>[isaf] New players (no save yet) are routed here by every gateway, whichever cluster they picked.</summary>
+    public bool Start { get; set; }
 
     /// <summary>ที่อยู่ที่ client ใช้ต่อ (ตัวเกมต่อ gateway ก่อนเสมอ)</summary>
     public string Address => $"{Host}:{GatewayPort}";

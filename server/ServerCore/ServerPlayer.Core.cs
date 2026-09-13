@@ -528,6 +528,10 @@ public partial class ServerPlayer
         //      → ส่ง Emigrated → client ปิด connection กลับหน้า title เพื่อเข้าเซิร์ฟใหม่
         _conn.Recv<DepartTutorial>(HandleDepartTutorial);
         _conn.Recv<DepartTutorialFor>(HandleDepartTutorialFor);
+        // [isaf] Ancora tutorial: shared raft + scripted survival events (ServerPlayer.Tutorial.cs)
+        _conn.Recv<ParticipateTutorialBoat>(HandleParticipateTutorialBoat);
+        _conn.Recv<PutMaterialsIntoTutorialBoat>(HandlePutMaterialsIntoTutorialBoat);
+        _conn.Recv<TutorialEvent>(HandleTutorialEvent);
         // [เพิ่มเอง] 31 ส.ค. 2026 — รับไว้เฉย ๆ ไม่ต้องทำอะไร **และนี่คือพฤติกรรมที่ถูกต้อง**
         //
         // `Depart` = client แจ้งว่าเริ่มออกเดิน (MoveMsgGenerator.UpdateCurrentLocation)

@@ -329,9 +329,10 @@ def generate(args):
         'entry_points': [[entry[0], entry[1]]], 'landmarks': [], 'global_landmarks': [], 'indicators': [], 'time_zone': [0, 0],
     }
     open(os.path.join(out, 'info.yml'), 'w', encoding='utf-8').write(json.dumps(info, indent=2))
-    def yml_points(name, pts): return f"{name}:\n" + ''.join(f"- tile: [{x}, {y}]\n" for x, y in pts) if pts else f"{name}: []\n"
+    # block-style YAML only: the server's TerrainYaml.cs reads "- - x / - y" pairs (the game's own format), not inline [x, y]
+    def yml_points(name, pts): return f"{name}:\n" + ''.join(f"- - {x}\n  - {y}\n" for x, y in pts) if pts else f"{name}: []\n"
     pois = (yml_points('warpholes', warpholes) + yml_points('rifts', rifts) + yml_points('port_points', [entry]) + 'craters: []\nscoop_slots: []\n'
-            + 'camp_artifacts:\n' + ''.join(f"- tile: [{x}, {y}]\n  entity_type: 9450\n" for x, y in camp))
+            + 'camp_artifacts:\n' + ''.join(f"- entity_type: 9450\n  tile:\n  - {x}\n  - {y}\n" for x, y in camp))
     open(os.path.join(out, 'pois.yml'), 'w', encoding='utf-8').write(pois)
     herds = 'herds:\n' + ''.join('  ' + line + '\n' for grp, pts in (('land', herd_land), ('beach', herd_beach), ('ocean', herd_ocean), ('lake_shallow', herd_lake))
                                   for line in yml_points(grp, pts).rstrip('\n').split('\n'))

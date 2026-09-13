@@ -28,6 +28,9 @@ public partial class ServerPlayer
     /// <summary>ข้อความนำหน้าที่ client (ที่ patch แล้ว) ใช้จับว่าเป็นคำสั่งย้ายเซิร์ฟ</summary>
     public const string GotoPrefix = "##goto ";
 
+    /// <summary>[isaf] island we are sailing to (saved as PlayerSave.TravelTarget so any gateway routes us there)</summary>
+    private string _travelTarget;
+
     /// <summary>รายชื่อเกาะทั้งหมด + บอกว่าไปได้ไหม</summary>
     public string DescribeIslands()
     {
@@ -84,6 +87,7 @@ public partial class ServerPlayer
 
         // เซฟก่อนตัดสาย ไม่งั้นของที่เก็บมาหลัง autosave ครั้งล่าสุดหายทั้งหมด
         // และ LastIsland ต้องเป็น "เกาะที่กำลังจะออก" เพื่อให้ปลายทางรู้ว่าเป็นคนมาใหม่
+        _travelTarget = dest.Id;
         Save();
 
         Console.WriteLine("[island] {0} เดินทาง {1} → {2} ({3})", Name, IslandRegistry.Current.Id, dest.Id, dest.Address);
@@ -240,10 +244,22 @@ public partial class ServerPlayer
             RejectFeatureDisabled("IslandTravel", "DepartTutorial", "Perjalanan antar pulau belum aktif di ronde ini", header);
             return;
         }
-        Console.WriteLine("[tutorial] {0} สั่งออกเรือ (entity {1})", Name, msg.EntityId);
+        // [isaf] the raft must be finished (every slot full) before anyone can sail
+        if (!IsTutorialBoatComplete(msg.EntityId, out string boatState))
+        {
+            Send(new Info { Text = "Rakit belum selesai — " + boatState }, header.Seq);
+            Send(Aborts.Reason(), header.Seq);
+            return;
+        }
+        string target = IslandRegistry.Current?.RaftDestination;
+        if (string.IsNullOrWhiteSpace(target) || IslandRegistry.Find(target) == null)
+        {
+            target = "mainland";
+        }
+        Console.WriteLine("[tutorial] {0} สั่งออกเรือ (entity {1}) → {2}", Name, msg.EntityId, target);
         Send(new DepartTutorialReady
         {
-            TargetRegionId = "mainland",
+            TargetRegionId = target,
             EntryPointOffset = -1
         }, header.Seq);
     }
@@ -263,8 +279,25 @@ public partial class ServerPlayer
             return;
         }
         Console.WriteLine("[tutorial] {0} ออกเรือไป {1} — ส่ง Emigrated ให้กลับหน้า title", Name, msg.TargetRegionId);
-        Save();
-        Send(new Info { Text = "Berhasil berlayar — kembali ke layar judul untuk masuk pulau tujuan" }, header.Seq);
+        // the server-side story quest "build the raft" is satisfied by sailing the shared tutorial raft
+        QuestProgress(QuestData.Goal.Build, "tutorial_boat");
+        IslandInfo dest = IslandRegistry.Find(msg.TargetRegionId ?? string.Empty)
+                          ?? IslandRegistry.Find(IslandRegistry.Current?.RaftDestination ?? string.Empty);
+        if (dest != null && IslandRegistry.Current != null && dest.Id != IslandRegistry.Current.Id)
+        {
+            // same path as TravelTo: remember the destination so the gateway the client re-knocks
+            // (it reconnects to the cluster it already has) hands it the destination frontend
+            _travelTarget = dest.Id;
+            Save();
+            Console.WriteLine("[island] {0} berlayar {1} → {2} ({3})", Name, IslandRegistry.Current.Id, dest.Id, dest.Address);
+            Send(new Info { Text = GotoPrefix + dest.Address });
+            Send(new Info { Text = $"Berlayar menuju {dest.Name}..." }, header.Seq);
+        }
+        else
+        {
+            Save();
+            Send(new Info { Text = "Berhasil berlayar — kembali ke layar judul untuk masuk pulau tujuan" }, header.Seq);
+        }
         Send(new Emigrated { Type = Shared.Teleport.TeleportType.Unknown }, header.Seq);
     }
 }
