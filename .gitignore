@@ -108,3 +108,7 @@ PATCH-LIST.md
 # compiled game/patch/mod binaries — ผู้ใช้ build จากซอร์สเอง
 server/data/patches/*.dll
 server/mods/*.dll
+
+# own tools (not game files)
+!tools/terraingen/
+!tools/terraingen/**
