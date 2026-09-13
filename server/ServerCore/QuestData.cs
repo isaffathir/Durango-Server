@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace DurangoServer.Core;
@@ -28,7 +29,7 @@ namespace DurangoServer.Core;
 /// **ทำงานได้ทันทีโดยไม่ต้องรอเรื่องฟอนต์/คำแปล** ส่วนชื่อในหน้าต่างเควสยังเป็นเกาหลี
 /// จนกว่าจะเปิดแค็ตตาล็อกไทยได้ (ดู docs/client/TUNING.md §2.1)
 /// </summary>
-public static class QuestData
+public static partial class QuestData
 {
     /// <summary>สิ่งที่ต้องทำให้ครบ — ผูกกับตัวนับที่ server มีอยู่แล้วทุกตัว</summary>
     public enum Goal
@@ -145,7 +146,9 @@ public static class QuestData
     /// เควส "ต่อแพหนีเกาะ" — จุดจบของสายสอนเล่น และเป็นหมุดที่ `cheat questskip` ใช้หยุด
     /// (ผูกด้วย id ไม่ใช่ตำแหน่งในอาเรย์ — สาย Story ยาวขึ้นได้เรื่อย ๆ)
     /// </summary>
-    public const string RaftQuestId = "story_enter_safehouse";
+    public const string BuiltInRaftQuestId = "story_enter_safehouse";
+    /// <summary>Active raft-quest id (JSON may override).</summary>
+    public static string RaftQuestId { get; private set; } = BuiltInRaftQuestId;
 
     /// <summary>
     /// **สายสอนเล่น → ต่อแพหนีเกาะ**
@@ -162,7 +165,7 @@ public static class QuestData
     /// ต้องใช้ **ท่อนซุง 4 + ก้าน 6** · ไม่ต้องใช้เครื่องมือ · เลเวล 1 ก็สร้างได้
     /// ทั้งสองอย่างเก็บได้บนเกาะเราอยู่แล้ว (`wood_log` มี tag `pillar_normal` · `stem` มี tag `stem`)
     /// </summary>
-    public static readonly Quest[] Story =
+    public static readonly Quest[] BuiltInStory =
     {
         new Quest("event_2018_fall_3_17_any_gathering_01", MainCategory, Goal.Gather, null, 10,
             null, new Reward(20, 0, ("stem", 3)),
@@ -246,7 +249,7 @@ public static class QuestData
     /// ยอมได้เพราะชุดนี้เป็นของชั่วคราวสำหรับเทส ไม่ใช่เนื้อหาที่ผู้เล่นจริงจะเห็น
     /// (id ที่ไม่มีในข้อมูลเกมเลยใช้ไม่ได้ — client `null-check` แล้ว **ไม่วาดอะไรเลย** ไม่ได้พัง แต่ก็ไม่โผล่)
     /// </summary>
-    public static readonly Quest[] Checklist =
+    public static readonly Quest[] BuiltInChecklist =
     {
         // ── ระบบปลูกผัก (ทำใหม่ล่าสุด ยังไม่เคยเจอตัวเกมจริง) ──────────
         new Quest("permanent_farming_seed_01", ChecklistCategory, Goal.Plant, "corn_seed", 4,
@@ -312,7 +315,10 @@ public static class QuestData
     };
 
     /// <summary>สายสอนเล่น + รายการตรวจ (รายการตรวจถูกกรองออกตอนส่งถ้าปิดใน config)</summary>
-    public static readonly Quest[] All = Combine(Story, Checklist);
+    /// <summary>Active story table (built-in unless data/quests/quests.json replaced it).</summary>
+    public static Quest[] Story { get; private set; } = BuiltInStory;
+    public static Quest[] Checklist { get; private set; } = BuiltInChecklist;
+    public static Quest[] All { get; private set; } = Combine(BuiltInStory, BuiltInChecklist);
 
     private static Quest[] Combine(Quest[] a, Quest[] b)
     {
@@ -322,7 +328,7 @@ public static class QuestData
         return all;
     }
 
-    private static readonly HashSet<string> _checklistIds = BuildChecklistIds();
+    private static HashSet<string> _checklistIds = BuildChecklistIds();
 
     private static HashSet<string> BuildChecklistIds()
     {
@@ -341,7 +347,7 @@ public static class QuestData
     }
 
     /// <summary>สร้างครั้งเดียวตอนโหลดคลาส — ไม่ทำ lazy init เพราะจะไม่ปลอดภัยถ้ามีหลายเธรดเรียกพร้อมกัน</summary>
-    public static readonly Dictionary<string, Quest> ById = BuildIndex();
+    public static Dictionary<string, Quest> ById { get; private set; } = BuildIndex();
 
     private static Dictionary<string, Quest> BuildIndex()
     {
@@ -351,6 +357,17 @@ public static class QuestData
             map[All[i].Id] = All[i];
         }
         return map;
+    }
+
+    /// <summary>Replace the active tables (used by LoadJson).</summary>
+    private static void Apply(Quest[] story, Quest[] checklist, string raftId)
+    {
+        Story = story ?? Array.Empty<Quest>();
+        Checklist = checklist ?? Array.Empty<Quest>();
+        All = Combine(Story, Checklist);
+        RaftQuestId = raftId ?? BuiltInRaftQuestId;
+        _checklistIds = BuildChecklistIds();
+        ById = BuildIndex();
     }
 
     public static bool TryGet(string id, out Quest quest)

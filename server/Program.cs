@@ -490,6 +490,7 @@ public static class Program
 
         // ตรวจตารางเควสตอนเปิดเซิร์ฟ — พิมพ์ผิดใน QuestData จะทำให้เควสเงียบหายไปเฉย ๆ
         // ถ้าไม่จับตรงนี้ จะไปเจอตอนผู้เล่นเล่นค้างอยู่ครึ่งสาย (ดู docs/server/Quests.md)
+        DurangoServer.Core.QuestData.LoadJson(dataDir);     // data/quests/quests.json (exported from the built-ins on first run)
         if (!DurangoServer.Core.QuestData.ValidateAndReport())
         {
             Console.WriteLine("[quest] ⚠️ เควสบางอันจะไม่ทำงาน — แก้ QuestData.cs แล้ว build ใหม่");

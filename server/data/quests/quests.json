@@ -1,0 +1,366 @@
+{
+  "main_category": "sunset",
+  "checklist_category": "daily",
+  "raft_quest_id": "story_enter_safehouse",
+  "story": [
+    {
+      "id": "event_2018_fall_3_17_any_gathering_01",
+      "goal": "Gather",
+      "param": null,
+      "count": 10,
+      "requires": null,
+      "reward": {
+        "exp": 20,
+        "skill_points": 0,
+        "items": {
+          "stem": 3
+        }
+      },
+      "text": "Kumpulkan bahan dari alam 10 kali. Tekan dan tahan pohon atau semak di sekitarmu."
+    },
+    {
+      "id": "daily_weaponcrafting_b_01",
+      "goal": "Craft",
+      "param": "tool",
+      "count": 5,
+      "requires": "event_2018_fall_3_17_any_gathering_01",
+      "reward": {
+        "exp": 30,
+        "skill_points": 1,
+        "items": {}
+      },
+      "text": "Buat 5 alat. Tanpa kapak kamu tidak bisa menebang, tanpa pisau tidak bisa menguliti."
+    },
+    {
+      "id": "customize_estate_quest_05",
+      "goal": "GatherItem",
+      "param": "wood_log",
+      "count": 10,
+      "requires": "daily_weaponcrafting_b_01",
+      "reward": {
+        "exp": 40,
+        "skill_points": 0,
+        "items": {
+          "stem": 6
+        }
+      },
+      "text": "Kumpulkan 10 batang kayu. Butuh kapak untuk menebang pohon besar. Rakit butuh 4 batang."
+    },
+    {
+      "id": "anniversary_1st_03",
+      "goal": "Hunt",
+      "param": null,
+      "count": 1,
+      "requires": "customize_estate_quest_05",
+      "reward": {
+        "exp": 40,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "Buru 1 hewan. Ketuk hewannya, lalu tekan tombol serang."
+    },
+    {
+      "id": "permanent_butchery_meat_01",
+      "goal": "Butcher",
+      "param": null,
+      "count": 10,
+      "requires": "anniversary_1st_03",
+      "reward": {
+        "exp": 50,
+        "skill_points": 1,
+        "items": {}
+      },
+      "text": "Kuliti bangkai sampai dapat 10 bagian. Pegang pisau dan keluar dari mode bertarung dulu."
+    },
+    {
+      "id": "permanent_cooking_any_01",
+      "goal": "Cook",
+      "param": null,
+      "count": 5,
+      "requires": "permanent_butchery_meat_01",
+      "reward": {
+        "exp": 60,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "Masak 5 kali. Daging mentah hanya memberi 60% tenaga dan menambah lelah. Panggang di api unggun."
+    },
+    {
+      "id": "daily_constructing_a_01",
+      "goal": "Build",
+      "param": null,
+      "count": 2,
+      "requires": "permanent_cooking_any_01",
+      "reward": {
+        "exp": 60,
+        "skill_points": 1,
+        "items": {}
+      },
+      "text": "Bangun 2 bangunan. Coba pasang api unggun dan kotak penyimpanan."
+    },
+    {
+      "id": "story_enter_safehouse",
+      "goal": "Build",
+      "param": "tutorial_boat",
+      "count": 1,
+      "requires": "daily_constructing_a_01",
+      "reward": {
+        "exp": 150,
+        "skill_points": 2,
+        "items": {
+          "stem": 10
+        }
+      },
+      "text": "Buat rakit untuk kabur dari Ancora! Butuh 4 batang kayu dan 6 ranting. Ini jalan keluarmu."
+    },
+    {
+      "id": "story_custom_event_meet_k",
+      "goal": "Reach",
+      "param": "north_beach",
+      "count": 1,
+      "requires": "story_enter_safehouse",
+      "reward": {
+        "exp": 80,
+        "skill_points": 1,
+        "items": {}
+      },
+      "text": "Setelah mendarat, berjalanlah ke pantai utara. Seorang wanita misterius bernama K menunggu di sana."
+    },
+    {
+      "id": "story_enter_personal",
+      "goal": "Craft",
+      "param": null,
+      "count": 5,
+      "requires": "story_custom_event_meet_k",
+      "reward": {
+        "exp": 100,
+        "skill_points": 1,
+        "items": {}
+      },
+      "text": "K memintamu mengenal Durango. Buat 5 barang di meja kerja."
+    },
+    {
+      "id": "story_enter_risky",
+      "goal": "Hunt",
+      "param": null,
+      "count": 3,
+      "requires": "story_enter_personal",
+      "reward": {
+        "exp": 120,
+        "skill_points": 1,
+        "items": {}
+      },
+      "text": "Nyatakan dirimu sebagai pionir! Buru 3 hewan di padang sekitar pulau."
+    },
+    {
+      "id": "story_level_16",
+      "goal": "Level",
+      "param": null,
+      "count": 16,
+      "requires": "story_enter_risky",
+      "reward": {
+        "exp": 200,
+        "skill_points": 2,
+        "items": {}
+      },
+      "text": "Capai level 16. Buktikan kamu bisa bertahan hidup di Durango. Quest dari cerita utama."
+    }
+  ],
+  "checklist": [
+    {
+      "id": "permanent_farming_seed_01",
+      "goal": "Plant",
+      "param": "corn_seed",
+      "count": 4,
+      "requires": null,
+      "reward": {
+        "exp": 20,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Tanam 4 benih jagung. Buat petak kebun dulu, lalu ketuk petak dan pilih Tanam."
+    },
+    {
+      "id": "event_1_farming_cherry_01",
+      "goal": "Water",
+      "param": null,
+      "count": 2,
+      "requires": null,
+      "reward": {
+        "exp": 15,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Siram tanaman 2 kali. Tanpa disiram, tanaman mati saat dewasa."
+    },
+    {
+      "id": "event_1_farming_cherry_02",
+      "goal": "Fertilize",
+      "param": null,
+      "count": 2,
+      "requires": null,
+      "reward": {
+        "exp": 15,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Beri pupuk 2 kali. Pupuk menentukan jumlah hasil panen."
+    },
+    {
+      "id": "event_1_gathering_cherry_bough_01",
+      "goal": "Harvest",
+      "param": null,
+      "count": 3,
+      "requires": null,
+      "reward": {
+        "exp": 25,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Panen 3 hasil. Ketuk petak yang sudah dewasa, pilih Panen."
+    },
+    {
+      "id": "event_newyear_2019_quest_04",
+      "goal": "DrawWater",
+      "param": null,
+      "count": 1,
+      "requires": null,
+      "reward": {
+        "exp": 15,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Ambil air 1 kali. Pegang wadah dan berdiri dekat sungai atau danau."
+    },
+    {
+      "id": "urban_weapon_event_04",
+      "goal": "Equip",
+      "param": null,
+      "count": 2,
+      "requires": null,
+      "reward": {
+        "exp": 20,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Pakai 2 perlengkapan. Lihat apakah penampilan dan status berubah."
+    },
+    {
+      "id": "urban_weapon_event_10",
+      "goal": "HuntRanged",
+      "param": null,
+      "count": 1,
+      "requires": null,
+      "reward": {
+        "exp": 30,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Buru 1 hewan dengan busur. Menguji serangan jarak jauh."
+    },
+    {
+      "id": "mainstory_chapter4_6",
+      "goal": "Repair",
+      "param": null,
+      "count": 1,
+      "requires": null,
+      "reward": {
+        "exp": 20,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Perbaiki 1 barang. Pakai alat sampai ketahanannya turun, lalu perbaiki."
+    },
+    {
+      "id": "estate_build_lv55_02",
+      "goal": "Store",
+      "param": null,
+      "count": 3,
+      "requires": null,
+      "reward": {
+        "exp": 20,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Simpan 3 barang ke kotak. Pasang kotak, buka, coba ambil lagi."
+    },
+    {
+      "id": "permanent_level_skill_gathering_10",
+      "goal": "LearnSkill",
+      "param": null,
+      "count": 1,
+      "requires": null,
+      "reward": {
+        "exp": 20,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Pelajari 1 skill. Buka halaman skill, pakai poin dari naik level."
+    },
+    {
+      "id": "mainstory_chapter1_5",
+      "goal": "Revive",
+      "param": null,
+      "count": 1,
+      "requires": null,
+      "reward": {
+        "exp": 20,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Mati lalu hidup lagi 1 kali. Pastikan kembali ke titik lahir dan barang tidak hilang."
+    },
+    {
+      "id": "urban_cook_event_06",
+      "goal": "Eat",
+      "param": null,
+      "count": 1,
+      "requires": null,
+      "reward": {
+        "exp": 15,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Makan 1 kali. Pastikan stamina naik dan lelah berkurang."
+    },
+    {
+      "id": "daily_survival_rest",
+      "goal": "Rest",
+      "param": null,
+      "count": 1,
+      "requires": null,
+      "reward": {
+        "exp": 15,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Istirahat di api unggun atau tenda 1 kali. Harus dapat buff istirahat."
+    },
+    {
+      "id": "daily_local_warp",
+      "goal": "WarpLocal",
+      "param": null,
+      "count": 1,
+      "requires": null,
+      "reward": {
+        "exp": 20,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Warp dalam pulau 1 kali lewat warphole yang dibangun."
+    },
+    {
+      "id": "daily_island_travel",
+      "goal": "IslandTravel",
+      "param": null,
+      "count": 1,
+      "requires": null,
+      "reward": {
+        "exp": 30,
+        "skill_points": 0,
+        "items": {}
+      },
+      "text": "[Cek] Pindah pulau lewat pelabuhan 1 kali. Handoff ke server pulau tujuan harus berhasil."
+    }
+  ]
+}
