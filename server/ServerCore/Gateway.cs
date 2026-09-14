@@ -858,6 +858,15 @@ public partial class Gateway
             string aPath = Path.Combine(AssetBundleAndroidDir, aName);
             return (HttpListenerRequest request, Dictionary<string, string> postData) =>
             {
+                // [isaf] the bundle index (Info.5.2.1.json) changes whenever bundles are converted or replaced, so it must
+                // never be cached: BundleFile sends "immutable" and a phone kept serving the old index (old bundle hashes)
+                // from its HTTP cache without asking the server again
+                if (aName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                {
+                    return File.Exists(aPath)
+                        ? new WebServer.JsonResponse(File.ReadAllText(aPath))
+                        : new WebServer.NotFountResponse();
+                }
                 // [4 ก.ย. 2026] ตั้ง AssetBundleUrlBase = ส่งไปโหลดที่ nginx แทนการอ่านไฟล์เอง
                 // APK มือถือถูกแพตช์ให้ขอ /live/android/... มาที่พอร์ตเกมตรง ๆ (ไม่ได้ใช้ url จาก /knock)
                 // จึงต้องดักตรงนี้ด้วย ไม่งั้นลูปเกมยังโดนงานอ่านไฟล์เหมือนเดิม
