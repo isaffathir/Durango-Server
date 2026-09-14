@@ -21,6 +21,8 @@ from terraingen import Noise, signed_distance, to_sbytes, png_write, B, ROCK, BI
 
 W = H = 256
 TROP, GRASS, BEACH, LAKE, OCEAN = B['TropicalForest'], B['Grassland'], B['SandBeach'], B['Lake'], B['WarmOcean']
+# land biome for the island body; Grassland avoids the mobile client's tropical grass stall (see commit message)
+LAND_BIOME = TROP
 
 # ── the story path (world tiles) ──────────────────────────────────────────────────────
 ENTRY = (60, 55)
@@ -215,7 +217,7 @@ def generate(out_dir, island_id, seed, region_template, tile_set, color_set, nat
             elif ocean_sd[i] <= 3:
                 biomes[i] = BEACH
             else:
-                biomes[i] = TROP
+                biomes[i] = LAND_BIOME
                 for gx, gy, gr in GRASS_PATCHES:
                     if math.hypot(x - gx, y - gy) + 1.5 * noise.fbm(x / 6.0, y / 6.0, 2) <= gr:
                         biomes[i] = GRASS
@@ -300,7 +302,7 @@ def generate(out_dir, island_id, seed, region_template, tile_set, color_set, nat
         x, y = rnd.randrange(W), rnd.randrange(H)
         if free(x, y, 2.5) and rnd.random() < 0.55:
             b = biomes[idx(x, y)] & 0x3F
-            pool = GRASSES + STICK_BUSHES + LOG_TREES + STONES if b in (TROP, GRASS) else ([BEACH_BUSH, BEACH_TREE] if b == BEACH else None)
+            pool = GRASSES + STICK_BUSHES + LOG_TREES + STONES if b in (TROP, GRASS, LAND_BIOME) else ([BEACH_BUSH, BEACH_TREE] if b == BEACH else None)
             if pool:
                 put(rnd.choice(pool), x, y); counts['bg'] += 1
 
@@ -342,7 +344,7 @@ def generate(out_dir, island_id, seed, region_template, tile_set, color_set, nat
         'region_template': region_template, 'tile_set': tile_set, 'color_set': color_set,
         'entry_points': [[ENTRY[0], ENTRY[1]]],
         'landmarks': [{'id': k, 'prefab': v} for k, v in sorted(LM.items())],
-        'global_landmarks': [], 'indicators': [], 'time_zone': [0, 0],
+        'global_landmarks': [], 'indicators': [], 'time_zone': [0, 24],
     }
     open(os.path.join(out, 'info.yml'), 'w', encoding='utf-8').write(json.dumps(info, indent=2))
     # block-style YAML only: the server's TerrainYaml.cs reads "- x / - y" pairs, not inline [x, y]

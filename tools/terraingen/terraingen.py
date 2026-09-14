@@ -326,7 +326,7 @@ def generate(args):
         'lake_type': 0, 'river_type': 0, 'ocean_type': 0,
         'lake_biome': 'lake', 'river_biome': 'river', 'ocean_biome': 'cold_ocean' if clim['cold'] else 'warm_ocean',
         'region_template': args.region_template, 'tile_set': args.tile_set, 'color_set': args.color_set,
-        'entry_points': [[entry[0], entry[1]]], 'landmarks': [], 'global_landmarks': [], 'indicators': [], 'time_zone': [0, 0],
+        'entry_points': [[entry[0], entry[1]]], 'landmarks': [], 'global_landmarks': [], 'indicators': [], 'time_zone': [0, 24],
     }
     open(os.path.join(out, 'info.yml'), 'w', encoding='utf-8').write(json.dumps(info, indent=2))
     # block-style YAML only: the server's TerrainYaml.cs reads "- - x / - y" pairs (the game's own format), not inline [x, y]
