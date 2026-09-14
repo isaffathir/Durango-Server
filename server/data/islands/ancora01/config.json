@@ -349,7 +349,7 @@
     "Enabled": true,
     "CycleSeconds": 3600.0,
     "Sequence": [
-      "cloudy"
+      "volcanic_ash"
     ]
   },
   "Survival": {

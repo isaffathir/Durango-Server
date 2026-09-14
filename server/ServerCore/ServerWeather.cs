@@ -19,7 +19,11 @@ public sealed class ServerWeather
         "rainy",
         "heavy_rainy",
         "snowy",
-        "heavy_snowy"
+        "heavy_snowy",
+        // [isaf] Ancora / volcanic islands — the client (WeatherManager.GetWeatherFromString) knows these too
+        "volcanic_ash",
+        "volcanic_sign",
+        "volcanic_storm"
     };
 
     private readonly ServerWorld _world;

@@ -31,7 +31,7 @@ DOG_PATH = [(60, 55), (63, 60), (74, 67), (80, 78), (94, 87), (125, 96), (134, 1
 CORRIDOR = 3.0            # tiles either side of the path guaranteed walkable
 
 # land = union of ellipses (cx, cy, rx, ry) — a crescent running from the train (SW) to the shipyard (NE)
-BLOBS = [(66, 58, 28, 24), (94, 90, 22, 18), (124, 102, 24, 18), (148, 121, 22, 9), (178, 121, 24, 8), (210, 116, 24, 10)]
+BLOBS = [(66, 72, 32, 22), (94, 90, 22, 18), (124, 102, 24, 18), (148, 121, 22, 9), (178, 121, 24, 8), (210, 116, 24, 10)]
 LAKES = [(86, 88, 4.5), (124, 104, 7.0), (219, 110, 2.5)]          # stream pond · brachio lake · shipyard pond
 GRASS_PATCHES = [(62, 56, 14), (151, 118, 7), (175, 118, 6)]
 # thorn-vine wall: rock from x0..x1 at rows y0..y1, open only at the gap (filled with thorn bushes)
@@ -71,7 +71,8 @@ def R(deg): return int(round((deg % 360) / 2)) & 0xFF        # LandmarkInfo.Rota
 # (prefab short name, x, y, rotation degrees)
 PLACEMENTS = [
     # train wreck south of the spawn, running east-west
-    ('ST_train_wreckage_01_a', 58, 49, 90), ('ST_train_wreckage_01_b', 66, 49, 90), ('ST_train_wreckage_01_c', 50, 50, 90),
+    # the derailed train lies on the south beach; the player wakes on the grass just above it
+    ('ST_train_wreckage_01_a', 58, 54, 90), ('ST_train_wreckage_01_b', 66, 54, 90), ('ST_train_wreckage_01_c', 51, 55, 90),
     # trigger volumes: boxes are long along local X → rotate 90 when the path runs east-west
     ('trigger_arrive_firststep', 66, 63, 0), ('trigger_gather_fruits', 71, 66, 0),
     ('trigger_arrive_river', 84, 82, 0), ('trigger_wash_yourself', 90, 85, 90),
@@ -276,7 +277,7 @@ def generate(out_dir, island_id, seed, region_template, tile_set, color_set, nat
                 put(rnd.choice(tids), x, y); n += 1
         return n
     counts = {}
-    counts['dates'] = scatter([DATE_PALM], 10, 63, 57, 8, keep_path=1.5)
+    counts['dates'] = scatter([DATE_PALM], 10, 63, 57, 8, keep_path=1.5) + scatter([DATE_PALM], 6, 71, 65, 6, keep_path=1.5)
     for cx, cy, r in LAKES:
         counts['reeds'] = counts.get('reeds', 0) + scatter(REEDS, int(8 + r * 3), cx, cy, r + 2.5, keep_path=0.8,
                                                            pred=lambda x, y: 0 < lake_sd[idx(x, y)] <= 3)
