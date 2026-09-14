@@ -31,11 +31,35 @@ DOG_PATH = [(60, 55), (63, 60), (74, 67), (80, 78), (94, 87), (125, 96), (134, 1
 CORRIDOR = 3.0            # tiles either side of the path guaranteed walkable
 
 # land = union of ellipses (cx, cy, rx, ry) — a crescent running from the train (SW) to the shipyard (NE)
-BLOBS = [(66, 72, 32, 22), (94, 90, 22, 18), (124, 102, 24, 18), (148, 121, 22, 9), (178, 121, 24, 8), (210, 116, 24, 10)]
+# Newbie-friendly layout: the island IS the path. Land = a corridor of CORRIDOR_LAND tiles either side of the story
+# path plus round "pockets" at the places the guide talks about, everything else is sea, so a new player can only walk
+# forward or back and always sees the next landmark. (Coordinates are fixed by the client's tutorial script.)
+CORRIDOR_LAND = 8
+POCKETS = [(60, 62, 17), (87, 86, 12), (124, 100, 16), (139, 112, 7), (151, 118, 11), (170, 120, 12), (188, 119, 10), (210, 113, 17)]
+#          train/start   pond          brachio lake   obstacle      bonfire camp   overpass       beach          shipyard
 LAKES = [(86, 88, 4.5), (124, 104, 7.0), (219, 110, 2.5)]          # stream pond · brachio lake · shipyard pond
 GRASS_PATCHES = [(62, 56, 14), (151, 118, 7), (175, 118, 6)]
 # thorn-vine wall: rock from x0..x1 at rows y0..y1, open only at the gap (filled with thorn bushes)
-WALL = dict(x0=96, x1=180, y0=113, y1=115, gap=(137, 139))
+# rock slab across the corridor at the obstacle, perpendicular to the path (134,110)->(139,115); only the gap in the
+# middle is open and the thorn bushes stand in it
+WALL = dict(center=(138.0, 113.5), dir=(0.7071, 0.7071), half_thick=1.5, half_width=24.0, half_gap=1.5)
+
+
+def wall_coords(x, y):
+    """(along-path, across-path) offsets of a tile from the wall centre"""
+    dx, dy = x - WALL['center'][0], y - WALL['center'][1]
+    ax, ay = WALL['dir']
+    return dx * ax + dy * ay, -dx * ay + dy * ax
+
+
+def in_wall_slab(x, y):
+    a, b = wall_coords(x, y)
+    return abs(a) <= WALL['half_thick'] and abs(b) <= WALL['half_width']
+
+
+def in_wall_gap(x, y):
+    a, b = wall_coords(x, y)
+    return abs(a) <= WALL['half_thick'] and abs(b) <= WALL['half_gap']
 BOAT_TILE, BOAT_SIZE = (208, 115), 4
 BONFIRE_TILE = (151, 118)
 
@@ -136,9 +160,12 @@ def generate(out_dir, island_id, seed, region_template, tile_set, color_set, nat
         for x in range(W):
             if x < 6 or y < 6 or x >= W - 6 or y >= H - 6:
                 continue
-            for cx, cy, rx, ry in BLOBS:
-                wob = 1.0 + 0.06 * noise.fbm(x / 9.0, y / 9.0, 3)
-                if ((x - cx) / (rx * wob)) ** 2 + ((y - cy) / (ry * wob)) ** 2 <= 1.0:
+            wob = 1.5 * noise.fbm(x / 9.0, y / 9.0, 3)          # gently wobbly coastline
+            if dist_to_path(x, y, DOG_PATH) <= CORRIDOR_LAND + wob:
+                land[idx(x, y)] = True
+                continue
+            for cx, cy, r in POCKETS:
+                if math.hypot(x - cx, y - cy) <= r + wob:
                     land[idx(x, y)] = True
                     break
     # the story corridor is always land
@@ -176,14 +203,12 @@ def generate(out_dir, island_id, seed, region_template, tile_set, color_set, nat
 
     # ── the thorn-vine wall (rock) ───────────────────────────────────────────────────
     rock = [False] * N
-    for y in range(WALL['y0'], WALL['y1'] + 1):
-        for x in range(WALL['x0'], WALL['x1'] + 1):
-            if WALL['gap'][0] <= x <= WALL['gap'][1]:
-                continue
-            if land[idx(x, y)] and not lake[idx(x, y)]:
+    for y in range(H):
+        for x in range(W):
+            if in_wall_slab(x, y) and not in_wall_gap(x, y) and land[idx(x, y)] and not lake[idx(x, y)]:
                 rock[idx(x, y)] = True
     # a few decorative boulders well away from the path
-    for _ in range(40):
+    for _ in range(0):      # (no decorative boulders on the tutorial island — only the thorn-vine wall)
         x, y = rnd.randrange(W), rnd.randrange(H)
         if land[idx(x, y)] and not lake[idx(x, y)] and ocean_sd[idx(x, y)] >= 5 and dist_to_path(x, y, DOG_PATH) > 9:
             for dx in range(-1, 2):
@@ -218,7 +243,7 @@ def generate(out_dir, island_id, seed, region_template, tile_set, color_set, nat
             elif ocean_sd[i] <= 3:
                 biomes[i] = BEACH
             else:
-                biomes[i] = LAND_BIOME
+                biomes[i] = GRASS if dist_to_path(x, y, DOG_PATH) <= 4.5 + 0.8 * noise.fbm(x / 5.0, y / 5.0, 2) else LAND_BIOME
                 for gx, gy, gr in GRASS_PATCHES:
                     if math.hypot(x - gx, y - gy) + 1.5 * noise.fbm(x / 6.0, y / 6.0, 2) <= gr:
                         biomes[i] = GRASS
@@ -301,14 +326,14 @@ def generate(out_dir, island_id, seed, region_template, tile_set, color_set, nat
     counts['bg'] = 0
     for _ in range(2200):
         x, y = rnd.randrange(W), rnd.randrange(H)
-        if free(x, y, 2.5) and rnd.random() < 0.55:
+        if free(x, y, 4.0) and rnd.random() < 0.5:
             b = biomes[idx(x, y)] & 0x3F
             pool = GRASSES + STICK_BUSHES + LOG_TREES + STONES if b in (TROP, GRASS, LAND_BIOME) else ([BEACH_BUSH, BEACH_TREE] if b == BEACH else None)
             if pool:
                 put(rnd.choice(pool), x, y); counts['bg'] += 1
 
     # ── sanity: every story tile is walkable land ───────────────────────────────────
-    for x, y in DOG_PATH + [(WALL['gap'][0] + 1, WALL['y0'] - 1), (WALL['gap'][0] + 1, WALL['y1'] + 1)]:
+    for x, y in DOG_PATH:
         i = idx(x, y)
         assert land[i] and not rock[i] and not lake[i], f'story tile {x},{y} not walkable'
     for x in range(BOAT_TILE[0], BOAT_TILE[0] + BOAT_SIZE):
@@ -325,7 +350,7 @@ def generate(out_dir, island_id, seed, region_template, tile_set, color_set, nat
                 if not inb(nx, ny): continue
                 k = idx(nx, ny)
                 if seen[k] or not land[k] or rock[k]: continue
-                if block_gap and WALL['y0'] <= ny <= WALL['y1'] and WALL['gap'][0] <= nx <= WALL['gap'][1]: continue
+                if block_gap and in_wall_gap(nx, ny): continue
                 seen[k] = True; q.append(k)
         return False
     assert reaches(False), 'shipyard unreachable even through the gap'
