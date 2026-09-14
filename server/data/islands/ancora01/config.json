@@ -166,10 +166,10 @@
   "Spawn": [
     {
       "Type": 2042,
-      "Name": "Kadal",
+      "Name": "กิ้งก่า",
       "MinLevel": 1,
       "MaxLevel": 3,
-      "Quota": 6,
+      "Quota": 0,
       "Behavior": "Flee",
       "MinTilesFromEntry": 0,
       "AttackCooltime": 1.4,
@@ -177,10 +177,10 @@
     },
     {
       "Type": 2015,
-      "Name": "Compsognathus",
+      "Name": "คอมป์โซกนาทัส",
       "MinLevel": 1,
       "MaxLevel": 4,
-      "Quota": 6,
+      "Quota": 0,
       "Behavior": "Flee",
       "MinTilesFromEntry": 0,
       "AttackCooltime": 3.0,
@@ -188,10 +188,10 @@
     },
     {
       "Type": 2033,
-      "Name": "Dodophis",
+      "Name": "โดโดฟิซิส",
       "MinLevel": 2,
       "MaxLevel": 5,
-      "Quota": 4,
+      "Quota": 0,
       "Behavior": "Flee",
       "MinTilesFromEntry": 0,
       "AttackCooltime": 3.0,
@@ -199,10 +199,10 @@
     },
     {
       "Type": 2006,
-      "Name": "Phenacodus",
+      "Name": "เฟนาโคดัส",
       "MinLevel": 3,
       "MaxLevel": 6,
-      "Quota": 4,
+      "Quota": 0,
       "Behavior": "Flee",
       "MinTilesFromEntry": 0,
       "AttackCooltime": 1.6,
@@ -210,10 +210,10 @@
     },
     {
       "Type": 2017,
-      "Name": "Protoceratops",
+      "Name": "โปรโตเซราท็อปส์",
       "MinLevel": 3,
       "MaxLevel": 7,
-      "Quota": 4,
+      "Quota": 0,
       "Behavior": "FightBack",
       "MinTilesFromEntry": 0,
       "AttackCooltime": 1.3,
@@ -221,10 +221,10 @@
     },
     {
       "Type": 2009,
-      "Name": "Parasaurolophus",
+      "Name": "พาราซอโรโลฟัส",
       "MinLevel": 5,
       "MaxLevel": 9,
-      "Quota": 3,
+      "Quota": 0,
       "Behavior": "FightBack",
       "MinTilesFromEntry": 4,
       "AttackCooltime": 2.0,
@@ -232,10 +232,10 @@
     },
     {
       "Type": 2000,
-      "Name": "Stegosaurus",
+      "Name": "สเตโกซอรัส",
       "MinLevel": 6,
       "MaxLevel": 10,
-      "Quota": 2,
+      "Quota": 0,
       "Behavior": "Flee",
       "MinTilesFromEntry": 6,
       "AttackCooltime": 2.1,
@@ -243,10 +243,10 @@
     },
     {
       "Type": 2003,
-      "Name": "Triceratops",
+      "Name": "ทริเซราท็อปส์",
       "MinLevel": 6,
       "MaxLevel": 10,
-      "Quota": 2,
+      "Quota": 0,
       "Behavior": "FightBack",
       "MinTilesFromEntry": 6,
       "AttackCooltime": 1.4,
@@ -254,10 +254,10 @@
     },
     {
       "Type": 2002,
-      "Name": "Oviraptor",
+      "Name": "โอวิแรปเตอร์",
       "MinLevel": 4,
       "MaxLevel": 8,
-      "Quota": 2,
+      "Quota": 0,
       "Behavior": "FightBack",
       "MinTilesFromEntry": 12,
       "AttackCooltime": 1.3,
@@ -265,64 +265,17 @@
     },
     {
       "Type": 2001,
-      "Name": "Raptor",
+      "Name": "แร็ปเตอร์",
       "MinLevel": 7,
       "MaxLevel": 10,
-      "Quota": 1,
+      "Quota": 0,
       "Behavior": "Aggressive",
       "MinTilesFromEntry": 20,
       "AttackCooltime": 1.7,
       "BehaviorEnum": 2
     }
   ],
-  "Zones": [
-    {
-      "Id": "meadow",
-      "Name": "Padang Rumput Depan",
-      "OffsetTileX": 0.0,
-      "OffsetTileY": 0.0,
-      "RadiusTiles": 14.0,
-      "Species": [
-        2042,
-        2015,
-        2033
-      ]
-    },
-    {
-      "Id": "forest",
-      "Name": "Tepi Hutan",
-      "OffsetTileX": 22.0,
-      "OffsetTileY": 6.0,
-      "RadiusTiles": 13.0,
-      "Species": [
-        2006,
-        2017
-      ]
-    },
-    {
-      "Id": "highland",
-      "Name": "Dataran Tinggi",
-      "OffsetTileX": -8.0,
-      "OffsetTileY": 24.0,
-      "RadiusTiles": 13.0,
-      "Species": [
-        2009,
-        2000,
-        2003
-      ]
-    },
-    {
-      "Id": "raptor_den",
-      "Name": "Lembah Raptor",
-      "OffsetTileX": 26.0,
-      "OffsetTileY": -22.0,
-      "RadiusTiles": 10.0,
-      "Species": [
-        2002,
-        2001
-      ]
-    }
-  ],
+  "Zones": [],
   "World": {
     "ChunkSendRange": 4,
     "NaturalRegrowSeconds": 1200.0,
@@ -570,5 +523,5 @@
   "RegionTemplateId": "i01ancora180107",
   "MaxOnlinePlayers": 50,
   "MaxPlayersPerIp": 8,
-  "TotalQuota": 34
+  "TotalQuota": 0
 }

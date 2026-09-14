@@ -338,7 +338,7 @@ def generate(out_dir, island_id, seed, region_template, tile_set, color_set, nat
     w('whole.ocean', ocean_v); w('whole.rivers', rivers_v); w('whole.garden', garden); w('whole.landmarks', landmarks)
     info = {
         'tile_count': [W, H], 'is_cold_ocean': False, 'lake_type': 0, 'river_type': 0, 'ocean_type': 0,
-        'lake_biome': 'lake', 'river_biome': 'river', 'ocean_biome': 'warm_ocean',
+        'lake_biome': 'tropical_forest', 'river_biome': 'tropical_forest', 'ocean_biome': 'warm_ocean',
         'region_template': region_template, 'tile_set': tile_set, 'color_set': color_set,
         'entry_points': [[ENTRY[0], ENTRY[1]]],
         'landmarks': [{'id': k, 'prefab': v} for k, v in sorted(LM.items())],
@@ -382,7 +382,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--id', default='ancora01'); ap.add_argument('--seed', type=int, default=180107)
     ap.add_argument('--region-template', default='i01ancora180107')
-    ap.add_argument('--tile-set', default='temperate'); ap.add_argument('--color-set', default='temperate')
+    ap.add_argument('--tile-set', default=''); ap.add_argument('--color-set', default='')
     ap.add_argument('--out', default=os.path.join(os.path.dirname(__file__), '..', '..', 'server', 'data', 'terrains', 'extracted'))
     ap.add_argument('--naturals', default=None)
     a = ap.parse_args()
